@@ -182,3 +182,8 @@ Route::get('/test-simple', function () {
 Route::get('/test-with-layout', function () {
     return view('test-with-layout');
 });
+
+Route::get('/test-session', function() {
+    session(['test' => 'value']);
+    return session('test');
+});
