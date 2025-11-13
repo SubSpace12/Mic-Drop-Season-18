@@ -21,7 +21,7 @@ class JudgeApp extends Model
     ];
 
     protected $casts = [
-	'user_id' => 'string'
+        'user-id' => 'string',
         'bonus' => 'boolean',
         'longer' => 'boolean',
     ];

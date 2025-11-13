@@ -60,14 +60,14 @@
     @endphp
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
 
         * {
-            font-family: 'Nunito', sans-serif;
+            font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
         }
 
         body {
-            background: linear-gradient(135deg, #fff0f6 0%, #ffe0f0 50%, #ffd5eb 100%);
+            background: linear-gradient(135deg, #1e1e1e 0%, #252526 50%, #2d2d30 100%);
         }
 
         .rounds-container {
@@ -77,46 +77,49 @@
         }
 
         .welcome-message {
-            background: linear-gradient(135deg, #ff9ed8 0%, #ffb3e6 50%, #ffc9f0 100%);
-            color: white;
+            background: linear-gradient(135deg, #0e639c 0%, #1177bb 50%, #1c88d1 100%);
+            color: #d4d4d4;
             padding: 2.5rem;
-            border-radius: 25px;
+            border-radius: 8px;
             margin-bottom: 2rem;
-            box-shadow: 0 8px 30px rgba(255, 158, 216, 0.4);
-            border: 3px solid #ffd5eb;
+            box-shadow: 0 4px 20px rgba(14, 99, 156, 0.4);
+            border: 2px solid #1c88d1;
             position: relative;
             overflow: hidden;
         }
 
         .welcome-message::before {
-            content: '✧･ﾟ: *✧･ﾟ:*';
+            content: '>';
             position: absolute;
             top: 10px;
             right: 20px;
             font-size: 1.5rem;
-            opacity: 0.6;
+            opacity: 0.3;
+            color: #4ec9b0;
         }
 
         .welcome-message::after {
-            content: '♡';
+            content: '//';
             position: absolute;
             bottom: 10px;
             left: 20px;
-            font-size: 2rem;
-            opacity: 0.4;
+            font-size: 1.5rem;
+            opacity: 0.3;
+            color: #608b4e;
         }
 
         .welcome-message h1 {
             font-size: 2rem;
-            font-weight: 800;
+            font-weight: 700;
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+            color: #4ec9b0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .welcome-message p {
             font-size: 1.125rem;
             opacity: 0.95;
-            font-weight: 600;
+            font-weight: 500;
         }
 
         .rounds-grid {
@@ -127,15 +130,15 @@
         }
 
         .round-card {
-            background: white;
-            border-radius: 25px;
+            background: #252526;
+            border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 5px 25px rgba(255, 182, 223, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
             transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
             overflow: hidden;
-            border: 3px solid #ffb3e6;
+            border: 2px solid #3e3e42;
         }
 
         .round-card::before {
@@ -144,30 +147,30 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 8px;
-            background: linear-gradient(90deg, #ff9ed8, #ffb3e6, #ffc9f0, #ffe0f0);
+            height: 4px;
+            background: linear-gradient(90deg, #569cd6, #4ec9b0, #608b4e);
         }
 
         .round-card::after {
-            content: '♡';
+            content: '{ }';
             position: absolute;
             bottom: 15px;
             right: 15px;
-            font-size: 3rem;
-            opacity: 0.08;
-            color: #ff9ed8;
+            font-size: 2rem;
+            opacity: 0.05;
+            color: #4ec9b0;
         }
 
         /* Status 0 - Coming Soon */
         .round-card.status-pending {
-            background: #fff5fa;
+            background: #1e1e1e;
             cursor: not-allowed;
-            opacity: 0.7;
-            border-color: #ffd5eb;
+            opacity: 0.6;
+            border-color: #2d2d30;
         }
 
         .round-card.status-pending::before {
-            background: linear-gradient(90deg, #e8b4d4, #f0c9e0);
+            background: linear-gradient(90deg, #3e3e42, #4e4e52);
         }
 
         .round-card.status-pending:hover {
@@ -176,54 +179,54 @@
 
         /* Status 1 - Active */
         .round-card.status-active {
-            border: 3px solid #ff69b4;
-            background: linear-gradient(135deg, #fff 0%, #fff5fa 100%);
-            animation: gentle-pulse 2s ease-in-out infinite;
+            border: 2px solid #4ec9b0;
+            background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
+            animation: terminal-pulse 2s ease-in-out infinite;
         }
 
-        @keyframes gentle-pulse {
+        @keyframes terminal-pulse {
             0%, 100% {
-                box-shadow: 0 5px 25px rgba(255, 105, 180, 0.4);
+                box-shadow: 0 4px 15px rgba(78, 201, 176, 0.4);
             }
             50% {
-                box-shadow: 0 8px 35px rgba(255, 105, 180, 0.6);
+                box-shadow: 0 6px 25px rgba(78, 201, 176, 0.6);
             }
         }
 
         .round-card.status-active::before {
-            background: linear-gradient(90deg, #ff69b4, #ff85c1, #ff9ed8);
+            background: linear-gradient(90deg, #4ec9b0, #4ec9b0, #569cd6);
         }
 
         .round-card.status-active:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(255, 105, 180, 0.5);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(78, 201, 176, 0.5);
         }
 
         /* Status 1 - Active but not clickable for spectators */
         .round-card.status-active.not-clickable {
             cursor: not-allowed;
-            opacity: 0.7;
+            opacity: 0.6;
             animation: none;
         }
 
         .round-card.status-active.not-clickable:hover {
             transform: none;
-            box-shadow: 0 5px 25px rgba(255, 182, 223, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
         /* Status 2 - Completed */
         .round-card.status-completed {
-            border: 3px solid #c77dff;
-            background: linear-gradient(135deg, #fff 0%, #f8f0ff 100%);
+            border: 2px solid #608b4e;
+            background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
         }
 
         .round-card.status-completed::before {
-            background: linear-gradient(90deg, #c77dff, #d4a5ff, #e0ccff);
+            background: linear-gradient(90deg, #608b4e, #6a9955, #608b4e);
         }
 
         .round-card.status-completed:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 12px 40px rgba(199, 125, 255, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(96, 139, 78, 0.4);
         }
 
         .round-header {
@@ -235,102 +238,101 @@
 
         .round-number {
             font-size: 3rem;
-            font-weight: 900;
+            font-weight: 700;
             line-height: 1;
-            color: #ff9ed8;
-            text-shadow: 3px 3px 0px #ffb3e6, 6px 6px 0px #ffc9f0;
+            color: #569cd6;
+            text-shadow: 2px 2px 0px #3e3e42;
         }
 
         .status-pending .round-number {
-            color: #e8b4d4;
-            text-shadow: 2px 2px 0px #f0c9e0;
+            color: #6e6e6e;
+            text-shadow: 2px 2px 0px #3e3e42;
         }
 
         .status-active .round-number {
-            color: #ff69b4;
-            text-shadow: 3px 3px 0px #ff85c1, 6px 6px 0px #ff9ed8;
+            color: #4ec9b0;
+            text-shadow: 2px 2px 0px #3e3e42;
         }
 
         .status-completed .round-number {
-            color: #c77dff;
-            text-shadow: 3px 3px 0px #d4a5ff, 6px 6px 0px #e0ccff;
+            color: #608b4e;
+            text-shadow: 2px 2px 0px #3e3e42;
         }
 
         .round-badge {
             padding: 0.5rem 1rem;
-            border-radius: 50px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            border: 2px solid;
+            letter-spacing: 1.5px;
+            border: 1px solid;
         }
 
         .badge-pending {
-            background: linear-gradient(135deg, #f0c9e0, #f5d9e8);
-            color: #d47fa8;
-            border-color: #e8b4d4;
+            background: #3e3e42;
+            color: #858585;
+            border-color: #4e4e52;
         }
 
         .badge-active {
-            background: linear-gradient(135deg, #ff9ed8, #ffb3e6);
-            color: white;
-            border-color: #ff69b4;
-            animation: badge-shimmer 2s ease-in-out infinite;
+            background: #0e4429;
+            color: #4ec9b0;
+            border-color: #4ec9b0;
+            animation: badge-blink 2s ease-in-out infinite;
         }
 
-        @keyframes badge-shimmer {
+        @keyframes badge-blink {
             0%, 100% {
-                transform: scale(1);
+                opacity: 1;
             }
             50% {
-                transform: scale(1.05);
+                opacity: 0.7;
             }
         }
 
         .badge-completed {
-            background: linear-gradient(135deg, #c77dff, #d4a5ff);
-            color: white;
-            border-color: #b565f0;
+            background: #1e3a1e;
+            color: #6a9955;
+            border-color: #608b4e;
         }
 
         .badge-merge {
-            background: linear-gradient(135deg, #ffc9f0, #ffe0f0);
-            color: #d47fa8;
-            border-color: #ffb3e6;
+            background: #1a1a2e;
+            color: #569cd6;
+            border-color: #569cd6;
             margin-left: 0.5rem;
         }
 
         .round-title {
             font-size: 1.5rem;
-            font-weight: 800;
-            color: #d47fa8;
+            font-weight: 600;
+            color: #d4d4d4;
             margin-bottom: 0.5rem;
-            text-shadow: 1px 1px 2px rgba(255, 182, 223, 0.3);
         }
 
         .status-pending .round-title {
-            color: #e8b4d4;
+            color: #858585;
         }
 
         .status-active .round-title {
-            color: #ff69b4;
+            color: #4ec9b0;
         }
 
         .status-completed .round-title {
-            color: #b565f0;
+            color: #6a9955;
         }
 
         .round-description {
-            color: #d47fa8;
+            color: #a0a0a0;
             font-size: 0.95rem;
             line-height: 1.6;
             margin-bottom: 1rem;
-            font-weight: 600;
+            font-weight: 400;
         }
 
         .status-pending .round-description {
-            color: #e8b4d4;
+            color: #6e6e6e;
         }
 
         .round-info {
@@ -338,7 +340,7 @@
             gap: 1rem;
             margin-top: 1rem;
             padding-top: 1rem;
-            border-top: 2px dashed #ffe0f0;
+            border-top: 1px solid #3e3e42;
         }
 
         .info-item {
@@ -346,60 +348,59 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.875rem;
-            color: #d47fa8;
-            font-weight: 700;
+            color: #a0a0a0;
+            font-weight: 500;
         }
 
         .info-icon {
-            font-size: 1.25rem;
+            font-size: 1rem;
+            color: #569cd6;
         }
 
         .action-text {
             text-align: center;
             margin-top: 1.5rem;
-            font-weight: 800;
-            font-size: 1.1rem;
+            font-weight: 600;
+            font-size: 1rem;
             padding: 0.75rem;
-            border-radius: 50px;
-            border: 2px solid;
+            border-radius: 4px;
+            border: 1px solid;
         }
 
         .status-pending .action-text {
-            color: #d47fa8;
-            background: #fff5fa;
-            border-color: #ffe0f0;
+            color: #858585;
+            background: #1e1e1e;
+            border-color: #3e3e42;
         }
 
         .status-active .action-text {
-            color: white;
-            background: linear-gradient(135deg, #ff69b4, #ff85c1);
-            border-color: #ff69b4;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            color: #4ec9b0;
+            background: linear-gradient(135deg, #0e4429, #1e5a3e);
+            border-color: #4ec9b0;
         }
 
         .status-completed .action-text {
-            color: white;
-            background: linear-gradient(135deg, #c77dff, #d4a5ff);
-            border-color: #b565f0;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            color: #6a9955;
+            background: linear-gradient(135deg, #1e3a1e, #2e4a2e);
+            border-color: #608b4e;
         }
 
         .status-active.not-clickable .action-text {
-            color: #d47fa8;
-            background: #fff5fa;
-            border-color: #ffe0f0;
+            color: #858585;
+            background: #1e1e1e;
+            border-color: #3e3e42;
         }
 
         .no-rounds {
             text-align: center;
             padding: 4rem;
-            color: #d47fa8;
+            color: #a0a0a0;
             font-size: 1.25rem;
-            font-weight: 700;
-            background: white;
-            border-radius: 25px;
-            border: 3px solid #ffe0f0;
-            box-shadow: 0 5px 25px rgba(255, 182, 223, 0.3);
+            font-weight: 500;
+            background: #252526;
+            border-radius: 8px;
+            border: 2px solid #3e3e42;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
         /* Group Selection Modal */
@@ -411,8 +412,8 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(255, 182, 223, 0.7);
-            backdrop-filter: blur(8px);
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
             animation: fadeIn 0.3s;
         }
 
@@ -432,25 +433,25 @@
         }
 
         .modal-content {
-            background: white;
-            border-radius: 30px;
+            background: #2d2d30;
+            border-radius: 8px;
             padding: 2.5rem;
             max-width: 500px;
             width: 90%;
-            box-shadow: 0 15px 50px rgba(255, 105, 180, 0.4);
-            border: 4px solid #ffb3e6;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+            border: 2px solid #3e3e42;
             animation: slideUp 0.3s;
             position: relative;
         }
 
         .modal-content::before {
-            content: '♡';
+            content: '>';
             position: absolute;
-            top: -15px;
-            right: 30px;
-            font-size: 2.5rem;
-            color: #ff69b4;
-            text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.3);
+            top: 15px;
+            right: 25px;
+            font-size: 2rem;
+            color: #4ec9b0;
+            opacity: 0.3;
         }
 
         @keyframes slideUp {
@@ -466,19 +467,18 @@
 
         .modal-header {
             font-size: 1.75rem;
-            font-weight: 900;
-            color: #ff69b4;
+            font-weight: 600;
+            color: #4ec9b0;
             margin-bottom: 1rem;
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(255, 182, 223, 0.3);
         }
 
         .modal-description {
-            color: #d47fa8;
+            color: #a0a0a0;
             text-align: center;
             margin-bottom: 2rem;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 400;
+            font-size: 1rem;
         }
 
         .group-buttons {
@@ -490,22 +490,22 @@
 
         .group-button {
             padding: 1.75rem 1rem;
-            background: linear-gradient(135deg, #ff9ed8, #ffb3e6);
-            color: white;
-            border: 3px solid #ff69b4;
-            border-radius: 20px;
-            font-weight: 800;
+            background: linear-gradient(135deg, #0e639c, #1177bb);
+            color: #d4d4d4;
+            border: 2px solid #569cd6;
+            border-radius: 4px;
+            font-weight: 600;
             font-size: 1.25rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(255, 105, 180, 0.4);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(14, 99, 156, 0.4);
         }
 
         .group-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(255, 105, 180, 0.6);
-            background: linear-gradient(135deg, #ff69b4, #ff85c1);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(14, 99, 156, 0.6);
+            background: linear-gradient(135deg, #1177bb, #1c88d1);
+            border-color: #4ec9b0;
         }
 
         /* Staff Action Modal */
@@ -518,84 +518,84 @@
 
         .action-button {
             padding: 1.75rem 1rem;
-            background: linear-gradient(135deg, #c77dff, #d4a5ff);
-            color: white;
-            border: 3px solid #b565f0;
-            border-radius: 20px;
-            font-weight: 800;
+            background: linear-gradient(135deg, #0e4429, #1e5a3e);
+            color: #d4d4d4;
+            border: 2px solid #4ec9b0;
+            border-radius: 4px;
+            font-weight: 600;
             font-size: 1.25rem;
             cursor: pointer;
             transition: all 0.3s;
-            box-shadow: 0 6px 20px rgba(199, 125, 255, 0.4);
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px rgba(14, 68, 41, 0.4);
         }
 
         .action-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 30px rgba(199, 125, 255, 0.6);
-            background: linear-gradient(135deg, #b565f0, #c77dff);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(14, 68, 41, 0.6);
+            background: linear-gradient(135deg, #1e5a3e, #2e6a4e);
+            border-color: #6a9955;
         }
 
         .cancel-button {
             width: 100%;
             padding: 1rem;
-            background: linear-gradient(135deg, #fff0f6, #ffe0f0);
-            border: 3px solid #ffb3e6;
-            border-radius: 50px;
-            font-weight: 800;
+            background: #1e1e1e;
+            border: 2px solid #3e3e42;
+            border-radius: 4px;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
-            color: #d47fa8;
-            font-size: 1.1rem;
+            color: #a0a0a0;
+            font-size: 1rem;
         }
 
         .cancel-button:hover {
-            background: linear-gradient(135deg, #ffe0f0, #ffd5eb);
-            transform: scale(1.02);
+            background: #252526;
+            border-color: #569cd6;
+            color: #d4d4d4;
         }
 
         .guest-message {
-            background: white;
+            background: #252526;
             padding: 3rem;
-            border-radius: 30px;
+            border-radius: 8px;
             text-align: center;
-            box-shadow: 0 8px 35px rgba(255, 182, 223, 0.4);
-            border: 4px solid #ffb3e6;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid #3e3e42;
             position: relative;
         }
 
         .guest-message::before {
-            content: '✧';
+            content: '//';
             position: absolute;
             top: 20px;
             left: 30px;
             font-size: 2rem;
-            color: #ff9ed8;
-            opacity: 0.5;
+            color: #608b4e;
+            opacity: 0.3;
         }
 
         .guest-message::after {
-            content: '✧';
+            content: '>';
             position: absolute;
             bottom: 20px;
             right: 30px;
             font-size: 2rem;
-            color: #ffb3e6;
-            opacity: 0.5;
+            color: #4ec9b0;
+            opacity: 0.3;
         }
 
         .guest-message h3 {
             font-size: 1.75rem;
-            color: #ff69b4;
+            color: #4ec9b0;
             margin-bottom: 1rem;
-            font-weight: 900;
-            text-shadow: 2px 2px 4px rgba(255, 182, 223, 0.3);
+            font-weight: 600;
         }
 
         .guest-message p {
-            color: #d47fa8;
+            color: #a0a0a0;
             margin-bottom: 1.5rem;
-            font-weight: 700;
+            font-weight: 400;
             font-size: 1.1rem;
         }
 
@@ -613,32 +613,20 @@
                 font-size: 2.5rem;
             }
         }
-
-        /* Cute sparkle animation */
-        @keyframes sparkle {
-            0%, 100% {
-                opacity: 0;
-                transform: scale(0);
-            }
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
     </style>
 
     <div class="rounds-container">
         @guest
             <div class="guest-message">
-                <h3>💖 Welcome to Mic Drop Season 18! 💖</h3>
-                <p>Please log in to participate in rounds and view results~ ✨</p>
+                <h3>Welcome to Mic Drop Season 18</h3>
+                <p>Please log in to participate in rounds and view results</p>
             </div>
         @endguest
 
         @auth
             @if($rounds->isEmpty())
                 <div class="no-rounds">
-                    No rounds have been created yet~ Check back soon! (◕‿◕)♡
+                    No rounds have been created yet. Check back soon.
                 </div>
             @else
                 <div class="rounds-grid">
@@ -679,7 +667,7 @@
                                 <div>
                                     <span class="round-badge {{ $badgeClass }}">{{ $statusBadge }}</span>
                                     @if($round->is_merge && $round->status != 0)
-                                        <span class="round-badge badge-merge">🔀 Merge</span>
+                                        <span class="round-badge badge-merge">MERGE</span>
                                     @endif
                                 </div>
                             </div>
@@ -687,7 +675,7 @@
                             @if($round->status == 0)
                                 {{-- Coming soon - hide details --}}
                                 <h3 class="round-title">Round {{ $round->round_number }}</h3>
-                                <p class="round-description">Details will be revealed when the round starts~ ✨</p>
+                                <p class="round-description">Details will be revealed when the round starts</p>
                             @else
                                 {{-- Active or completed - show details --}}
                                 <h3 class="round-title">{{ $round->title }}</h3>
@@ -697,34 +685,34 @@
                             @if($round->status != 0)
                                 <div class="round-info">
                                     <div class="info-item">
-                                        <span class="info-icon">📅</span>
+                                        <span class="info-icon">[DATE]</span>
                                         <span>{{ date('M j, Y', strtotime($round->deadline)) }}</span>
                                     </div>
                                     <div class="info-item">
-                                        <span class="info-icon">👥</span>
+                                        <span class="info-icon">[GROUPS]</span>
                                         <span>{{ $round->is_merge ? 'All Groups' : '3 Groups' }}</span>
                                     </div>
                                 </div>
                             @endif
 
                             @if($round->status == 0)
-                                <div class="action-text">⏳ Coming Soon~</div>
+                                <div class="action-text">COMING SOON</div>
                             @elseif($round->status == 1)
                                 <div class="action-text">
                                     @if($userRole == 'spectator')
-                                        👁️ Spectating
+                                        SPECTATING
                                     @elseif($userRole == 'contestant')
-                                        🎤 Submit Songs ♡
+                                        SUBMIT SONGS
                                     @elseif($userRole == 'judge')
-                                        ⚖️ Judge Now!
+                                        JUDGE NOW
                                     @elseif($userRole == 'staff')
-                                        🛠️ Staff Options
+                                        STAFF OPTIONS
                                     @else
-                                        ℹ️ Active Round
+                                        ACTIVE ROUND
                                     @endif
                                 </div>
                             @elseif($round->status == 2)
-                                <div class="action-text">📊 View Results ✨</div>
+                                <div class="action-text">VIEW RESULTS</div>
                             @endif
                         </div>
                     @endforeach
@@ -736,8 +724,8 @@
     <!-- Group Selection Modal (for viewing results) -->
     <div id="groupModal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-header">Select a Group~ ♡</h2>
-            <p class="modal-description">Which group's results would you like to view? ✨</p>
+            <h2 class="modal-header">Select a Group</h2>
+            <p class="modal-description">Which group's results would you like to view?</p>
 
             <div class="group-buttons">
                 <button class="group-button" onclick="selectGroup(1)">
@@ -758,15 +746,15 @@
     <!-- Staff Action Modal (for staff choosing action) -->
     <div id="staffModal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-header">Choose Action~ ♡</h2>
-            <p class="modal-description">What would you like to do? ✨</p>
+            <h2 class="modal-header">Choose Action</h2>
+            <p class="modal-description">What would you like to do?</p>
 
             <div class="action-buttons">
                 <button class="action-button" onclick="staffAction('submit')">
-                    🎤 View submission form
+                    View submission form
                 </button>
                 <button class="action-button" onclick="staffAction('judge')">
-                    ⚖️ View judging sheets
+                    View judging sheets
                 </button>
             </div>
 
@@ -777,8 +765,8 @@
     <!-- Staff Group Selection Modal -->
     <div id="staffGroupModal" class="modal">
         <div class="modal-content">
-            <h2 class="modal-header">Select a Group~ ♡</h2>
-            <p class="modal-description" id="staffGroupDescription">Which group would you like to work with? ✨</p>
+            <h2 class="modal-header">Select a Group</h2>
+            <p class="modal-description" id="staffGroupDescription">Which group would you like to work with?</p>
 
             <div class="group-buttons">
                 <button class="group-button" onclick="selectStaffGroup(1)">
@@ -903,9 +891,9 @@
             } else {
                 // Group round - ask for group
                 if (action === 'submit') {
-                    document.getElementById('staffGroupDescription').textContent = 'Which group would you like to submit for? ✨';
+                    document.getElementById('staffGroupDescription').textContent = 'Which group would you like to submit for?';
                 } else if (action === 'judge') {
-                    document.getElementById('staffGroupDescription').textContent = 'Which group would you like to judge? ✨';
+                    document.getElementById('staffGroupDescription').textContent = 'Which group would you like to judge?';
                 }
                 openStaffGroupModal();
             }
