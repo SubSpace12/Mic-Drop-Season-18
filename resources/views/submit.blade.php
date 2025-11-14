@@ -5,7 +5,23 @@ $round = request()->query('round', -1);
 if ($group < 0 || $group > 3) {
 $group = -1;
 }
-$round_info = DB::table('round')->where('round_number', $round)->first();
+
+// Get the active season
+$activeSeason = DB::table('season')
+    ->where('active', true)
+    ->first();
+
+$seasonId = $activeSeason ? $activeSeason->season_id : null;
+
+if (!$seasonId) {
+    abort(404, 'No active season found');
+}
+
+$round_info = DB::table('round')
+    ->where('round_number', $round)
+    ->where('season_id', $seasonId)
+    ->first();
+
 // Check if round exists
 if (!$round_info) {
 abort(404, 'Round not found');
@@ -42,7 +58,7 @@ if (!$statusError && auth()->check()) {
     elseif (!$accessDenied && $group != 0) {
         $contestant = DB::table('contestants')
             ->where('id', auth()->id())
-            ->where('season_id', 1)
+            ->where('season_id', $seasonId)
             ->first();
         
         if (!$contestant) {
@@ -65,7 +81,7 @@ $deadlinePassed = false;
 if (!$statusError && !$accessDenied && auth()->check() && !$isStaffViewing) {
 $contestant = DB::table('contestants')
 ->where('id', auth()->id())
-->where('season_id', 1)
+->where('season_id', $seasonId)
 ->first();
 if ($contestant) {
 // Calculate effective deadline with extension hours
@@ -89,6 +105,7 @@ $existing_submissions = DB::table('submissions')
 ->where('contestant_id', auth()->id())
 ->where('round', $round)
 ->where('md_group', $group)
+->where('season_id', $seasonId)
 ->exists();
 if ($existing_submissions) {
 $alreadySubmitted = true;
@@ -102,6 +119,7 @@ $judges = DB::table('judges')
 ->select('judges.id as judge_id', 'users.global_name', 'apps.*')
 ->where('judges.round', $round)
 ->where('judges.md_group', $group)
+->where('judges.season_id', $seasonId)
 ->get();
 }
 @endphp

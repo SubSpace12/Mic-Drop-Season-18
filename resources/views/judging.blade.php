@@ -532,6 +532,13 @@
 
         @auth
             @php
+                // Get the active season
+                $activeSeason = DB::table('season')
+                    ->where('active', true)
+                    ->first();
+
+                $seasonId = $activeSeason ? $activeSeason->season_id : null;
+
                 $group = request()->query('group', 0);
                 $round = request()->query('round', -1);
                 if ($group < 0 || $group > 3) {
@@ -554,31 +561,35 @@
                     default:
                         break;
                 }
-                $judges = DB::table('judges')->join('users', 'users.id', '=', 'judges.id')
+                $judges = $seasonId ? DB::table('judges')->join('users', 'users.id', '=', 'judges.id')
                     ->select('users.global_name', 'users.id')
                     ->where('md_group', $group_raw)->where('round', $round)
-                    ->orderBy('judge_number')->get();
-                $contestants = DB::table('contestants')
+                    ->where('judges.season_id', $seasonId)
+                    ->orderBy('judge_number')->get() : collect();
+                $contestants = $seasonId ? DB::table('contestants')
                     ->where('md_group', $group_raw)
+                    ->where('season_id', $seasonId)
                     ->where('eliminated', false)->orderBy('submission_date', 'asc')
-                    ->get();
+                    ->get() : collect();
                 $subsTable = [];
                 foreach ($contestants as $contestant) {
                     $scores = [];
                     $validScores = [];
                     $avg = 0.0;
 
-                    $subs = DB::table('submissions')
-                        ->join('judges', function ($join) use ($round, $group_raw) {
+                    $subs = $seasonId ? DB::table('submissions')
+                        ->join('judges', function ($join) use ($round, $group_raw, $seasonId) {
                             $join->on('judges.id', '=', 'submissions.judge_id')
                                 ->where('judges.round', '=', $round)
-                                ->where('judges.md_group', '=', $group_raw);
+                                ->where('judges.md_group', '=', $group_raw)
+                                ->where('judges.season_id', '=', $seasonId);
                         })
                         ->where('submissions.contestant_id', $contestant->id)
                         ->where('submissions.round', $round)
                         ->where('submissions.md_group', $group_raw)
+                        ->where('submissions.season_id', $seasonId)
                         ->orderBy('judges.judge_number')
-                        ->get();
+                        ->get() : collect();
                     // Collect scores from each judge
                     foreach ($subs as $sub) {
                         if ($sub->score !== null) {
@@ -618,15 +629,16 @@
                 // Get submissions for each judge
                 $judgeSubmissions = [];
                 foreach ($judges as $judge) {
-                    $submissions = DB::table('submissions')
+                    $submissions = $seasonId ? DB::table('submissions')
                         ->join('contestants', 'contestants.id', '=', 'submissions.contestant_id')
                         ->join('users', 'users.id', '=', 'contestants.id')
                         ->select('submissions.*', 'contestants.submission_date', 'users.global_name as contestant_name')
                         ->where('judge_id', $judge->id)
                         ->where('round', $round)
                         ->where('submissions.md_group', $group_raw)
+                        ->where('submissions.season_id', $seasonId)
                         ->orderBy('submission_date', 'asc')
-                        ->get();
+                        ->get() : collect();
                     $judgeSubmissions[$judge->id] = $submissions;
                 }
             @endphp

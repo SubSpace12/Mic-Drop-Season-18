@@ -1016,19 +1016,27 @@
                 </div>
             @else
                 @php
-                    // Get the active round (status = 1)
-                    $activeRound = DB::table('round')
-                        ->where('status', 1)
-                        ->where('season_id', 1)
-                        ->orderBy('round_number')
+                    // Get the active season
+                    $activeSeason = DB::table('season')
+                        ->where('active', true)
                         ->first();
 
-                    // Get the first round with status = 0, ordered by round_number
-                    $nextRound = DB::table('round')
-                        ->where('status', 0)
-                        ->where('season_id', 1)
+                    // If no active season, set default
+                    $seasonId = $activeSeason ? $activeSeason->season_id : null;
+
+                    // Get the active round (status = 1)
+                    $activeRound = $seasonId ? DB::table('round')
+                        ->where('status', 1)
+                        ->where('season_id', $seasonId)
                         ->orderBy('round_number')
-                        ->first();
+                        ->first() : null;
+
+                    // Get the first round with status = 0, ordered by round_number
+                    $nextRound = $seasonId ? DB::table('round')
+                        ->where('status', 0)
+                        ->where('season_id', $seasonId)
+                        ->orderBy('round_number')
+                        ->first() : null;
 
                     // Get all eligible judges (users in apps table)
                     $eligibleJudges = DB::table('users')
@@ -1041,10 +1049,10 @@
                     // Check if judges are already assigned for the next round
                     $existingJudges = null;
                     $judgesAssigned = false;
-                    if ($nextRound) {
+                    if ($nextRound && $seasonId) {
                         $existingJudges = DB::table('judges')
                             ->join('users', 'judges.id', '=', 'users.id')
-                            ->where('judges.season_id', 1)
+                            ->where('judges.season_id', $seasonId)
                             ->where('judges.round', $nextRound->round_number)
                             ->select('judges.*', 'users.global_name')
                             ->get();
@@ -1054,10 +1062,10 @@
 
                     // Get active round judges if there's an active round
                     $activeJudges = null;
-                    if ($activeRound) {
+                    if ($activeRound && $seasonId) {
                         $activeJudges = DB::table('judges')
                             ->join('users', 'judges.id', '=', 'users.id')
-                            ->where('judges.season_id', 1)
+                            ->where('judges.season_id', $seasonId)
                             ->where('judges.round', $activeRound->round_number)
                             ->select('judges.*', 'users.global_name')
                             ->get();
@@ -1067,14 +1075,14 @@
                     $canEliminate = false;
                     $eliminationData = [];
 
-                    if ($activeRound) {
+                    if ($activeRound && $seasonId) {
                         // Check if deadline has passed
                         $deadlinePassed = strtotime($activeRound->deadline) < time();
 
                         // Check if all scores are submitted (no null scores)
                         $nullScores = DB::table('submissions')
                             ->where('round', $activeRound->round_number)
-                            ->where('season_id', 1)
+                            ->where('season_id', $seasonId)
                             ->whereNull('score')
                             ->count();
 
@@ -1091,7 +1099,7 @@
                                 // Get all non-eliminated contestants
                                 $contestants = DB::table('contestants')
                                     ->join('users', 'contestants.id', '=', 'users.id')
-                                    ->where('contestants.season_id', 1)
+                                    ->where('contestants.season_id', $seasonId)
                                     ->where('contestants.eliminated', false)
                                     ->select('contestants.*', 'users.global_name')
                                     ->get();
@@ -1117,12 +1125,14 @@
                                     } else {
                                         // Calculate average score
                                         $subs = DB::table('submissions')
-                                            ->join('judges', function ($join) use ($activeRound) {
+                                            ->join('judges', function ($join) use ($activeRound, $seasonId) {
                                                 $join->on('judges.id', '=', 'submissions.judge_id')
-                                                    ->where('judges.round', '=', $activeRound->round_number);
+                                                    ->where('judges.round', '=', $activeRound->round_number)
+                                                    ->where('judges.season_id', '=', $seasonId);
                                             })
                                             ->where('submissions.contestant_id', $contestant->id)
                                             ->where('submissions.round', $activeRound->round_number)
+                                            ->where('submissions.season_id', $seasonId)
                                             ->whereNotNull('submissions.score')
                                             ->get();
 
@@ -1169,7 +1179,7 @@
 
                                     $contestants = DB::table('contestants')
                                         ->join('users', 'contestants.id', '=', 'users.id')
-                                        ->where('contestants.season_id', 1)
+                                        ->where('contestants.season_id', $seasonId)
                                         ->where('contestants.eliminated', false)
                                         ->where('contestants.md_group', $group)
                                         ->select('contestants.*', 'users.global_name')
@@ -1196,14 +1206,16 @@
                                         } else {
                                             // Calculate average score for this group
                                             $subs = DB::table('submissions')
-                                                ->join('judges', function ($join) use ($activeRound, $group) {
+                                                ->join('judges', function ($join) use ($activeRound, $group, $seasonId) {
                                                     $join->on('judges.id', '=', 'submissions.judge_id')
                                                         ->where('judges.round', '=', $activeRound->round_number)
-                                                        ->where('judges.md_group', '=', $group);
+                                                        ->where('judges.md_group', '=', $group)
+                                                        ->where('judges.season_id', '=', $seasonId);
                                                 })
                                                 ->where('submissions.contestant_id', $contestant->id)
                                                 ->where('submissions.round', $activeRound->round_number)
                                                 ->where('submissions.md_group', $group)
+                                                ->where('submissions.season_id', $seasonId)
                                                 ->whereNotNull('submissions.score')
                                                 ->get();
 
@@ -1248,8 +1260,15 @@
                     }
                 @endphp
 
-                {{-- Active Round Section --}}
-                @if($activeRound)
+                @if(!$seasonId)
+                    <div class="access-message error">
+                        <p style="font-size: 1.5rem; margin-bottom: 1rem;">⚠️ No Active Season</p>
+                        <p>There is no active season configured in the database.</p>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem;">Please set a season's 'active' column to TRUE in the 'season' table.</p>
+                    </div>
+                @else
+                    {{-- Active Round Section --}}
+                    @if($activeRound)
                     <div class="round-info-card" style="border: 3px solid #17a2b8;">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                             <div>
@@ -1318,7 +1337,7 @@
                             // Get active contestants for this round
                             $activeContestants = DB::table('contestants')
                                 ->join('users', 'contestants.id', '=', 'users.id')
-                                ->where('contestants.season_id', 1)
+                                ->where('contestants.season_id', $seasonId)
                                 ->where('contestants.eliminated', false);
 
                             if (!$activeRound->is_merge) {
@@ -1499,7 +1518,7 @@
                                 $deadlinePassed = strtotime($activeRound->deadline) < time();
                                 $nullScores = DB::table('submissions')
                                     ->where('round', $activeRound->round_number)
-                                    ->where('season_id', 1)
+                                    ->where('season_id', $seasonId)
                                     ->whereNull('score')
                                     ->count();
                                 $allScoresSubmitted = $nullScores === 0;
@@ -1782,6 +1801,13 @@
                                 @endif
 
                                 <div class="actions-bar">
+                                    <button type="button" class="btn btn-edit" data-round="{{ $nextRound->round_number }}"
+                                        data-title="{{ $nextRound->title }}" data-description="{{ $nextRound->description }}"
+                                        data-eliminate="{{ $nextRound->eliminate_number }}"
+                                        data-deadline="{{ date('Y-m-d\TH:i', strtotime($nextRound->deadline)) }}"
+                                        onclick="openEditModalFromButton(this)">
+                                        <span class="edit-icon">✏️ Edit Round Details</span>
+                                    </button>
                                     <button type="button" class="btn btn-primary" onclick="resetSelections()">
                                         🔄 Reset All
                                     </button>
@@ -2255,6 +2281,7 @@
                         </form>
                     </div>
                 </div>
+                @endif
             @endif
         @endauth
     </div>

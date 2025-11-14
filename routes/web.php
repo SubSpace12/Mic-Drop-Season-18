@@ -39,7 +39,6 @@ Route::post('/judge-vote', [AppVoteController::class, 'handleJudgeVote'])->middl
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    
 });
 
 Route::get('/results', function () {
@@ -70,63 +69,7 @@ Route::post('/apps', [JudgeAppController::class, 'store'])->name('apps.store');
 
 Route::post('/update-submission', [SubmissionController::class, 'update']);
 
-Route::post('/update-submission-details', function() {
-    try {
-        // Check permissions first
-        if (auth()->user()->perms < 6) {
-            return response()->json([
-                'success' => false, 
-                'message' => 'Unauthorized - insufficient permissions'
-            ], 403);
-        }
-        
-        $validated = request()->validate([
-            'submission_id' => 'required|integer',
-            'artist' => 'required|string|max:255',
-            'title' => 'required|string|max:255',
-            'url' => 'required|string|max:500',
-            'marked_for_resub' => 'required|boolean'
-        ]);
-        
-        // Check if the column exists, if not update without it
-        $updateData = [
-            'artist' => $validated['artist'],
-            'title' => $validated['title'],
-            'url' => $validated['url'],
-        ];
-        
-        // Try to check if marked_for_resub column exists
-        try {
-            $columns = Schema::getColumnListing('submissions');
-            if (in_array('marked_for_resub', $columns)) {
-                $updateData['marked_for_resub'] = $validated['marked_for_resub'];
-            }
-        } catch (\Exception $e) {
-            // Column doesn't exist, continue without it
-        }
-        
-        $updated = DB::table('submissions')
-            ->where('submission_id', $validated['submission_id'])
-            ->update($updateData);
-        
-        return response()->json([
-            'success' => $updated > 0,
-            'message' => $updated > 0 ? 'Submission updated successfully' : 'No changes made or submission not found'
-        ]);
-        
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Validation error: ' . json_encode($e->errors())
-        ], 422);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Server error: ' . $e->getMessage()
-        ], 500);
-    }
-})->middleware('auth');
-
+Route::post('/update-submission-details', [SubmissionController::class, 'updateSubmissionDetails'])->middleware('auth');
 // ============================================================
 // ADMIN ROUND MANAGEMENT ROUTES
 // ============================================================

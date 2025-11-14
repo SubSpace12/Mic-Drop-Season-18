@@ -1,18 +1,33 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class SlideBGController extends Controller
 {
+    /**
+     * Get the active season ID
+     */
+    private function getActiveSeasonId()
+    {
+        $activeSeason = DB::table('season')
+            ->where('active', true)
+            ->first();
+        
+        return $activeSeason ? $activeSeason->season_id : null;
+    }
+
     public function update(Request $request)
     {
         // Check if user has staff permissions
         if (!auth()->check() || auth()->user()->perms < 6) {
             return redirect()->back()->with('error', 'Unauthorized access.');
+        }
+
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return redirect()->back()->with('error', 'No active season found.');
         }
 
         $request->validate([
@@ -30,10 +45,11 @@ class SlideBGController extends Controller
         // Get existing round data
         $round = DB::table('round')
             ->where('round_number', $roundNumber)
+            ->where('season_id', $seasonId)
             ->first();
 
         if (!$round) {
-            return redirect()->back()->with('error', 'Round not found.');
+            return redirect()->back()->with('error', 'Round not found in active season.');
         }
 
         // Process each background image
@@ -59,6 +75,7 @@ class SlideBGController extends Controller
         if (!empty($updateData)) {
             DB::table('round')
                 ->where('round_number', $roundNumber)
+                ->where('season_id', $seasonId)
                 ->update($updateData);
         }
 

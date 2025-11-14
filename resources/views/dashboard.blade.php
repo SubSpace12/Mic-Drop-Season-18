@@ -6,11 +6,19 @@
     </x-slot>
 
     @php
-        // Get all rounds for season 1, ordered by round number
-        $rounds = DB::table('round')
-            ->where('season_id', 1)
+        // Get the active season
+        $activeSeason = DB::table('season')
+            ->where('active', true)
+            ->first();
+
+        // If no active season, set defaults
+        $seasonId = $activeSeason ? $activeSeason->season_id : null;
+
+        // Get all rounds for the active season, ordered by round number
+        $rounds = $seasonId ? DB::table('round')
+            ->where('season_id', $seasonId)
             ->orderBy('round_number')
-            ->get();
+            ->get() : collect();
 
         // Get user permission level and role-specific info
         $userPerms = 0;
@@ -18,7 +26,7 @@
         $userRole = 'guest';
         $contestant = null;
 
-        if (auth()->check()) {
+        if (auth()->check() && $seasonId) {
             $userPerms = auth()->user()->perms ?? 0;
 
             // Determine role and group based on permission level
@@ -29,7 +37,7 @@
                 // Get contestant info including their group
                 $contestant = DB::table('contestants')
                     ->where('id', auth()->id())
-                    ->where('season_id', 1)
+                    ->where('season_id', $seasonId)
                     ->first();
                 if ($contestant) {
                     $userGroup = $contestant->md_group;
@@ -38,19 +46,19 @@
                 $userRole = 'judge';
                 // Get judge info for active round
                 $activeRound = DB::table('round')
-                    ->where('season_id', 1)
+                    ->where('season_id', $seasonId)
                     ->where('status', 1)
                     ->first();
 
                 if ($activeRound) {
                     $judgeInfo = DB::table('judges')
                         ->where('id', auth()->id())
-                        ->where('season_id', 1)
+                        ->where('season_id', $seasonId)
                         ->where('round', $activeRound->round_number)
                         ->first();
 
                     if ($judgeInfo) {
-                        $userGroup = $userPerms - 2;
+                        $userGroup = $judgeInfo->md_group;
                     }
                 }
             } elseif ($userPerms >= 6) {
@@ -124,7 +132,7 @@
 
         .rounds-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(4, 1fr); /* show 4 per row */
             gap: 2rem;
             margin-top: 2rem;
         }
@@ -601,7 +609,7 @@
 
         @media (max-width: 768px) {
             .rounds-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: 1fr 1fr; /* 2 per row on mobile */
             }
 
             .group-buttons,

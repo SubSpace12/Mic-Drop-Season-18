@@ -5,6 +5,13 @@ if (auth()->user()->perms < 6) {
     abort(403, 'You do not have permission to access this page.');
 }
 
+// Get the active season
+$activeSeason = DB::table('season')
+    ->where('active', true)
+    ->first();
+
+$seasonId = $activeSeason ? $activeSeason->season_id : null;
+
 $user_apps = DB::table('apps')
     ->join('users', 'apps.user_id', '=', 'users.id')
     ->select('apps.*', 'users.global_name')->OrderBy('apps.id', 'asc')
@@ -26,6 +33,27 @@ $vote_counts = DB::table('judge_upvotes')
     ->groupBy('app_id')
     ->get()
     ->keyBy('app_id');
+
+// Get judging history for each user in the active season
+$judging_history = [];
+if ($seasonId) {
+    $judges = DB::table('judges')
+        ->where('season_id', $seasonId)
+        ->select('id', 'round')
+        ->get();
+    
+    foreach ($judges as $judge) {
+        if (!isset($judging_history[$judge->id])) {
+            $judging_history[$judge->id] = [];
+        }
+        $judging_history[$judge->id][] = $judge->round;
+    }
+    
+    // Sort rounds for each judge
+    foreach ($judging_history as $userId => $rounds) {
+        sort($judging_history[$userId]);
+    }
+}
 @endphp
 
 <style>
@@ -78,6 +106,16 @@ $vote_counts = DB::table('judge_upvotes')
     color: #bdc3c7;
     display: flex;
     gap: 15px;
+}
+
+.app-nav-judging {
+    font-size: 12px;
+    color: #f39c12;
+    margin-top: 5px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
 .vote-count {
@@ -244,6 +282,11 @@ $vote_counts = DB::table('judge_upvotes')
                                 👎 {{ $vote_counts[$app->id]->thumbs_down ?? 0 }}
                             </span>
                         </div>
+                        @if(isset($judging_history[$app->user_id]) && count($judging_history[$app->user_id]) > 0)
+                            <div class="app-nav-judging">
+                                ⚖️ Judged: R{{ implode(', R', $judging_history[$app->user_id]) }}
+                            </div>
+                        @endif
                     </li>
                 @endforeach
             </ul>

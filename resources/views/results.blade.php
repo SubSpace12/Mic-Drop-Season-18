@@ -482,6 +482,13 @@
     </style>
 
     @php
+    // Get the active season
+    $activeSeason = DB::table('season')
+        ->where('active', true)
+        ->first();
+
+    $seasonId = $activeSeason ? $activeSeason->season_id : null;
+
     $group = request()->query('group', 0);
     $round = request()->query('round', -1);
     if ($group < 0 || $group > 3) {
@@ -489,9 +496,10 @@
     }
 
     // Get round information
-    $roundInfo = DB::table('round')
+    $roundInfo = $seasonId ? DB::table('round')
         ->where('round_number', $round)
-        ->first();
+        ->where('season_id', $seasonId)
+        ->first() : null;
 
     // Check permissions
     $userPerms = auth()->user()->perms ?? 0;
@@ -512,24 +520,27 @@
     }
 
     // Check if there are any submissions with NULL scores for this group and round
-    $hasNullScores = DB::table('submissions')
+    $hasNullScores = $seasonId ? DB::table('submissions')
         ->where('md_group', $group)
         ->where('round', $round)
+        ->where('season_id', $seasonId)
         ->whereNull('score')
-        ->exists();
+        ->exists() : false;
 
-    $contestants = DB::table('contestants')
+    $contestants = $seasonId ? DB::table('contestants')
         ->join('users', 'users.id', '=', 'contestants.id')
         ->where('contestants.md_group', $group)
+        ->where('contestants.season_id', $seasonId)
         ->where('contestants.eliminated', false)
-        ->get();
+        ->get() : collect();
 
     // Count contestants with null submission_date and not eliminated
-    $missedSubmissions = DB::table('contestants')
+    $missedSubmissions = $seasonId ? DB::table('contestants')
         ->where('md_group', $group)
+        ->where('season_id', $seasonId)
         ->where('eliminated', false)
         ->whereNull('submission_date')
-        ->count();
+        ->count() : 0;
 
     $eliminateNumber = $roundInfo ? $roundInfo->eliminate_number : 0;
     $eliminationThreshold = max(1, $eliminateNumber - $missedSubmissions);
@@ -543,19 +554,21 @@
         $scores[0] = $contestant->global_name;
         $avg = 0.0;
 
-        $subs = DB::table('submissions')
-        ->join('judges', function ($join) use ($round, $group) {
+        $subs = $seasonId ? DB::table('submissions')
+        ->join('judges', function ($join) use ($round, $group, $seasonId) {
             $join->on('judges.id', '=', 'submissions.judge_id')
                  ->where('judges.round', '=', $round)
-                 ->where('judges.md_group', '=', $group);
+                 ->where('judges.md_group', '=', $group)
+                 ->where('judges.season_id', '=', $seasonId);
         })
         ->join('users', 'users.id', '=', 'judges.id')
         ->select('submissions.*', 'judges.judge_number', 'users.global_name', 'users.username')
         ->where('submissions.contestant_id', $contestant->id)
         ->where('submissions.round', $round)
         ->where('submissions.md_group', $group)
+        ->where('submissions.season_id', $seasonId)
         ->orderBy('judges.judge_number')
-        ->get();
+        ->get() : collect();
 
         foreach ($subs as $sub) {
             $song = $sub->artist . ' - ' . $sub->title;

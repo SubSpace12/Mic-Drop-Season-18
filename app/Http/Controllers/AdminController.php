@@ -8,6 +8,18 @@ use Illuminate\Support\Facades\DB;
 class AdminController extends Controller
 {
     /**
+     * Get the active season ID
+     */
+    private function getActiveSeasonId()
+    {
+        $activeSeason = DB::table('season')
+            ->where('active', true)
+            ->first();
+        
+        return $activeSeason ? $activeSeason->season_id : null;
+    }
+
+    /**
      * Complete the active round (eliminate contestants and change status to 2)
      */
     public function completeRound(Request $request)
@@ -17,13 +29,18 @@ class AdminController extends Controller
         'contestants' => 'required|json'
     ]);
 
+    $seasonId = $this->getActiveSeasonId();
+    if (!$seasonId) {
+        return redirect('/admin')->with('error', 'No active season found.');
+    }
+
     $roundNumber = $request->input('round_number');
     $contestantIds = json_decode($request->input('contestants'), true);
 
     // Verify the round is active
     $round = DB::table('round')
         ->where('round_number', $roundNumber)
-        ->where('season_id', 1)
+        ->where('season_id', $seasonId)
         ->where('status', 1)
         ->first();
 
@@ -39,7 +56,7 @@ class AdminController extends Controller
     // Verify all scores are submitted (no null scores)
     $nullScores = DB::table('submissions')
         ->where('round', $roundNumber)
-        ->where('season_id', 1)
+        ->where('season_id', $seasonId)
         ->whereNull('score')
         ->count();
 
@@ -56,7 +73,7 @@ class AdminController extends Controller
         if (!empty($contestantIds)) {
             $eliminatedCount = DB::table('contestants')
                 ->whereIn('id', $contestantIds)
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->where('eliminated', false)
                 ->update(['eliminated' => true]);
             
@@ -73,13 +90,13 @@ class AdminController extends Controller
 
         // Step 3: Set all submission_date values to null in contestants table
         DB::table('contestants')
-            ->where('season_id', 1)
+            ->where('season_id', $seasonId)
             ->update(['submission_date' => null]);
 
         // Step 4: Mark round as completed
         DB::table('round')
             ->where('round_number', $roundNumber)
-            ->where('season_id', 1)
+            ->where('season_id', $seasonId)
             ->where('status', 1)
             ->update(['status' => 2]);
 
@@ -110,19 +127,24 @@ class AdminController extends Controller
             'round_number' => 'required|integer'
         ]);
 
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return redirect('/admin')->with('error', 'No active season found.');
+        }
+
         $roundNumber = $request->input('round_number');
 
         try {
             // First, set any currently active rounds to completed
             DB::table('round')
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->where('status', 1)
                 ->update(['status' => 2]);
 
             // Start the new round
             DB::table('round')
                 ->where('round_number', $roundNumber)
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->where('status', 0)
                 ->update(['status' => 1]);
 
@@ -141,12 +163,17 @@ class AdminController extends Controller
             'round_number' => 'required|integer'
         ]);
 
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return redirect('/admin')->with('error', 'No active season found.');
+        }
+
         $roundNumber = $request->input('round_number');
 
         try {
             DB::table('judges')
                 ->where('round', $roundNumber)
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->delete();
 
             return redirect('/admin')->with('success', "Judges for Round {$roundNumber} have been reset.");
@@ -164,6 +191,11 @@ class AdminController extends Controller
             'round_number' => 'required|integer',
             'is_merge' => 'required|boolean'
         ]);
+
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return response()->json(['success' => false, 'message' => 'No active season found.']);
+        }
 
         $roundNumber = $request->input('round_number');
         $isMerge = $request->input('is_merge');
@@ -184,7 +216,7 @@ class AdminController extends Controller
                 foreach ($judges as $index => $judgeId) {
                     DB::table('judges')->insert([
                         'id' => $judgeId,
-                        'season_id' => 1,
+                        'season_id' => $seasonId,
                         'round' => $roundNumber,
                         'md_group' => 0,
                         'judge_number' => $index
@@ -213,7 +245,7 @@ class AdminController extends Controller
                     foreach ($judges as $index => $judgeId) {
                         DB::table('judges')->insert([
                             'id' => $judgeId,
-                            'season_id' => 1,
+                            'season_id' => $seasonId,
                             'round' => $roundNumber,
                             'md_group' => $group,
                             'judge_number' => $index
@@ -254,12 +286,17 @@ class AdminController extends Controller
             'deadline' => 'required|date'
         ]);
 
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return redirect('/admin')->with('error', 'No active season found.');
+        }
+
         $roundNumber = $request->input('round_number');
 
         try {
             DB::table('round')
                 ->where('round_number', $roundNumber)
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->update([
                     'title' => $request->input('title'),
                     'description' => $request->input('description'),
@@ -283,13 +320,18 @@ class AdminController extends Controller
             'round_number' => 'required|integer'
         ]);
 
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return redirect('/admin')->with('error', 'No active season found.');
+        }
+
         $contestantId = $request->input('contestant_id');
         $roundNumber = $request->input('round_number');
 
         // Verify the round is active
         $round = DB::table('round')
             ->where('round_number', $roundNumber)
-            ->where('season_id', 1)
+            ->where('season_id', $seasonId)
             ->where('status', 1)
             ->first();
 
@@ -302,7 +344,7 @@ class AdminController extends Controller
             $contestant = DB::table('contestants')
                 ->join('users', 'contestants.id', '=', 'users.id')
                 ->where('contestants.id', $contestantId)
-                ->where('contestants.season_id', 1)
+                ->where('contestants.season_id', $seasonId)
                 ->select('users.global_name')
                 ->first();
 
@@ -313,7 +355,7 @@ class AdminController extends Controller
             // Mark as dropped out (special = true)
             DB::table('contestants')
                 ->where('id', $contestantId)
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->update(['special' => true]);
 
             return redirect('/admin')->with('success', "{$contestant->global_name} has been marked as dropped out.");
@@ -332,13 +374,18 @@ class AdminController extends Controller
             'round_number' => 'required|integer'
         ]);
 
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return redirect('/admin')->with('error', 'No active season found.');
+        }
+
         $contestantId = $request->input('contestant_id');
         $roundNumber = $request->input('round_number');
 
         // Verify the round is active
         $round = DB::table('round')
             ->where('round_number', $roundNumber)
-            ->where('season_id', 1)
+            ->where('season_id', $seasonId)
             ->where('status', 1)
             ->first();
 
@@ -351,7 +398,7 @@ class AdminController extends Controller
             $contestant = DB::table('contestants')
                 ->join('users', 'contestants.id', '=', 'users.id')
                 ->where('contestants.id', $contestantId)
-                ->where('contestants.season_id', 1)
+                ->where('contestants.season_id', $seasonId)
                 ->select('users.global_name')
                 ->first();
 
@@ -362,7 +409,7 @@ class AdminController extends Controller
             // Restore (special = false)
             DB::table('contestants')
                 ->where('id', $contestantId)
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->update(['special' => false]);
 
             return redirect('/admin')->with('success', "{$contestant->global_name} has been restored.");
@@ -382,6 +429,11 @@ class AdminController extends Controller
             'extension_hours' => 'required|integer|min:0|max:168'
         ]);
 
+        $seasonId = $this->getActiveSeasonId();
+        if (!$seasonId) {
+            return redirect('/admin')->with('error', 'No active season found.');
+        }
+
         $contestantId = $request->input('contestant_id');
         $roundNumber = $request->input('round_number');
         $extensionHours = $request->input('extension_hours');
@@ -389,7 +441,7 @@ class AdminController extends Controller
         // Verify the round is active
         $round = DB::table('round')
             ->where('round_number', $roundNumber)
-            ->where('season_id', 1)
+            ->where('season_id', $seasonId)
             ->where('status', 1)
             ->first();
 
@@ -402,7 +454,7 @@ class AdminController extends Controller
             $contestant = DB::table('contestants')
                 ->join('users', 'contestants.id', '=', 'users.id')
                 ->where('contestants.id', $contestantId)
-                ->where('contestants.season_id', 1)
+                ->where('contestants.season_id', $seasonId)
                 ->select('users.global_name')
                 ->first();
 
@@ -413,7 +465,7 @@ class AdminController extends Controller
             // Update extension hours
             DB::table('contestants')
                 ->where('id', $contestantId)
-                ->where('season_id', 1)
+                ->where('season_id', $seasonId)
                 ->update(['extension_hours' => $extensionHours]);
 
             if ($extensionHours > 0) {

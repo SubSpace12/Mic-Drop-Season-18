@@ -2,9 +2,22 @@
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 class SubmissionController extends Controller
 {
+    /**
+     * Get the active season ID
+     */
+    private function getActiveSeasonId()
+    {
+        $activeSeason = DB::table('season')
+            ->where('active', true)
+            ->first();
+        
+        return $activeSeason ? $activeSeason->season_id : null;
+    }
+
     public function update(Request $request)
     {
         $data = $request->only(['submission_id', 'score', 'review', 'is_valid']);
@@ -34,9 +47,71 @@ class SubmissionController extends Controller
         return response()->json(['status' => 'success', 'success' => true]);
     }
 
+    public function updateSubmissionDetails(Request $request)
+    {
+        try {
+            // Check permissions first
+            if (auth()->user()->perms < 6) {
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Unauthorized - insufficient permissions'
+                ], 403);
+            }
+
+            $validated = $request->validate([
+                'submission_id' => 'required|integer',
+                'artist' => 'required|string|max:255',
+                'title' => 'required|string|max:255',
+                'url' => 'required|string|max:500',
+                'marked_for_resub' => 'required|boolean'
+            ]);
+
+            // Check if the column exists, if not update without it
+            $updateData = [
+                'artist' => $validated['artist'],
+                'title' => $validated['title'],
+                'url' => $validated['url'],
+            ];
+
+            // Try to check if marked_for_resub column exists
+            try {
+                $columns = Schema::getColumnListing('submissions');
+                if (in_array('marked_for_resub', $columns)) {
+                    $updateData['marked_for_resub'] = $validated['marked_for_resub'];
+                }
+            } catch (\Exception $e) {
+                // Column doesn't exist, continue without it
+            }
+
+            $updated = DB::table('submissions')
+                ->where('submission_id', $validated['submission_id'])
+                ->update($updateData);
+
+            return response()->json([
+                'success' => $updated > 0,
+                'message' => $updated > 0 ? 'Submission updated successfully' : 'No changes made or submission not found'
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation error: ' . json_encode($e->errors())
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Server error: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function submitSongs(Request $request)
     {
         try {
+            $seasonId = $this->getActiveSeasonId();
+            if (!$seasonId) {
+                return back()->withErrors(['error' => 'No active season found']);
+            }
+
             $group = $request->input('group', 0);
             $round = $request->input('round', -1);
 
@@ -44,19 +119,21 @@ class SubmissionController extends Controller
                 return back()->withErrors(['error' => 'Invalid group']);
             }
 
-            $round_info = DB::table('round')->where('round_number', $round)->first();
+            $round_info = DB::table('round')
+                ->where('round_number', $round)
+                ->where('season_id', $seasonId)
+                ->first();
 
             if (!$round_info) {
                 return back()->withErrors(['error' => 'Invalid round']);
             }
 
             $contestant_id = auth()->id();
-            $season_id = $round_info->season_id;
 
-            // NEW: Check deadline with extension hours
+            // Check deadline with extension hours
             $contestant = DB::table('contestants')
                 ->where('id', $contestant_id)
-                ->where('season_id', $season_id)
+                ->where('season_id', $seasonId)
                 ->first();
 
             if ($contestant) {
@@ -75,6 +152,7 @@ class SubmissionController extends Controller
                 ->where('contestant_id', $contestant_id)
                 ->where('round', $round)
                 ->where('md_group', $group)
+                ->where('season_id', $seasonId)
                 ->exists();
 
             if ($existing) {
@@ -85,6 +163,7 @@ class SubmissionController extends Controller
             $judges = DB::table('judges')
                 ->where('round', $round)
                 ->where('md_group', $group)
+                ->where('season_id', $seasonId)
                 ->pluck('id');
 
             if ($judges->isEmpty()) {
@@ -102,7 +181,7 @@ class SubmissionController extends Controller
                 if ($artist && $title && $url) {
                     DB::table('submissions')->insert([
                         'contestant_id' => $contestant_id,
-                        'season_id' => $season_id,
+                        'season_id' => $seasonId,
                         'judge_id' => $judge_id,
                         'round' => $round,
                         'md_group' => $group,
@@ -121,7 +200,12 @@ class SubmissionController extends Controller
                 return back()->withErrors(['error' => 'No songs were submitted']);
             }
 
-            // CHANGED: Updated success message for "Thank you for submitting" feature
+            // Update contestant's submission_date to current timestamp
+            DB::table('contestants')
+                ->where('id', $contestant_id)
+                ->where('season_id', $seasonId)
+                ->update(['submission_date' => now()]);
+
             return redirect()->back()->with('success', 'Thank you for submitting!');
         } catch (\Exception $e) {
             \Log::error('Submission error: ' . $e->getMessage());
