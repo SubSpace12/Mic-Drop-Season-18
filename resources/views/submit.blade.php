@@ -124,10 +124,13 @@ $judges = DB::table('judges')
 }
 @endphp
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+
 * {
 margin: 0;
 padding: 0;
 box-sizing: border-box;
+font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
         }
 .submission-container {
 max-width: 900px;
@@ -138,163 +141,181 @@ padding: 40px 20px;
 text-align: center;
 margin-bottom: 40px;
 padding-bottom: 30px;
-border-bottom: 3px solid #3498db;
+border-bottom: 2px solid #569cd6;
         }
 .page-header h1 {
-color: white;
+color: #4ec9b0;
 font-size: 32px;
 margin-bottom: 15px;
+font-weight: 600;
+line-height: 1.4;
         }
 .page-header h2 {
-color: #bdc3c7;
+color: #d4d4d4;
 font-size: 20px;
-font-weight: normal;
+font-weight: 400;
+line-height: 1.5;
         }
 .staff-viewing-banner {
-background: linear-gradient(135deg, #e67e22, #d35400);
-color: white;
+background: linear-gradient(135deg, #ce9178, #d4a574);
+color: #1e1e1e;
 padding: 15px;
-border-radius: 8px;
+border-radius: 4px;
 margin-bottom: 20px;
 text-align: center;
 font-weight: 600;
-box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3);
+box-shadow: 0 4px 15px rgba(206, 145, 120, 0.3);
+border: 2px solid #d4a574;
         }
 .access-denied {
-background: white;
-border-radius: 12px;
+background: #252526;
+border-radius: 8px;
 padding: 60px 40px;
 margin: 80px auto;
 max-width: 600px;
 text-align: center;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+border: 2px solid #3e3e42;
         }
 .access-denied.not-started {
-border-top: 5px solid #f39c12;
+border-top: 4px solid #d7ba7d;
         }
 .access-denied.completed {
-border-top: 5px solid #95a5a6;
+border-top: 4px solid #858585;
         }
 .access-denied.deadline-passed {
-border-top: 5px solid #e74c3c;
+border-top: 4px solid #f48771;
         }
 .access-denied.already-submitted {
-border-top: 5px solid #27ae60;
+border-top: 4px solid #608b4e;
         }
 .access-denied.permission-denied {
-border-top: 5px solid #e74c3c;
+border-top: 4px solid #f48771;
         }
 .access-denied-icon {
 font-size: 80px;
 margin-bottom: 20px;
         }
 .access-denied h1 {
-color: #2c3e50;
+color: #d4d4d4;
 font-size: 32px;
 margin-bottom: 15px;
+font-weight: 600;
         }
 .access-denied p {
-color: #7f8c8d;
+color: #a0a0a0;
 font-size: 18px;
 line-height: 1.6;
 margin-bottom: 30px;
         }
 .access-denied .round-info {
-background: #f8f9fa;
+background: #1e1e1e;
 padding: 20px;
-border-radius: 8px;
+border-radius: 4px;
 margin-bottom: 30px;
-border-left: 4px solid #3498db;
+border-left: 4px solid #569cd6;
         }
 .access-denied .round-info h3 {
-color: #2c3e50;
+color: #4ec9b0;
 font-size: 20px;
 margin-bottom: 10px;
+font-weight: 600;
         }
 .access-denied .round-info p {
-color: #34495e;
+color: #d4d4d4;
 font-size: 16px;
 margin: 5px 0;
         }
 .back-button {
 display: inline-block;
-background: linear-gradient(135deg, #3498db, #2980b9);
-color: white;
+background: linear-gradient(135deg, #0e639c, #1177bb);
+color: #d4d4d4;
 padding: 12px 30px;
-border-radius: 8px;
+border-radius: 4px;
 text-decoration: none;
 font-size: 16px;
 font-weight: 600;
 transition: all 0.3s;
-box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+box-shadow: 0 4px 15px rgba(14, 99, 156, 0.4);
+border: 2px solid #569cd6;
         }
 .back-button:hover {
-background: linear-gradient(135deg, #2980b9, #21618c);
+background: linear-gradient(135deg, #1177bb, #1c88d1);
 transform: translateY(-2px);
-box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+box-shadow: 0 6px 20px rgba(14, 99, 156, 0.6);
+border-color: #4ec9b0;
         }
 .success-message {
-background: linear-gradient(135deg, #27ae60, #229954);
-color: white;
+background: linear-gradient(135deg, #0e4429, #1e5a3e);
+color: #d4d4d4;
 padding: 20px;
-border-radius: 12px;
+border-radius: 8px;
 margin-bottom: 30px;
 text-align: center;
-box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+box-shadow: 0 4px 15px rgba(14, 68, 41, 0.4);
+border: 2px solid #4ec9b0;
         }
 .success-message h3 {
 font-size: 24px;
 margin-bottom: 10px;
+color: #6a9955;
+font-weight: 600;
         }
 .success-message p {
 font-size: 16px;
 opacity: 0.95;
         }
 .judge-section {
-background: white;
-border-radius: 12px;
+background: #252526;
+border-radius: 8px;
 padding: 30px;
 margin-bottom: 30px;
-box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+box-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
+border: 2px solid #3e3e42;
         }
 .judge-name {
-color: #2c3e50;
+color: #4ec9b0;
 font-size: 24px;
 margin-bottom: 25px;
 padding-bottom: 15px;
-border-bottom: 2px solid #ecf0f1;
+border-bottom: 2px solid #3e3e42;
+font-weight: 600;
         }
 .judge-info {
 margin-bottom: 25px;
         }
 .judge-info h3 {
-color: #34495e;
-font-size: 16px;
+color: #569cd6;
+font-size: 17px;
 font-weight: 600;
 margin-bottom: 10px;
+line-height: 1.5;
         }
 .judge-info p {
-color: #2c3e50;
-background: #f8f9fa;
+color: #e0e0e0;
+background: #1e1e1e;
 padding: 15px;
-border-radius: 8px;
-border-left: 4px solid #3498db;
-line-height: 1.6;
+border-radius: 4px;
+border-left: 4px solid #569cd6;
+line-height: 1.8;
+font-size: 15px;
         }
 .judge-info p b {
-color: #2c3e50;
+color: #4ec9b0;
+font-weight: 700;
         }
 .submission-block {
-background: #ecf0f1;
+background: #1e1e1e;
 padding: 25px;
-border-radius: 8px;
+border-radius: 4px;
 margin-top: 25px;
-border: 2px solid #3498db;
+border: 2px solid #569cd6;
         }
 .submission-block h2 {
-color: #2c3e50;
+color: #4ec9b0;
 font-size: 18px;
 margin-bottom: 20px;
+font-weight: 600;
         }
 .input-group {
 display: grid;
@@ -307,71 +328,78 @@ margin-bottom: 15px;
 .submission-block input[type="url"] {
 width: 100%;
 padding: 12px 15px;
-border: 2px solid #bdc3c7;
-border-radius: 6px;
+border: 2px solid #3e3e42;
+border-radius: 4px;
 font-size: 15px;
 transition: border-color 0.3s;
+background: #252526;
+color: #d4d4d4;
         }
 .input-group input[type="text"]:focus,
 .input-group input[type="url"]:focus,
 .submission-block input[type="url"]:focus {
 outline: none;
-border-color: #3498db;
+border-color: #569cd6;
+background: #2d2d30;
         }
 .submission-block input[type="url"] {
 grid-column: 1 / -1;
         }
 .submit-button {
-background: linear-gradient(135deg, #3498db, #2980b9);
-color: white;
+background: linear-gradient(135deg, #0e639c, #1177bb);
+color: #d4d4d4;
 padding: 15px 40px;
-border: none;
-border-radius: 8px;
+border: 2px solid #569cd6;
+border-radius: 4px;
 font-size: 18px;
 font-weight: 600;
 cursor: pointer;
 transition: all 0.3s;
-box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+box-shadow: 0 4px 15px rgba(14, 99, 156, 0.4);
 display: block;
 margin: 30px auto 0;
         }
 .submit-button:hover {
-background: linear-gradient(135deg, #2980b9, #21618c);
+background: linear-gradient(135deg, #1177bb, #1c88d1);
 transform: translateY(-2px);
-box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+box-shadow: 0 6px 20px rgba(14, 99, 156, 0.6);
+border-color: #4ec9b0;
         }
 .submit-button:active {
 transform: translateY(0);
         }
 .submit-button:disabled {
-background: #95a5a6;
+background: #3e3e42;
 cursor: not-allowed;
 transform: none;
 box-shadow: none;
+border-color: #3e3e42;
+color: #858585;
         }
 .submit-button:disabled:hover {
-background: #95a5a6;
+background: #3e3e42;
 transform: none;
 box-shadow: none;
+border-color: #3e3e42;
         }
 .deadline-info {
-background: #fff3cd;
-border: 2px solid #ffc107;
-border-radius: 8px;
+background: #3e2723;
+border: 2px solid #d7ba7d;
+border-radius: 4px;
 padding: 15px;
 margin-bottom: 20px;
 text-align: center;
         }
 .deadline-info p {
-color: #856404;
+color: #d7ba7d;
 font-weight: 600;
 margin: 0;
         }
 .deadline-info .extension-note {
 font-size: 14px;
-color: #856404;
+color: #ce9178;
 margin-top: 5px;
-font-weight: normal;
+font-weight: 400;
         }
 @media (max-width: 768px) {
 .input-group {
@@ -397,11 +425,11 @@ font-size: 16px;
 {{-- Access Denied Page for Invalid Round Status --}}
 <div class="access-denied {{ $statusError == 'not_started' ? 'not-started' : 'completed' }}">
 @if($statusError == 'not_started')
-<div class="access-denied-icon">⏳</div>
+<div class="access-denied-icon">PENDING</div>
 <h1>Round Not Started Yet</h1>
 <p>This round hasn't begun yet. Submissions are not currently being accepted.</p>
 @else
-<div class="access-denied-icon">🏁</div>
+<div class="access-denied-icon">COMPLETE</div>
 <h1>Round Already Completed</h1>
 <p>This round has ended and is no longer accepting submissions.</p>
 @endif
@@ -411,32 +439,32 @@ font-size: 16px;
 <p><strong>Group:</strong> {{ $group == 0 ? 'Merge' : 'Group ' . $group }}</p>
 <p><strong>Status:</strong>
 @if($statusError == 'not_started')
-<span style="color: #f39c12; font-weight: 600;">Pending</span>
+<span style="color: #d7ba7d; font-weight: 600;">Pending</span>
 @else
-<span style="color: #95a5a6; font-weight: 600;">Completed</span>
+<span style="color: #858585; font-weight: 600;">Completed</span>
 @endif
 </p>
 </div>
 @if($statusError == 'not_started')
-<p style="font-size: 16px; color: #7f8c8d;">
+<p style="font-size: 16px; color: #a0a0a0;">
                         Please wait for the round to be activated by an administrator.
                         You'll be notified when submissions open.
 </p>
 @else
-<p style="font-size: 16px; color: #7f8c8d;">
+<p style="font-size: 16px; color: #a0a0a0;">
                         Thank you for participating! Check the results page to see the outcomes.
 </p>
 @endif
-<a href="/dashboard" class="back-button">← Back to Dashboard</a>
+<a href="/dashboard" class="back-button">Back to Dashboard</a>
 </div>
 @elseif($accessDenied)
 {{-- Access Denied for Permission Issues --}}
 <div class="access-denied permission-denied">
-<div class="access-denied-icon">🚫</div>
+<div class="access-denied-icon">ACCESS DENIED</div>
 @if($accessDeniedReason == 'not_contestant')
 <h1>Access Denied</h1>
 <p>You must be a registered contestant to submit songs.</p>
-<p style="font-size: 16px; color: #7f8c8d;">
+<p style="font-size: 16px; color: #a0a0a0;">
                         If you believe this is an error, please contact an administrator.
 </p>
 @elseif($accessDeniedReason == 'wrong_group')
@@ -450,25 +478,25 @@ font-size: 16px;
 <p><strong>Your Group:</strong> Group {{ $contestant->md_group }}</p>
 @endif
 </div>
-<p style="font-size: 16px; color: #7f8c8d;">
+<p style="font-size: 16px; color: #a0a0a0;">
                         Please submit songs for your assigned group only.
 </p>
 @elseif($accessDeniedReason == 'not_logged_in')
 <h1>Login Required</h1>
 <p>You must be logged in to submit songs.</p>
-<p style="font-size: 16px; color: #7f8c8d;">
+<p style="font-size: 16px; color: #a0a0a0;">
                         Please log in and try again.
 </p>
 @else
 <h1>Access Denied</h1>
 <p>You do not have permission to submit songs for this round.</p>
 @endif
-<a href="/dashboard" class="back-button">← Back to Dashboard</a>
+<a href="/dashboard" class="back-button">Back to Dashboard</a>
 </div>
 @elseif(!$isStaffViewing && $deadlinePassed)
 {{-- Deadline Passed Screen --}}
 <div class="access-denied deadline-passed">
-<div class="access-denied-icon">⏰</div>
+<div class="access-denied-icon">DEADLINE PASSED</div>
 <h1>Deadline Has Passed</h1>
 <p>The submission deadline for this round has expired.</p>
 <div class="round-info">
@@ -477,26 +505,26 @@ font-size: 16px;
 <p><strong>Group:</strong> {{ $group == 0 ? 'Merge' : 'Group ' . $group }}</p>
 <p><strong>Deadline was:</strong>
 <span class="deadline-display" data-deadline="{{ $baseDeadline->format('c') }}"
-style="color: #e74c3c; font-weight: 600;">
+style="color: #f48771; font-weight: 600;">
 {{ $effectiveDeadline->format('M j, Y g:i A') }} (Server Time)
 </span>
 </p>
 @if($contestant && $contestant->extension_hours > 0)
-<p style="font-size: 14px; color: #7f8c8d; margin-top: 10px;">
+<p style="font-size: 14px; color: #a0a0a0; margin-top: 10px;">
 <em>This included your {{ $contestant->extension_hours }}-hour extension</em>
 </p>
 @endif
 </div>
-<p style="font-size: 16px; color: #7f8c8d;">
+<p style="font-size: 16px; color: #a0a0a0;">
                     Unfortunately, you can no longer submit songs for this round.
                     If you believe this is an error, please contact an administrator.
 </p>
-<a href="/dashboard" class="back-button">← Back to Dashboard</a>
+<a href="/dashboard" class="back-button">Back to Dashboard</a>
 </div>
 @elseif(!$isStaffViewing && $alreadySubmitted)
 {{-- Already Submitted Screen --}}
 <div class="access-denied already-submitted">
-<div class="access-denied-icon">✅</div>
+<div class="access-denied-icon">SUBMITTED</div>
 <h1>Submission Already Received</h1>
 <p>You have already submitted your songs for this round.</p>
 <div class="round-info">
@@ -504,17 +532,17 @@ style="color: #e74c3c; font-weight: 600;">
 <p><strong>Round:</strong> {{ $round }}</p>
 <p><strong>Group:</strong> {{ $group == 0 ? 'Merge' : 'Group ' . $group }}</p>
 <p><strong>Status:</strong>
-<span style="color: #27ae60; font-weight: 600;">Submitted</span>
+<span style="color: #608b4e; font-weight: 600;">Submitted</span>
 </p>
 </div>
-<p style="font-size: 16px; color: #7f8c8d;">
+<p style="font-size: 16px; color: #a0a0a0;">
                     Your submission has been recorded successfully.
-                    Good luck with your songs! 🎵
+                    Good luck with your songs!
 </p>
-<p style="font-size: 14px; color: #95a5a6; margin-top: 20px;">
+<p style="font-size: 14px; color: #858585; margin-top: 20px;">
                     Need to make changes? Contact an administrator for assistance.
 </p>
-<a href="/dashboard" class="back-button">← Back to Dashboard</a>
+<a href="/dashboard" class="back-button">Back to Dashboard</a>
 </div>
 @else
 {{-- Normal Submission Page / Staff Viewing --}}
@@ -525,18 +553,18 @@ style="color: #e74c3c; font-weight: 600;">
 
 @if($isStaffViewing)
 <div class="staff-viewing-banner">
-                🛠️ Staff View Mode - You are viewing this form as staff. Submission is disabled.
+                [STAFF] View Mode - You are viewing this form as staff. Submission is disabled.
 </div>
 @endif
 
 @if(session('success'))
 <div class="success-message">
-<h3>🎉 {{ session('success') }}</h3>
+<h3>{{ session('success') }}</h3>
 <p>Your songs have been submitted successfully. Good luck!</p>
 </div>
 @endif
 @if($errors->any())
-<div style="background: #e74c3c; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+<div style="background: #5a1e1e; color: #f48771; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 2px solid #f48771;">
 <ul style="margin: 0; padding-left: 20px;">
 @foreach($errors->all() as $error)
 <li>{{ $error }}</li>
@@ -547,7 +575,7 @@ style="color: #e74c3c; font-weight: 600;">
 {{-- Show deadline info with extension if applicable --}}
 @if(!$isStaffViewing && $contestant && $effectiveDeadline)
 <div class="deadline-info">
-<p>⏰ Submission Deadline:
+<p>[DEADLINE] Submission Deadline:
 <span class="deadline-display" data-deadline="{{ $baseDeadline->format('c') }}"
 style="font-weight: 600;">
                             Calculating...

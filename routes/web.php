@@ -1,12 +1,13 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SubmissionController;
-use App\Http\Controllers\JudgeAppController;
-use App\Http\Controllers\AppVoteController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\SeasonController;
+use App\Http\Controllers\AppVoteController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SlideBGController;
+use App\Http\Controllers\JudgeAppController;
+use App\Http\Controllers\SubmissionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -57,6 +58,9 @@ Route::get('/admin', function() {
     return view('admin');
 });
 
+Route::post('/join-season', [SeasonController::class, 'joinSeason'])
+    ->middleware('auth')
+    ->name('join.season');
 
 Route::post('/submit-songs', [SubmissionController::class, 'submitSongs'])
     ->name('submit.songs')

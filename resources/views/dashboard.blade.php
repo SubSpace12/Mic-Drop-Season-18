@@ -20,6 +20,42 @@
             ->orderBy('round_number')
             ->get() : collect();
 
+        // Check if user needs to join the season
+        $needsToJoin = false;
+        $canJoinSeason = false;
+        $firstRound = null;
+        
+        if (auth()->check() && $seasonId) {
+            // Check if user is in contestants table for this season
+            $isContestant = DB::table('contestants')
+                ->where('id', auth()->id())
+                ->where('season_id', $seasonId)
+                ->exists();
+            
+            if (!$isContestant) {
+                // Check if first round deadline has passed
+                $firstRound = DB::table('round')
+                    ->where('season_id', $seasonId)
+                    ->where('round_number', 1)
+                    ->first();
+                
+                if ($firstRound) {
+                    $firstRoundDeadline = new DateTime($firstRound->deadline);
+                    $now = new DateTime();
+                    
+                    // Can join if deadline hasn't passed
+                    if ($now <= $firstRoundDeadline) {
+                        $needsToJoin = true;
+                        $canJoinSeason = true;
+                    }
+                } else {
+                    // No first round yet, can join
+                    $needsToJoin = true;
+                    $canJoinSeason = true;
+                }
+            }
+        }
+
         // Get user permission level and role-specific info
         $userPerms = 0;
         $userGroup = null;
@@ -84,6 +120,127 @@
             padding: 2rem;
         }
 
+        /* Join Season Screen */
+        .join-season-container {
+            max-width: 700px;
+            margin: 4rem auto;
+            background: #252526;
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+            border: 2px solid #4ec9b0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .join-season-container::before {
+            content: '>';
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 3rem;
+            opacity: 0.1;
+            color: #4ec9b0;
+        }
+
+        .join-season-container::after {
+            content: '{ }';
+            position: absolute;
+            bottom: 20px;
+            left: 30px;
+            font-size: 3rem;
+            opacity: 0.1;
+            color: #608b4e;
+        }
+
+        .join-season-icon {
+            text-align: center;
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .join-season-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #4ec9b0;
+            margin-bottom: 1rem;
+        }
+
+        .join-season-description {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+        }
+
+        .season-info-box {
+            background: #1e1e1e;
+            border: 2px solid #3e3e42;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .season-info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #3e3e42;
+            color: #d4d4d4;
+        }
+
+        .season-info-item:last-child {
+            border-bottom: none;
+        }
+
+        .season-info-label {
+            color: #569cd6;
+            font-weight: 600;
+        }
+
+        .season-info-value {
+            color: #4ec9b0;
+            font-weight: 600;
+        }
+
+        .join-button {
+            width: 100%;
+            padding: 1.5rem;
+            background: linear-gradient(135deg, #0e4429, #1e5a3e);
+            color: #d4d4d4;
+            border: 2px solid #4ec9b0;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(14, 68, 41, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .join-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(78, 201, 176, 0.6);
+            background: linear-gradient(135deg, #1e5a3e, #2e6a4e);
+        }
+
+        .join-button:active {
+            transform: translateY(0);
+        }
+
         .welcome-message {
             background: linear-gradient(135deg, #0e639c 0%, #1177bb 50%, #1c88d1 100%);
             color: #d4d4d4;
@@ -132,7 +289,7 @@
 
         .rounds-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr); /* show 4 per row */
+            grid-template-columns: repeat(4, 1fr);
             gap: 2rem;
             margin-top: 2rem;
         }
@@ -169,7 +326,6 @@
             color: #4ec9b0;
         }
 
-        /* Status 0 - Coming Soon */
         .round-card.status-pending {
             background: #1e1e1e;
             cursor: not-allowed;
@@ -185,7 +341,6 @@
             transform: none;
         }
 
-        /* Status 1 - Active */
         .round-card.status-active {
             border: 2px solid #4ec9b0;
             background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
@@ -210,7 +365,6 @@
             box-shadow: 0 8px 30px rgba(78, 201, 176, 0.5);
         }
 
-        /* Status 1 - Active but not clickable for spectators */
         .round-card.status-active.not-clickable {
             cursor: not-allowed;
             opacity: 0.6;
@@ -222,7 +376,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Status 2 - Completed */
         .round-card.status-completed {
             border: 2px solid #608b4e;
             background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
@@ -411,7 +564,6 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        /* Group Selection Modal */
         .modal {
             display: none;
             position: fixed;
@@ -516,7 +668,6 @@
             border-color: #4ec9b0;
         }
 
-        /* Staff Action Modal */
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -609,7 +760,7 @@
 
         @media (max-width: 768px) {
             .rounds-grid {
-                grid-template-columns: 1fr 1fr; /* 2 per row on mobile */
+                grid-template-columns: 1fr 1fr;
             }
 
             .group-buttons,
@@ -632,11 +783,41 @@
         @endguest
 
         @auth
-            @if($rounds->isEmpty())
+            @if($needsToJoin && $canJoinSeason && auth()->user()->perms < 6)
+                {{-- Join Season Screen --}}
+                <div class="join-season-container">
+                    <div class="join-season-icon">🎵</div>
+                    <h1 class="join-season-title">Join Season {{ $activeSeason->season_id }}</h1>
+                    <p class="join-season-description">
+                        You're not currently registered for this season. Click below to join and start competing!
+                    </p>
+
+                    @if($firstRound)
+                        <div class="season-info-box">
+                            <div class="season-info-item">
+                                <span class="season-info-label">First Round Deadline:</span>
+                                <span class="season-info-value">{{ date('M j, Y g:i A', strtotime($firstRound->deadline)) }}</span>
+                            </div>
+                            <div class="season-info-item">
+                                <span class="season-info-label">Status:</span>
+                                <span class="season-info-value">Registration Open</span>
+                            </div>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('join.season') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="join-button">
+                            Join Season Now
+                        </button>
+                    </form>
+                </div>
+            @elseif($rounds->isEmpty())
                 <div class="no-rounds">
                     No rounds have been created yet. Check back soon.
                 </div>
             @else
+                {{-- Normal Round Display --}}
                 <div class="rounds-grid">
                     @foreach($rounds as $round)
                         @php
@@ -647,7 +828,6 @@
                                 default => 'status-pending'
                             };
 
-                            // Spectators can't click active rounds
                             if ($round->status == 1 && $userRole == 'spectator') {
                                 $statusClass .= ' not-clickable';
                             }
@@ -681,11 +861,9 @@
                             </div>
 
                             @if($round->status == 0)
-                                {{-- Coming soon - hide details --}}
                                 <h3 class="round-title">Round {{ $round->round_number }}</h3>
                                 <p class="round-description">Details will be revealed when the round starts</p>
                             @else
-                                {{-- Active or completed - show details --}}
                                 <h3 class="round-title">{{ $round->title }}</h3>
                                 <p class="round-description">{{ $round->description }}</p>
                             @endif
@@ -736,34 +914,24 @@
             <p class="modal-description">Which group's results would you like to view?</p>
 
             <div class="group-buttons">
-                <button class="group-button" onclick="selectGroup(1)">
-                    Group 1
-                </button>
-                <button class="group-button" onclick="selectGroup(2)">
-                    Group 2
-                </button>
-                <button class="group-button" onclick="selectGroup(3)">
-                    Group 3
-                </button>
+                <button class="group-button" onclick="selectGroup(1)">Group 1</button>
+                <button class="group-button" onclick="selectGroup(2)">Group 2</button>
+                <button class="group-button" onclick="selectGroup(3)">Group 3</button>
             </div>
 
             <button class="cancel-button" onclick="closeModal()">Cancel</button>
         </div>
     </div>
 
-    <!-- Staff Action Modal (for staff choosing action) -->
+    <!-- Staff Action Modal -->
     <div id="staffModal" class="modal">
         <div class="modal-content">
             <h2 class="modal-header">Choose Action</h2>
             <p class="modal-description">What would you like to do?</p>
 
             <div class="action-buttons">
-                <button class="action-button" onclick="staffAction('submit')">
-                    View submission form
-                </button>
-                <button class="action-button" onclick="staffAction('judge')">
-                    View judging sheets
-                </button>
+                <button class="action-button" onclick="staffAction('submit')">View submission form</button>
+                <button class="action-button" onclick="staffAction('judge')">View judging sheets</button>
             </div>
 
             <button class="cancel-button" onclick="closeModal()">Cancel</button>
@@ -777,15 +945,9 @@
             <p class="modal-description" id="staffGroupDescription">Which group would you like to work with?</p>
 
             <div class="group-buttons">
-                <button class="group-button" onclick="selectStaffGroup(1)">
-                    Group 1
-                </button>
-                <button class="group-button" onclick="selectStaffGroup(2)">
-                    Group 2
-                </button>
-                <button class="group-button" onclick="selectStaffGroup(3)">
-                    Group 3
-                </button>
+                <button class="group-button" onclick="selectStaffGroup(1)">Group 1</button>
+                <button class="group-button" onclick="selectStaffGroup(2)">Group 2</button>
+                <button class="group-button" onclick="selectStaffGroup(3)">Group 3</button>
             </div>
 
             <button class="cancel-button" onclick="closeModal()">Cancel</button>
@@ -799,23 +961,14 @@
         let staffChosenAction = null;
 
         function handleRoundClick(roundNumber, status, isMerge, userRole, userGroup) {
-            // Status 0 - Do nothing (coming soon)
-            if (status === 0) {
-                return;
-            }
-
-            // Spectators can't interact with active rounds
-            if (status === 1 && userRole === 'spectator') {
-                return;
-            }
+            if (status === 0) return;
+            if (status === 1 && userRole === 'spectator') return;
 
             currentRound = roundNumber;
             currentIsMerge = isMerge;
 
-            // Status 1 - Active round
             if (status === 1) {
                 if (userRole === 'contestant') {
-                    // Contestant - direct to submission form
                     if (isMerge) {
                         window.location.href = `/submit?round=${roundNumber}`;
                     } else {
@@ -826,7 +979,6 @@
                         window.location.href = `/submit?round=${roundNumber}&group=${userGroup}`;
                     }
                 } else if (userRole === 'judge') {
-                    // Judge - direct to judging page
                     if (isMerge) {
                         window.location.href = `/judging?round=${roundNumber}`;
                     } else {
@@ -837,18 +989,14 @@
                         window.location.href = `/judging?round=${roundNumber}&group=${userGroup}`;
                     }
                 } else if (userRole === 'staff') {
-                    // Staff - show action selection modal
                     openStaffModal();
                 }
             }
 
-            // Status 2 - Completed round (results)
             if (status === 2) {
                 if (isMerge) {
-                    // Merge round - direct to results
                     window.location.href = `/results?round=${roundNumber}`;
                 } else {
-                    // Group round - show modal to select group
                     currentAction = 'results';
                     openGroupModal();
                 }
@@ -886,18 +1034,15 @@
 
         function staffAction(action) {
             staffChosenAction = action;
-            // Close only the staff modal, don't reset variables
             document.getElementById('staffModal').classList.remove('show');
 
             if (currentIsMerge) {
-                // Merge round - direct to page
                 if (action === 'submit') {
                     window.location.href = `/submit?round=${currentRound}`;
                 } else if (action === 'judge') {
                     window.location.href = `/judging?round=${currentRound}`;
                 }
             } else {
-                // Group round - ask for group
                 if (action === 'submit') {
                     document.getElementById('staffGroupDescription').textContent = 'Which group would you like to submit for?';
                 } else if (action === 'judge') {
@@ -908,9 +1053,7 @@
         }
 
         function selectStaffGroup(group) {
-            console.log(staffChosenAction);
             if (staffChosenAction === 'submit') {
-
                 window.location.href = `/submit?round=${currentRound}&group=${group}`;
             } else if (staffChosenAction === 'judge') {
                 window.location.href = `/judging?round=${currentRound}&group=${group}`;
@@ -918,7 +1061,6 @@
             closeModal();
         }
 
-        // Close modal when clicking outside
         window.onclick = function (event) {
             const groupModal = document.getElementById('groupModal');
             const staffModal = document.getElementById('staffModal');
@@ -929,7 +1071,6 @@
             }
         }
 
-        // Close modal with Escape key
         document.addEventListener('keydown', function (event) {
             if (event.key === 'Escape') {
                 closeModal();

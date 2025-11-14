@@ -1,27 +1,35 @@
 <x-app-layout>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+        }
+
         .results-container {
             display: flex;
-            height: calc(100vh - 64px); /* Subtract header height */
+            height: calc(100vh - 64px);
             overflow: hidden;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, #1e1e1e 0%, #252526 100%);
         }
 
         .sidebar {
             width: 280px;
-            background: rgba(44, 62, 80, 0.9);
-            backdrop-filter: blur(10px);
+            background: #2d2d30;
             color: white;
             overflow-y: auto;
-            box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            border-right: 2px solid #3e3e42;
         }
 
         .sidebar h2 {
             padding: 20px;
-            background: rgba(26, 37, 47, 0.9);
+            background: #1e1e1e;
             font-size: 18px;
-            border-bottom: 1px solid rgba(52, 73, 94, 0.5);
+            border-bottom: 2px solid #3e3e42;
+            color: #4ec9b0;
+            font-weight: 600;
         }
 
         .slide-nav {
@@ -31,34 +39,37 @@
         .slide-nav li {
             padding: 15px 20px;
             cursor: pointer;
-            border-bottom: 1px solid rgba(52, 73, 94, 0.5);
+            border-bottom: 1px solid #3e3e42;
             transition: background 0.2s;
+            color: #d4d4d4;
         }
 
         .slide-nav li:hover {
-            background: rgba(52, 73, 94, 0.7);
+            background: #3e3e42;
         }
 
         .slide-nav li.active {
-            background: rgba(52, 152, 219, 0.8);
-            border-left: 4px solid #2980b9;
+            background: #0e639c;
+            border-left: 4px solid #4ec9b0;
+            color: white;
         }
 
         .main-content {
             flex: 1;
             overflow-y: auto;
             padding: 40px;
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            background: linear-gradient(135deg, #1e1e1e 0%, #252526 100%);
         }
 
         .result-slide {
             display: none;
             max-width: 1200px;
             margin: 0 auto;
-            border-radius: 12px;
+            border-radius: 8px;
             padding: 30px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
             position: relative;
+            border: 2px solid #3e3e42;
         }
 
         .result-slide.active {
@@ -72,107 +83,104 @@
             align-items: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            border-bottom: 2px solid #3e3e42;
         }
 
         .rank-box, .score-box {
-            background: rgba(52, 73, 94, 0.85);
-            backdrop-filter: blur(10px);
-            color: white;
+            background: #2d2d30;
+            color: #d4d4d4;
             padding: 15px 25px;
-            border-radius: 12px;
+            border-radius: 4px;
             font-size: 24px;
             font-weight: bold;
             text-align: center;
             min-width: 80px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 2px solid #3e3e42;
         }
 
         .rank-box.gold {
-            background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 165, 0, 0.9));
-            backdrop-filter: blur(10px);
-            color: #000;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
-            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.6);
+            background: linear-gradient(135deg, #d4a574, #b8935f);
+            color: #1e1e1e;
+            border-color: #d4a574;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.6);
         }
 
         .rank-box.silver {
-            background: linear-gradient(135deg, rgba(192, 192, 192, 0.9), rgba(168, 168, 168, 0.9));
-            backdrop-filter: blur(10px);
-            color: #000;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.5);
-            box-shadow: 0 4px 15px rgba(192, 192, 192, 0.6);
+            background: linear-gradient(135deg, #858585, #6e6e6e);
+            color: #1e1e1e;
+            border-color: #858585;
+            box-shadow: 0 4px 15px rgba(133, 133, 133, 0.6);
         }
 
         .rank-box.bronze {
-            background: linear-gradient(135deg, rgba(205, 127, 50, 0.9), rgba(139, 69, 19, 0.9));
-            backdrop-filter: blur(10px);
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            box-shadow: 0 4px 15px rgba(205, 127, 50, 0.6);
+            background: linear-gradient(135deg, #8b5a3c, #6d4428);
+            color: #d4d4d4;
+            border-color: #8b5a3c;
+            box-shadow: 0 4px 15px rgba(139, 90, 60, 0.6);
         }
 
         .rank-box.eliminated {
-            background: linear-gradient(135deg, rgba(231, 76, 60, 0.9), rgba(192, 57, 43, 0.9));
-            backdrop-filter: blur(10px);
-            color: #fff;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
-            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.8);
-            animation: pulse 2s infinite;
+            background: linear-gradient(135deg, #7a2828, #5a1e1e);
+            color: #d4d4d4;
+            border-color: #c85050;
+            box-shadow: 0 4px 15px rgba(200, 80, 80, 0.8);
+            animation: terminal-blink 2s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+        @keyframes terminal-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .score-box {
-            background: rgba(46, 204, 113, 0.85);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.4);
+            background: #0e4429;
+            color: #4ec9b0;
+            border-color: #4ec9b0;
+            box-shadow: 0 4px 15px rgba(78, 201, 176, 0.4);
         }
 
         .contestant-name {
             font-size: 28px;
             font-weight: bold;
             text-align: center;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-            background: rgba(0, 0, 0, 0.4);
+            color: #4ec9b0;
+            background: #1e1e1e;
             padding: 10px 20px;
-            border-radius: 8px;
-            backdrop-filter: blur(5px);
+            border-radius: 4px;
+            border: 2px solid #3e3e42;
         }
 
         .judge-block {
             margin-bottom: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
+            border: 2px solid #3e3e42;
+            border-radius: 4px;
             overflow: hidden;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: #1e1e1e;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
         .judge-header {
             display: grid;
             grid-template-columns: 1fr 2fr 1fr;
-            background: rgba(52, 73, 94, 0.85);
-            backdrop-filter: blur(10px);
-            color: white;
+            background: #2d2d30;
+            color: #d4d4d4;
             padding: 12px 20px;
             font-size: 14px;
             align-items: center;
+            border-bottom: 2px solid #3e3e42;
         }
 
         .judge-name {
             text-align: left;
             font-weight: 600;
+            color: #569cd6;
         }
 
         .song-title {
             text-align: center;
             font-weight: 600;
+            color: #d4d4d4;
         }
 
         .judge-score {
@@ -182,85 +190,82 @@
         }
 
         .judge-score.low {
-            color: #e74c3c;
+            color: #f48771;
         }
 
         .judge-score.high {
-            color: #2ecc71;
+            color: #6a9955;
         }
 
         .judge-score.perfect {
-            color: #f39c12;
-            text-shadow: 0 0 10px rgba(243, 156, 18, 0.8);
+            color: #d7ba7d;
         }
 
         .review-body {
             padding: 20px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(5px);
+            background: #252526;
             min-height: 80px;
             line-height: 1.6;
-            color: white;
+            color: #d4d4d4;
             text-align: center;
-            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
         }
 
         .no-results {
             text-align: center;
             padding: 40px;
-            color: white;
+            color: #a0a0a0;
             font-size: 18px;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
+            background: #252526;
+            border-radius: 8px;
             margin: 40px auto;
             max-width: 600px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border: 2px solid #3e3e42;
         }
 
         .announcement {
             text-align: center;
             padding: 60px 40px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
+            background: #2d2d30;
+            border-radius: 8px;
             margin: 40px auto;
             max-width: 800px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
-            border-left: 6px solid #e74c3c;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border-left: 6px solid #f48771;
+            border: 2px solid #3e3e42;
         }
 
         .announcement-icon {
             font-size: 64px;
             margin-bottom: 20px;
+            color: #d7ba7d;
         }
 
         .announcement h2 {
-            color: #e74c3c;
+            color: #f48771;
             margin-bottom: 20px;
             font-size: 28px;
+            font-weight: 600;
         }
 
         .announcement p {
-            color: #ecf0f1;
+            color: #d4d4d4;
             font-size: 18px;
             line-height: 1.6;
             margin-bottom: 10px;
         }
 
         .bg-upload-section {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
+            background: #2d2d30;
             padding: 30px;
-            border-radius: 12px;
+            border-radius: 8px;
             margin-bottom: 30px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border: 2px solid #3e3e42;
         }
 
         .bg-upload-section h3 {
-            color: white;
+            color: #4ec9b0;
             margin-bottom: 20px;
             font-size: 20px;
             font-weight: bold;
@@ -274,41 +279,39 @@
         }
 
         .bg-upload-item {
-            border: 2px dashed rgba(255, 255, 255, 0.3);
-            border-radius: 8px;
+            border: 2px dashed #3e3e42;
+            border-radius: 4px;
             padding: 20px;
             text-align: center;
             transition: all 0.3s;
-            background: rgba(0, 0, 0, 0.3);
+            background: #1e1e1e;
         }
 
         .bg-upload-item:hover {
-            border-color: #3498db;
-            background: rgba(52, 152, 219, 0.2);
+            border-color: #569cd6;
+            background: #252526;
         }
 
         .bg-upload-item label {
             display: block;
             font-weight: 600;
             margin-bottom: 10px;
-            color: white;
+            color: #d4d4d4;
         }
 
-        /* Floating Staff Button */
         .staff-tools-button {
             position: fixed;
             bottom: 30px;
             right: 30px;
             width: 60px;
             height: 60px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(52, 152, 219, 0.9), rgba(41, 128, 185, 0.9));
-            backdrop-filter: blur(10px);
+            border-radius: 4px;
+            background: linear-gradient(135deg, #0e639c, #1177bb);
             color: white;
-            border: none;
+            border: 2px solid #569cd6;
             font-size: 24px;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(52, 152, 219, 0.6);
+            box-shadow: 0 4px 20px rgba(14, 99, 156, 0.6);
             transition: all 0.3s;
             z-index: 1000;
             display: flex;
@@ -317,11 +320,11 @@
         }
 
         .staff-tools-button:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 30px rgba(52, 152, 219, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(14, 99, 156, 0.8);
+            border-color: #4ec9b0;
         }
 
-        /* Modal Overlay */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -329,8 +332,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 9998;
         }
 
@@ -338,7 +340,6 @@
             display: block;
         }
 
-        /* Modal Container */
         .bg-upload-modal {
             display: none;
             position: fixed;
@@ -349,12 +350,11 @@
             max-width: 900px;
             max-height: 90vh;
             overflow-y: auto;
-            background: rgba(26, 37, 47, 0.95);
-            backdrop-filter: blur(15px);
-            border-radius: 16px;
+            background: #2d2d30;
+            border-radius: 8px;
             padding: 30px;
-            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.9);
+            border: 2px solid #3e3e42;
             z-index: 9999;
         }
 
@@ -380,22 +380,23 @@
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 2px solid #3e3e42;
         }
 
         .modal-header h3 {
-            color: white;
+            color: #4ec9b0;
             font-size: 24px;
             margin: 0;
+            font-weight: 600;
         }
 
         .modal-close {
-            background: rgba(231, 76, 60, 0.8);
+            background: #7a2828;
             color: white;
-            border: none;
+            border: 2px solid #c85050;
             width: 35px;
             height: 35px;
-            border-radius: 50%;
+            border-radius: 4px;
             font-size: 20px;
             cursor: pointer;
             transition: all 0.3s;
@@ -405,22 +406,23 @@
         }
 
         .modal-close:hover {
-            background: rgba(231, 76, 60, 1);
-            transform: rotate(90deg);
+            background: #a03535;
+            transform: scale(1.1);
         }
 
         .debug-info-box {
-            background: rgba(0, 0, 0, 0.4);
+            background: #1e1e1e;
             padding: 15px;
-            border-radius: 8px;
+            border-radius: 4px;
             margin-bottom: 20px;
             font-family: monospace;
             font-size: 12px;
-            color: #ecf0f1;
+            color: #d4d4d4;
+            border: 2px solid #3e3e42;
         }
 
         .debug-info-box strong {
-            color: #3498db;
+            color: #569cd6;
         }
 
         .bg-upload-item input[type="file"] {
@@ -428,21 +430,26 @@
             width: 100%;
             padding: 8px;
             font-size: 12px;
+            background: #252526;
+            color: #d4d4d4;
+            border: 2px solid #3e3e42;
+            border-radius: 4px;
         }
 
         .bg-upload-item button {
             margin-top: 10px;
             padding: 8px 16px;
-            background: #3498db;
+            background: #0e639c;
             color: white;
-            border: none;
+            border: 2px solid #569cd6;
             border-radius: 4px;
             cursor: pointer;
             font-weight: 600;
         }
 
         .bg-upload-item button:hover {
-            background: #2980b9;
+            background: #1177bb;
+            border-color: #4ec9b0;
         }
 
         .bg-preview {
@@ -450,33 +457,36 @@
             max-width: 100%;
             max-height: 100px;
             border-radius: 4px;
+            border: 2px solid #3e3e42;
         }
 
         .access-denied {
             text-align: center;
             padding: 60px 40px;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
+            background: #2d2d30;
+            border-radius: 8px;
             margin: 40px auto;
             max-width: 600px;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.5);
-            border-left: 6px solid #e74c3c;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border-left: 6px solid #f48771;
+            border: 2px solid #3e3e42;
         }
 
         .access-denied-icon {
             font-size: 64px;
             margin-bottom: 20px;
+            color: #f48771;
         }
 
         .access-denied h2 {
-            color: #e74c3c;
+            color: #f48771;
             margin-bottom: 20px;
             font-size: 28px;
+            font-weight: 600;
         }
 
         .access-denied p {
-            color: #ecf0f1;
+            color: #d4d4d4;
             font-size: 18px;
         }
     </style>
@@ -510,7 +520,7 @@
         // Show access denied message
         echo '<div class="main-content" style="flex: 1; padding: 40px;">
             <div class="access-denied">
-                <div class="access-denied-icon">🔒</div>
+                <div class="access-denied-icon">ACCESS DENIED</div>
                 <h2>Access Denied</h2>
                 <p>Results for this round are not yet available.</p>
                 <p>Please wait until the results are officially released.</p>
@@ -668,7 +678,7 @@
     @if ($isStaff)
         <!-- Floating Staff Tools Button -->
         <button class="staff-tools-button" onclick="toggleStaffModal()" title="Staff Tools">
-            ⚙️
+            [ADMIN]
         </button>
 
         <!-- Modal Overlay -->
@@ -677,15 +687,15 @@
         <!-- Background Upload Modal -->
         <div class="bg-upload-modal" id="staffModal">
             <div class="modal-header">
-                <h3>🎨 Slide Background Manager</h3>
-                <button class="modal-close" onclick="toggleStaffModal()">×</button>
+                <h3>Slide Background Manager</h3>
+                <button class="modal-close" onclick="toggleStaffModal()">X</button>
             </div>
 
-            <p style="color: #ecf0f1; margin-bottom: 20px;">Upload background images for different placement slides. Images should be at least 1200x800px for best results.</p>
+            <p style="color: #d4d4d4; margin-bottom: 20px;">Upload background images for different placement slides. Images should be at least 1200x800px for best results.</p>
             
             @if($roundInfo)
                 <div class="debug-info-box">
-                    <strong>🔍 Debug Info:</strong><br>
+                    <strong>[DEBUG INFO]</strong><br>
                     @if($roundInfo->slidebg_first)
                         1st: {{ asset('storage/' . $roundInfo->slidebg_first) }}<br>
                     @endif
@@ -713,53 +723,53 @@
                 
                 <div class="bg-upload-grid">
                     <div class="bg-upload-item">
-                        <label>🥇 1st Place</label>
+                        <label>[1ST PLACE]</label>
                         <input type="file" name="slidebg_first" accept="image/*">
                         @if($roundInfo && $roundInfo->slidebg_first)
-                            <img src="{{ asset('storage/' . $roundInfo->slidebg_first) }}" class="bg-preview" alt="1st place background" onerror="this.style.border='2px solid red'; this.alt='⚠️ Image not found';">
-                            <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">{{ $roundInfo->slidebg_first }}</div>
+                            <img src="{{ asset('storage/' . $roundInfo->slidebg_first) }}" class="bg-preview" alt="1st place background" onerror="this.style.border='2px solid red'; this.alt='Image not found';">
+                            <div style="font-size: 10px; color: #858585; margin-top: 5px;">{{ $roundInfo->slidebg_first }}</div>
                         @endif
                     </div>
 
                     <div class="bg-upload-item">
-                        <label>🥈 2nd Place</label>
+                        <label>[2ND PLACE]</label>
                         <input type="file" name="slidebg_second" accept="image/*">
                         @if($roundInfo && $roundInfo->slidebg_second)
-                            <img src="{{ asset('storage/' . $roundInfo->slidebg_second) }}" class="bg-preview" alt="2nd place background" onerror="this.style.border='2px solid red'; this.alt='⚠️ Image not found';">
-                            <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">{{ $roundInfo->slidebg_second }}</div>
+                            <img src="{{ asset('storage/' . $roundInfo->slidebg_second) }}" class="bg-preview" alt="2nd place background" onerror="this.style.border='2px solid red'; this.alt='Image not found';">
+                            <div style="font-size: 10px; color: #858585; margin-top: 5px;">{{ $roundInfo->slidebg_second }}</div>
                         @endif
                     </div>
 
                     <div class="bg-upload-item">
-                        <label>🥉 3rd Place</label>
+                        <label>[3RD PLACE]</label>
                         <input type="file" name="slidebg_third" accept="image/*">
                         @if($roundInfo && $roundInfo->slidebg_third)
-                            <img src="{{ asset('storage/' . $roundInfo->slidebg_third) }}" class="bg-preview" alt="3rd place background" onerror="this.style.border='2px solid red'; this.alt='⚠️ Image not found';">
-                            <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">{{ $roundInfo->slidebg_third }}</div>
+                            <img src="{{ asset('storage/' . $roundInfo->slidebg_third) }}" class="bg-preview" alt="3rd place background" onerror="this.style.border='2px solid red'; this.alt='Image not found';">
+                            <div style="font-size: 10px; color: #858585; margin-top: 5px;">{{ $roundInfo->slidebg_third }}</div>
                         @endif
                     </div>
 
                     <div class="bg-upload-item">
-                        <label>📄 Normal Slides</label>
+                        <label>[NORMAL]</label>
                         <input type="file" name="slidebg_normal" accept="image/*">
                         @if($roundInfo && $roundInfo->slidebg_normal)
-                            <img src="{{ asset('storage/' . $roundInfo->slidebg_normal) }}" class="bg-preview" alt="Normal background" onerror="this.style.border='2px solid red'; this.alt='⚠️ Image not found';">
-                            <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">{{ $roundInfo->slidebg_normal }}</div>
+                            <img src="{{ asset('storage/' . $roundInfo->slidebg_normal) }}" class="bg-preview" alt="Normal background" onerror="this.style.border='2px solid red'; this.alt='Image not found';">
+                            <div style="font-size: 10px; color: #858585; margin-top: 5px;">{{ $roundInfo->slidebg_normal }}</div>
                         @endif
                     </div>
 
                     <div class="bg-upload-item">
-                        <label>❌ Eliminated</label>
+                        <label>[ELIMINATED]</label>
                         <input type="file" name="slidebg_elim" accept="image/*">
                         @if($roundInfo && $roundInfo->slidebg_elim)
-                            <img src="{{ asset('storage/' . $roundInfo->slidebg_elim) }}" class="bg-preview" alt="Eliminated background" onerror="this.style.border='2px solid red'; this.alt='⚠️ Image not found';">
-                            <div style="font-size: 10px; color: #7f8c8d; margin-top: 5px;">{{ $roundInfo->slidebg_elim }}</div>
+                            <img src="{{ asset('storage/' . $roundInfo->slidebg_elim) }}" class="bg-preview" alt="Eliminated background" onerror="this.style.border='2px solid red'; this.alt='Image not found';">
+                            <div style="font-size: 10px; color: #858585; margin-top: 5px;">{{ $roundInfo->slidebg_elim }}</div>
                         @endif
                     </div>
                 </div>
 
-                <button type="submit" style="margin-top: 20px; width: 100%; padding: 12px 30px; background: #2ecc71; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s;">
-                    💾 Save Backgrounds
+                <button type="submit" style="margin-top: 20px; width: 100%; padding: 12px 30px; background: #0e4429; color: #4ec9b0; border: 2px solid #4ec9b0; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; transition: all 0.3s;">
+                    Save Backgrounds
                 </button>
             </form>
         </div>
@@ -795,7 +805,7 @@
     @if ($hasNullScores)
         <div class="main-content" style="flex: 1; padding: 40px;">
             <div class="announcement">
-                <div class="announcement-icon">⏳</div>
+                <div class="announcement-icon">PENDING</div>
                 <h2>Judging Still in Progress</h2>
                 <p>Not every song has been judged yet for Group {{ $group == 0 ? 'Merge' : $group }} - Round {{ $round }}.</p>
                 <p>Please wait until all submissions have been scored before viewing the results.</p>
