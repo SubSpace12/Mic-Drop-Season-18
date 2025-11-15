@@ -854,7 +854,7 @@
                         <div class="slide-header">
                             <div class="rank-box {{ $rankClass }}">#{{ $rank }}</div>
                             <div class="contestant-name">{{ $table[0] }}</div>
-                            <div class="score-box">{{ $table[count($table) - 3] }}</div>
+                            <div class="score-box">{{ $table[count($table) - 2] }}</div>
                         </div>
 
                         <div class="judge-block">
