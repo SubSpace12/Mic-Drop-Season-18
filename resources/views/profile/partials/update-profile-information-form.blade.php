@@ -30,19 +30,5 @@
                 <x-input-error class="mt-2" :messages="$errors->get('discriminator')" />
             </div>
         @endif
-
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email ?? __('Unknown'))" required autocomplete="email" disabled />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
-
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->verified)
-                <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Your email address is unverified.') }}
-                    </p>
-                </div>
-            @endif
-        </div>
     </div>
 </section>

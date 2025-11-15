@@ -183,6 +183,17 @@
             color: #d4d4d4;
         }
 
+        .song-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .song-title a:hover {
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+
         .judge-score {
             text-align: right;
             font-weight: bold;
@@ -583,6 +594,8 @@
             $song = $sub->artist . ' - ' . $sub->title;
             $scores[$i] = $song;
             $i++;
+            $scores[$i] = $sub->url; // Store the URL
+            $i++;
             $scores[$i] = $sub->global_name;
             $i++;
             $scores[$i] = $sub->review;
@@ -846,29 +859,29 @@
 
                         <div class="judge-block">
                             <div class="judge-header">
-                                <div class="judge-name">{{ $table[2] }}</div>
-                                <div class="song-title">{{ $table[1] }}</div>
-                                <div class="judge-score @if($table[4] == 10) perfect @elseif($table[4] >= 9) high @elseif($table[4] < 4) low @endif">{{ $table[4] }}</div>
+                                <div class="judge-name">{{ $table[3] }}</div>
+                                <div class="song-title"><a href="{{ $table[2] }}" target="_blank">{{ $table[1] }}</a></div>
+                                <div class="judge-score @if($table[6] == 10) perfect @elseif($table[6] >= 9) high @elseif($table[6] < 4) low @endif">{{ $table[6] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[3] }}</div>
+                            <div class="review-body">{{ $table[5] }}</div>
                         </div>
 
                         <div class="judge-block">
                             <div class="judge-header">
-                                <div class="judge-name">{{ $table[6] }}</div>
-                                <div class="song-title">{{ $table[5] }}</div>
-                                <div class="judge-score @if($table[8] == 10) perfect @elseif($table[8] >= 9) high @elseif($table[8] < 4) low @endif">{{ $table[8] }}</div>
+                                <div class="judge-name">{{ $table[8] }}</div>
+                                <div class="song-title"><a href="{{ $table[7] }}" target="_blank">{{ $table[6] }}</a></div>
+                                <div class="judge-score @if($table[11] == 10) perfect @elseif($table[11] >= 9) high @elseif($table[11] < 4) low @endif">{{ $table[11] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[7] }}</div>
+                            <div class="review-body">{{ $table[10] }}</div>
                         </div>
 
                         <div class="judge-block">
                             <div class="judge-header">
-                                <div class="judge-name">{{ $table[10] }}</div>
-                                <div class="song-title">{{ $table[9] }}</div>
-                                <div class="judge-score @if($table[12] == 10) perfect @elseif($table[12] >= 9) high @elseif($table[12] < 4) low @endif">{{ $table[12] }}</div>
+                                <div class="judge-name">{{ $table[13] }}</div>
+                                <div class="song-title"><a href="{{ $table[12] }}" target="_blank">{{ $table[11] }}</a></div>
+                                <div class="judge-score @if($table[16] == 10) perfect @elseif($table[16] >= 9) high @elseif($table[16] < 4) low @endif">{{ $table[16] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[11] }}</div>
+                            <div class="review-body">{{ $table[15] }}</div>
                         </div>
                     </div>
                 @endforeach
