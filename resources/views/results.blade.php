@@ -861,27 +861,27 @@
                             <div class="judge-header">
                                 <div class="judge-name">{{ $table[3] }}</div>
                                 <div class="song-title"><a href="{{ $table[2] }}" target="_blank">{{ $table[1] }}</a></div>
-                                <div class="judge-score @if($table[6] == 10) perfect @elseif($table[6] >= 9) high @elseif($table[6] < 4) low @endif">{{ $table[6] }}</div>
+                                <div class="judge-score @if($table[5] == 10) perfect @elseif($table[5] >= 9) high @elseif($table[5] < 4) low @endif">{{ $table[5] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[5] }}</div>
+                            <div class="review-body">{{ $table[4] }}</div>
                         </div>
 
                         <div class="judge-block">
                             <div class="judge-header">
                                 <div class="judge-name">{{ $table[8] }}</div>
                                 <div class="song-title"><a href="{{ $table[7] }}" target="_blank">{{ $table[6] }}</a></div>
-                                <div class="judge-score @if($table[11] == 10) perfect @elseif($table[11] >= 9) high @elseif($table[11] < 4) low @endif">{{ $table[11] }}</div>
+                                <div class="judge-score @if($table[10] == 10) perfect @elseif($table[10] >= 9) high @elseif($table[10] < 4) low @endif">{{ $table[10] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[10] }}</div>
+                            <div class="review-body">{{ $table[9] }}</div>
                         </div>
 
                         <div class="judge-block">
                             <div class="judge-header">
                                 <div class="judge-name">{{ $table[13] }}</div>
                                 <div class="song-title"><a href="{{ $table[12] }}" target="_blank">{{ $table[11] }}</a></div>
-                                <div class="judge-score @if($table[16] == 10) perfect @elseif($table[16] >= 9) high @elseif($table[16] < 4) low @endif">{{ $table[16] }}</div>
+                                <div class="judge-score @if($table[15] == 10) perfect @elseif($table[15] >= 9) high @elseif($table[15] < 4) low @endif">{{ $table[15] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[15] }}</div>
+                            <div class="review-body">{{ $table[14] }}</div>
                         </div>
                     </div>
                 @endforeach
