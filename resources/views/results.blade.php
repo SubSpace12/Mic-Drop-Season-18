@@ -541,7 +541,6 @@
         ->join('users', 'users.id', '=', 'contestants.id')
         ->where('contestants.md_group', $group)
         ->where('contestants.season_id', $seasonId)
-        ->where('contestants.eliminated', false)
         ->get() : collect();
 
     // Count contestants with null submission_date and not eliminated
