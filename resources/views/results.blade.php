@@ -554,16 +554,23 @@
         ->whereNull('score')
         ->exists() : false;
 
+    // Determine if we should ignore group filtering for contestants
+    $ignoreGroupFilter = ($roundInfo && $roundInfo->is_merge && $activeSeason && !$activeSeason->is_merged);
+
     $contestants = $seasonId ? DB::table('contestants')
         ->join('users', 'users.id', '=', 'contestants.id')
-        ->where('contestants.md_group', $effectiveGroup)
         ->where('contestants.season_id', $seasonId)
+        ->when(!$ignoreGroupFilter, function ($query) use ($effectiveGroup) {
+            return $query->where('contestants.md_group', $effectiveGroup);
+        })
         ->get() : collect();
 
     // Count contestants with null submission_date and not eliminated
     $missedSubmissions = $seasonId ? DB::table('contestants')
-        ->where('md_group', $effectiveGroup)
         ->where('season_id', $seasonId)
+        ->when(!$ignoreGroupFilter, function ($query) use ($effectiveGroup) {
+            return $query->where('md_group', $effectiveGroup);
+        })
         ->where('eliminated', false)
         ->whereNull('submission_date')
         ->count() : 0;
