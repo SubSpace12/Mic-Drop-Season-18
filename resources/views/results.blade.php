@@ -522,6 +522,12 @@
         ->where('season_id', $seasonId)
         ->first() : null;
 
+    // If this is a merge round but the season hasn't merged yet, treat all contestants as group 0
+    $effectiveGroup = $group;
+    if ($roundInfo && $roundInfo->is_merge && $activeSeason && !$activeSeason->is_merged) {
+        $effectiveGroup = 0;
+    }
+
     // Check permissions
     $userPerms = auth()->user()->perms ?? 0;
     $isStaff = $userPerms >= 6;
@@ -542,7 +548,7 @@
 
     // Check if there are any submissions with NULL scores for this group and round
     $hasNullScores = $seasonId ? DB::table('submissions')
-        ->where('md_group', $group)
+        ->where('md_group', $effectiveGroup)
         ->where('round', $round)
         ->where('season_id', $seasonId)
         ->whereNull('score')
@@ -550,13 +556,13 @@
 
     $contestants = $seasonId ? DB::table('contestants')
         ->join('users', 'users.id', '=', 'contestants.id')
-        ->where('contestants.md_group', $group)
+        ->where('contestants.md_group', $effectiveGroup)
         ->where('contestants.season_id', $seasonId)
         ->get() : collect();
 
     // Count contestants with null submission_date and not eliminated
     $missedSubmissions = $seasonId ? DB::table('contestants')
-        ->where('md_group', $group)
+        ->where('md_group', $effectiveGroup)
         ->where('season_id', $seasonId)
         ->where('eliminated', false)
         ->whereNull('submission_date')
@@ -575,17 +581,17 @@
         $avg = 0.0;
 
         $subs = $seasonId ? DB::table('submissions')
-        ->join('judges', function ($join) use ($round, $group, $seasonId) {
+        ->join('judges', function ($join) use ($round, $effectiveGroup, $seasonId) {
             $join->on('judges.id', '=', 'submissions.judge_id')
                  ->where('judges.round', '=', $round)
-                 ->where('judges.md_group', '=', $group)
+                 ->where('judges.md_group', '=', $effectiveGroup)
                  ->where('judges.season_id', '=', $seasonId);
         })
         ->join('users', 'users.id', '=', 'judges.id')
         ->select('submissions.*', 'judges.judge_number', 'users.global_name', 'users.username')
         ->where('submissions.contestant_id', $contestant->id)
         ->where('submissions.round', $round)
-        ->where('submissions.md_group', $group)
+        ->where('submissions.md_group', $effectiveGroup)
         ->where('submissions.season_id', $seasonId)
         ->orderBy('judges.judge_number')
         ->get() : collect();
