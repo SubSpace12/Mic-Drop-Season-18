@@ -21,6 +21,7 @@
             overflow-y: auto;
             box-shadow: 2px 0 10px rgba(0,0,0,0.5);
             border-right: 2px solid #3e3e42;
+            transition: transform 0.3s ease;
         }
 
         .sidebar h2 {
@@ -500,6 +501,376 @@
             color: #d4d4d4;
             font-size: 18px;
         }
+
+        /* Mobile Navigation Controls */
+        .mobile-nav-controls {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #2d2d30;
+            border-top: 2px solid #3e3e42;
+            padding: 15px;
+            z-index: 999;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .mobile-nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .mobile-nav-button {
+            flex: 1;
+            padding: 12px 20px;
+            background: #0e639c;
+            color: white;
+            border: 2px solid #569cd6;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+        }
+
+        .mobile-nav-button:active {
+            background: #1177bb;
+            transform: scale(0.98);
+        }
+
+        .mobile-nav-button:disabled {
+            background: #3e3e42;
+            border-color: #555;
+            color: #858585;
+            cursor: not-allowed;
+        }
+
+        .mobile-slide-counter {
+            padding: 8px 15px;
+            background: #1e1e1e;
+            border: 2px solid #3e3e42;
+            border-radius: 4px;
+            color: #4ec9b0;
+            font-size: 14px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: #0e639c;
+            border: 2px solid #569cd6;
+            border-radius: 4px;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            z-index: 1001;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(14, 99, 156, 0.6);
+        }
+
+        .mobile-menu-toggle:active {
+            transform: scale(0.95);
+        }
+
+        /* MOBILE RESPONSIVE STYLES */
+        @media (max-width: 768px) {
+            .results-container {
+                height: calc(100vh - 64px - 80px); /* Account for mobile nav */
+                flex-direction: column;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 64px;
+                left: 0;
+                bottom: 80px;
+                width: 85%;
+                max-width: 320px;
+                transform: translateX(-100%);
+                z-index: 1000;
+                box-shadow: 4px 0 20px rgba(0, 0, 0, 0.8);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .sidebar h2 {
+                padding: 15px;
+                font-size: 16px;
+            }
+
+            .slide-nav li {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+
+            .main-content {
+                padding: 20px 15px 100px;
+                overflow-y: auto;
+            }
+
+            .result-slide {
+                padding: 20px 15px;
+                border-radius: 4px;
+            }
+
+            .slide-header {
+                grid-template-columns: auto 1fr;
+                grid-template-rows: auto auto;
+                gap: 12px;
+                margin-bottom: 20px;
+                padding-bottom: 15px;
+            }
+
+            .rank-box {
+                grid-row: 1 / 2;
+                grid-column: 1 / 2;
+                padding: 12px 18px;
+                font-size: 20px;
+                min-width: 60px;
+            }
+
+            .score-box {
+                grid-row: 1 / 2;
+                grid-column: 2 / 3;
+                justify-self: end;
+                padding: 12px 18px;
+                font-size: 20px;
+                min-width: 60px;
+            }
+
+            .contestant-name {
+                grid-row: 2 / 3;
+                grid-column: 1 / 3;
+                font-size: 20px;
+                padding: 10px 15px;
+            }
+
+            .judge-block {
+                margin-bottom: 15px;
+            }
+
+            .judge-header {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                gap: 8px;
+                padding: 12px 15px;
+                text-align: center;
+            }
+
+            .judge-name {
+                text-align: center;
+                font-size: 13px;
+            }
+
+            .song-title {
+                font-size: 12px;
+                word-break: break-word;
+            }
+
+            .judge-score {
+                text-align: center;
+                font-size: 22px;
+            }
+
+            .review-body {
+                padding: 15px;
+                font-size: 14px;
+                min-height: 60px;
+            }
+
+            .mobile-nav-controls {
+                display: block;
+            }
+
+            .mobile-menu-toggle {
+                display: flex;
+            }
+
+            .staff-tools-button {
+                bottom: 100px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 10px;
+            }
+
+            .announcement {
+                padding: 40px 20px;
+                margin: 20px 15px;
+            }
+
+            .announcement-icon {
+                font-size: 48px;
+            }
+
+            .announcement h2 {
+                font-size: 22px;
+            }
+
+            .announcement p {
+                font-size: 16px;
+            }
+
+            .access-denied {
+                padding: 40px 20px;
+                margin: 20px 15px;
+            }
+
+            .access-denied-icon {
+                font-size: 48px;
+            }
+
+            .access-denied h2 {
+                font-size: 22px;
+            }
+
+            .access-denied p {
+                font-size: 16px;
+            }
+
+            .no-results {
+                padding: 30px 20px;
+                font-size: 16px;
+                margin: 20px 15px;
+            }
+
+            /* Modal adjustments for mobile */
+            .bg-upload-modal {
+                width: 95%;
+                max-width: none;
+                padding: 20px;
+                max-height: 80vh;
+            }
+
+            .modal-header h3 {
+                font-size: 18px;
+            }
+
+            .bg-upload-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .debug-info-box {
+                font-size: 10px;
+                padding: 10px;
+                overflow-x: auto;
+            }
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .sidebar {
+                width: 240px;
+            }
+
+            .main-content {
+                padding: 30px 20px;
+            }
+
+            .result-slide {
+                padding: 25px 20px;
+            }
+
+            .slide-header {
+                gap: 15px;
+            }
+
+            .rank-box, .score-box {
+                padding: 12px 20px;
+                font-size: 20px;
+                min-width: 70px;
+            }
+
+            .contestant-name {
+                font-size: 24px;
+            }
+
+            .judge-header {
+                padding: 10px 15px;
+                font-size: 13px;
+            }
+
+            .review-body {
+                padding: 18px;
+            }
+        }
+
+        /* Touch-friendly improvements */
+        @media (hover: none) and (pointer: coarse) {
+            .slide-nav li {
+                min-height: 48px;
+                display: flex;
+                align-items: center;
+            }
+
+            .mobile-nav-button {
+                min-height: 52px;
+            }
+
+            .song-title a {
+                display: inline-block;
+                padding: 8px;
+                margin: -8px;
+            }
+        }
+
+        /* Swipe indicator */
+        .swipe-indicator {
+            display: none;
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 48px;
+            color: rgba(78, 201, 176, 0.3);
+            z-index: 998;
+            pointer-events: none;
+            animation: swipeHint 2s ease-in-out infinite;
+        }
+
+        .swipe-indicator.left {
+            left: 20px;
+        }
+
+        .swipe-indicator.right {
+            right: 20px;
+        }
+
+        @keyframes swipeHint {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translateY(-50%) translateX(0);
+            }
+            50% {
+                opacity: 0.6;
+                transform: translateY(-50%) translateX(10px);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .swipe-indicator {
+                display: block;
+            }
+        }
     </style>
 
     @php
@@ -844,8 +1215,13 @@
             </div>
         </div>
     @else
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
+            ☰
+        </button>
+
         <div class="results-container">
-            <div class="sidebar">
+            <div class="sidebar" id="sidebar">
                 <h2>Results Navigation</h2>
                 <ul class="slide-nav">
                     @foreach ($subsTable as $index => $table)
@@ -901,7 +1277,31 @@
             </div>
         </div>
 
+        <!-- Mobile Navigation Controls -->
+        <div class="mobile-nav-controls">
+            <div class="mobile-nav-buttons">
+                <button class="mobile-nav-button" id="prevButton" onclick="prevSlide()">
+                    ◀ Previous
+                </button>
+                <div class="mobile-slide-counter" id="slideCounter">
+                    1 / {{ count($subsTable) }}
+                </div>
+                <button class="mobile-nav-button" id="nextButton" onclick="nextSlide()">
+                    Next ▶
+                </button>
+            </div>
+        </div>
+
+        <!-- Swipe Indicators -->
+        <div class="swipe-indicator left">◀</div>
+        <div class="swipe-indicator right">▶</div>
+
         <script>
+            let currentSlide = 0;
+            const totalSlides = {{ count($subsTable) }};
+            let touchStartX = 0;
+            let touchEndX = 0;
+
             function showSlide(index) {
                 // Hide all slides
                 document.querySelectorAll('.result-slide').forEach(slide => {
@@ -916,7 +1316,105 @@
                 // Show selected slide
                 document.querySelector(`.result-slide[data-slide="${index}"]`).classList.add('active');
                 document.querySelector(`.slide-nav li[data-slide="${index}"]`).classList.add('active');
+                
+                // Update current slide
+                currentSlide = index;
+                
+                // Update mobile counter
+                updateMobileControls();
+                
+                // Close mobile menu if open
+                const sidebar = document.getElementById('sidebar');
+                if (sidebar.classList.contains('active')) {
+                    sidebar.classList.remove('active');
+                }
             }
+
+            function nextSlide() {
+                if (currentSlide < totalSlides - 1) {
+                    showSlide(currentSlide + 1);
+                }
+            }
+
+            function prevSlide() {
+                if (currentSlide > 0) {
+                    showSlide(currentSlide - 1);
+                }
+            }
+
+            function updateMobileControls() {
+                const prevButton = document.getElementById('prevButton');
+                const nextButton = document.getElementById('nextButton');
+                const counter = document.getElementById('slideCounter');
+                
+                if (counter) {
+                    counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+                }
+                
+                if (prevButton) {
+                    prevButton.disabled = currentSlide === 0;
+                }
+                
+                if (nextButton) {
+                    nextButton.disabled = currentSlide === totalSlides - 1;
+                }
+            }
+
+            function toggleMobileMenu() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('active');
+            }
+
+            // Touch/Swipe Navigation
+            const mainContent = document.querySelector('.main-content');
+            
+            mainContent.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            });
+
+            mainContent.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+                
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        // Swipe left - next slide
+                        nextSlide();
+                    } else {
+                        // Swipe right - previous slide
+                        prevSlide();
+                    }
+                }
+            }
+
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'ArrowRight') {
+                    nextSlide();
+                } else if (e.key === 'ArrowLeft') {
+                    prevSlide();
+                }
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                const sidebar = document.getElementById('sidebar');
+                const menuToggle = document.getElementById('mobileMenuToggle');
+                
+                if (window.innerWidth <= 768) {
+                    if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            });
+
+            // Initialize mobile controls
+            updateMobileControls();
         </script>
     @endif
 </x-app-layout>
