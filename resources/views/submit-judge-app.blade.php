@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+@vite(['resources/css/submit-judge-app.css'])
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,114 +18,7 @@
         $isEditing = !is_null($existingApp);
     @endphp
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
-
-        * {
-            font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
-        }
-
-        .max-w-4xl {
-            background: #252526;
-            border-radius: 8px;
-            border: 2px solid #3e3e42;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
-        }
-
-        .bg-white {
-            background: #252526 !important;
-        }
-
-        .border-gray-200 {
-            border-color: #3e3e42 !important;
-        }
-
-        .bg-blue-100 {
-            background: #1e3a5f !important;
-            border-color: #569cd6 !important;
-            color: #d4d4d4 !important;
-        }
-
-        .text-blue-700 {
-            color: #569cd6 !important;
-        }
-
-        .bg-red-100 {
-            background: #5a1e1e !important;
-            border-color: #c85050 !important;
-            color: #f48771 !important;
-        }
-
-        .text-red-700 {
-            color: #f48771 !important;
-        }
-
-        .text-gray-700 {
-            color: #d4d4d4 !important;
-        }
-
-        .bg-green-100 {
-            background: #1e3a1e !important;
-            border-color: #4ec9b0 !important;
-            color: #6a9955 !important;
-        }
-
-        .text-green-700 {
-            color: #6a9955 !important;
-        }
-
-        h2 {
-            color: #4ec9b0;
-            font-weight: 600;
-        }
-
-        label {
-            color: #d4d4d4;
-            font-weight: 600;
-            font-size: 15px;
-            line-height: 1.5;
-        }
-
-        textarea, input[type="text"] {
-            background: #1e1e1e;
-            border: 2px solid #3e3e42;
-            color: #e0e0e0;
-            border-radius: 4px;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-
-        textarea:focus, input:focus {
-            outline: none;
-            border-color: #569cd6;
-            box-shadow: 0 0 0 3px rgba(86, 156, 214, 0.2);
-        }
-
-        .form-radio {
-            accent-color: #569cd6;
-        }
-
-        .inline-flex span {
-            color: #d4d4d4;
-            font-size: 15px;
-        }
-
-        button[type="submit"] {
-            background: linear-gradient(135deg, #0e639c, #1177bb);
-            color: #d4d4d4;
-            font-weight: 700;
-            border: 2px solid #569cd6;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
-
-        button[type="submit"]:hover {
-            background: linear-gradient(135deg, #1177bb, #1c88d1);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(14, 99, 156, 0.6);
-            border-color: #4ec9b0;
-        }
-    </style>
+        
 
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">

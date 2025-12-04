@@ -1,0 +1,706 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+}
+
+.apps-container {
+    display: flex;
+    height: calc(100vh - 64px);
+    overflow: hidden;
+    background: #1e1e1e;
+}
+
+.apps-sidebar {
+    width: 280px;
+    background: #252526;
+    color: #d4d4d4;
+    overflow-y: auto;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.8);
+    border-right: 2px solid #3e3e42;
+}
+
+.apps-sidebar h2 {
+    padding: 20px;
+    background: #1e1e1e;
+    font-size: 18px;
+    border-bottom: 2px solid #3e3e42;
+    color: #4ec9b0;
+    font-weight: 600;
+}
+
+.app-nav {
+    list-style: none;
+}
+
+.app-nav li {
+    padding: 15px 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #3e3e42;
+    transition: background 0.2s;
+}
+
+.app-nav-name {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #d4d4d4;
+    font-weight: 500;
+}
+
+.app-nav-votes {
+    font-size: 13px;
+    color: #a0a0a0;
+    display: flex;
+    gap: 15px;
+}
+
+.app-nav-judging {
+    font-size: 12px;
+    color: #d7ba7d;
+    margin-top: 5px;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.vote-count {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.app-nav li:hover {
+    background: #2d2d30;
+}
+
+.app-nav li.active {
+    background: #0e639c;
+    border-left: 4px solid #4ec9b0;
+    color: #d4d4d4;
+}
+
+.apps-main {
+    flex: 1;
+    overflow-y: auto;
+    padding: 40px;
+    display: flex;
+    gap: 30px;
+}
+
+.app-content {
+    flex: 1;
+    max-width: 900px;
+}
+
+.app-sheet {
+    display: none;
+    background: #252526;
+    border-radius: 8px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    border: 2px solid #3e3e42;
+}
+
+.app-sheet.active {
+    display: block;
+}
+
+.app-sheet h1 {
+    color: #4ec9b0;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #569cd6;
+    font-size: 32px;
+    font-weight: 600;
+}
+
+.app-question {
+    margin-bottom: 30px;
+}
+
+.app-question h3 {
+    color: #569cd6;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+.app-question p {
+    background: #1e1e1e;
+    padding: 15px;
+    border-radius: 4px;
+    border-left: 4px solid #569cd6;
+    color: #e0e0e0;
+    line-height: 1.8;
+    font-size: 15px;
+    /* FIX: Preserve line breaks from database */
+    white-space: pre-line;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.vote-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: sticky;
+    top: 40px;
+}
+
+.vote-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.vote-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
+}
+
+.vote-btn:active {
+    transform: scale(0.95);
+}
+
+.vote-btn.voted {
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.7);
+    transform: scale(1.1);
+    border: 4px solid #d4d4d4;
+}
+
+.thumbs-up {
+    background: linear-gradient(135deg, #0e4429, #1e5a3e);
+    color: #d4d4d4;
+    border: 2px solid #4ec9b0;
+}
+
+.thumbs-up:hover {
+    background: linear-gradient(135deg, #1e5a3e, #2e6a4e);
+}
+
+.thumbs-up.voted {
+    background: linear-gradient(135deg, #1e5a3e, #2e6a4e);
+    box-shadow: 0 0 30px rgba(78, 201, 176, 0.6);
+    border-color: #6a9955;
+}
+
+.thumbs-down {
+    background: linear-gradient(135deg, #7a2828, #a03535);
+    color: #d4d4d4;
+    border: 2px solid #c85050;
+}
+
+.thumbs-down:hover {
+    background: linear-gradient(135deg, #a03535, #c04545);
+}
+
+.thumbs-down.voted {
+    background: linear-gradient(135deg, #a03535, #c04545);
+    box-shadow: 0 0 30px rgba(200, 80, 80, 0.6);
+    border-color: #f48771;
+}
+
+.no-apps {
+    text-align: center;
+    padding: 60px 40px;
+    color: #858585;
+    font-size: 18px;
+    background: #252526;
+    border-radius: 8px;
+    margin: 40px;
+    border: 2px solid #3e3e42;
+}
+
+/* ========== MOBILE RESPONSIVE STYLES ========== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .apps-sidebar {
+        width: 240px;
+    }
+
+    .apps-main {
+        padding: 30px 20px;
+        gap: 20px;
+    }
+
+    .app-sheet {
+        padding: 30px 25px;
+    }
+
+    .vote-buttons {
+        gap: 15px;
+    }
+
+    .vote-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .apps-container {
+        flex-direction: column;
+        height: auto;
+        min-height: calc(100vh - 64px);
+    }
+
+    /* Sidebar becomes horizontal tabs */
+    .apps-sidebar {
+        width: 100%;
+        height: auto;
+        max-height: none;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: none;
+        border-bottom: 2px solid #3e3e42;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .apps-sidebar h2 {
+        padding: 15px 20px;
+        font-size: 16px;
+        position: sticky;
+        left: 0;
+        background: #1e1e1e;
+        z-index: 10;
+    }
+
+    .app-nav {
+        display: flex;
+        flex-direction: row;
+        gap: 0;
+        padding: 0 10px;
+    }
+
+    .app-nav li {
+        min-width: 200px;
+        flex-shrink: 0;
+        padding: 12px 15px;
+        border-bottom: none;
+        border-right: 1px solid #3e3e42;
+    }
+
+    .app-nav li:last-child {
+        border-right: none;
+    }
+
+    .app-nav li.active {
+        border-left: none;
+        border-bottom: 4px solid #4ec9b0;
+        background: #0e639c;
+    }
+
+    .app-nav-name {
+        font-size: 14px;
+        margin-bottom: 5px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .app-nav-votes {
+        font-size: 12px;
+        gap: 10px;
+    }
+
+    .app-nav-judging {
+        font-size: 11px;
+        margin-top: 4px;
+    }
+
+    /* Main content area */
+    .apps-main {
+        flex-direction: column;
+        padding: 20px 15px 100px 15px; /* Extra bottom padding for fixed vote buttons */
+        gap: 0;
+        overflow-y: visible;
+        height: auto;
+    }
+
+    .app-content {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .app-sheet {
+        padding: 25px 20px;
+        margin-bottom: 0;
+    }
+
+    .app-sheet h1 {
+        font-size: 24px;
+        margin-bottom: 25px;
+        padding-bottom: 15px;
+    }
+
+    .app-question {
+        margin-bottom: 25px;
+    }
+
+    .app-question h3 {
+        font-size: 15px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .app-question p {
+        padding: 12px;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    /* Vote buttons - Fixed at bottom */
+    .vote-buttons {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        flex-direction: row;
+        justify-content: center;
+        gap: 30px;
+        padding: 15px;
+        background: #1e1e1e;
+        border-top: 2px solid #3e3e42;
+        box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.8);
+        z-index: 100;
+    }
+
+    .vote-btn {
+        width: 70px;
+        height: 70px;
+        font-size: 28px;
+        position: relative;
+    }
+
+    .vote-btn.voted {
+        transform: scale(1.05);
+    }
+
+    .no-apps {
+        padding: 40px 20px;
+        margin: 20px 15px;
+        font-size: 16px;
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .apps-sidebar h2 {
+        padding: 12px 15px;
+        font-size: 15px;
+    }
+
+    .app-nav {
+        padding: 0 5px;
+    }
+
+    .app-nav li {
+        min-width: 180px;
+        padding: 10px 12px;
+    }
+
+    .app-nav-name {
+        font-size: 13px;
+    }
+
+    .app-nav-votes {
+        font-size: 11px;
+        gap: 8px;
+    }
+
+    .app-nav-judging {
+        font-size: 10px;
+    }
+
+    .apps-main {
+        padding: 15px 10px 100px 10px;
+    }
+
+    .app-sheet {
+        padding: 20px 15px;
+    }
+
+    .app-sheet h1 {
+        font-size: 20px;
+        margin-bottom: 20px;
+        padding-bottom: 12px;
+    }
+
+    .app-question {
+        margin-bottom: 20px;
+    }
+
+    .app-question h3 {
+        font-size: 14px;
+        margin-bottom: 7px;
+    }
+
+    .app-question p {
+        padding: 10px;
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .vote-buttons {
+        gap: 20px;
+        padding: 12px;
+    }
+
+    .vote-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+
+    .no-apps {
+        padding: 30px 15px;
+        margin: 15px 10px;
+        font-size: 15px;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    /* Ensure minimum touch target sizes */
+    .app-nav li {
+        min-height: 48px;
+        touch-action: manipulation;
+    }
+
+    .vote-btn {
+        min-width: 64px;
+        min-height: 64px;
+        touch-action: manipulation;
+    }
+
+    /* Remove hover effects on touch devices */
+    .app-nav li:hover,
+    .vote-btn:hover {
+        transform: none;
+    }
+
+    /* Add active states for touch feedback */
+    .app-nav li:active {
+        background: #3e3e42;
+        opacity: 0.9;
+    }
+
+    .vote-btn:active {
+        transform: scale(0.95);
+        opacity: 0.9;
+    }
+
+    .vote-btn.voted:active {
+        transform: scale(1.0);
+    }
+}
+
+/* Landscape mode adjustments for mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+    .apps-main {
+        padding: 15px 15px 90px 15px;
+    }
+
+    .app-sheet {
+        padding: 20px 15px;
+    }
+
+    .app-question {
+        margin-bottom: 15px;
+    }
+
+    .app-question p {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .vote-buttons {
+        padding: 10px;
+        gap: 25px;
+    }
+
+    .vote-btn {
+        width: 60px;
+        height: 60px;
+        font-size: 24px;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+    .app-nav li {
+        min-width: 160px;
+        padding: 8px 10px;
+    }
+
+    .app-nav-name {
+        font-size: 12px;
+    }
+
+    .app-nav-votes {
+        font-size: 10px;
+    }
+
+    .app-nav-judging {
+        font-size: 9px;
+    }
+
+    .app-sheet h1 {
+        font-size: 18px;
+    }
+
+    .app-question h3 {
+        font-size: 13px;
+    }
+
+    .app-question p {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .vote-buttons {
+        gap: 15px;
+        padding: 10px;
+    }
+
+    .vote-btn {
+        width: 55px;
+        height: 55px;
+        font-size: 22px;
+    }
+}
+
+/* Prevent horizontal scroll */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .apps-container {
+        overflow-x: hidden;
+        max-width: 100%;
+    }
+
+    .app-sheet,
+    .app-content {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Ensure long text doesn't break layout */
+    .app-question p,
+    .app-question h3,
+    .app-sheet h1,
+    .app-nav-name {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+}
+
+/* Improve readability on small screens */
+@media (max-width: 480px) {
+    /* Increase line height for better mobile reading */
+    .app-question p {
+        line-height: 1.6;
+    }
+
+    /* Better spacing for sections */
+    .app-question {
+        margin-bottom: 18px;
+    }
+
+    /* Clearer visual hierarchy */
+    .app-sheet {
+        border-width: 2px;
+    }
+}
+
+/* Scrollbar styling for horizontal nav */
+@media (max-width: 768px) {
+    .apps-sidebar::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .apps-sidebar::-webkit-scrollbar-track {
+        background: #1e1e1e;
+    }
+
+    .apps-sidebar::-webkit-scrollbar-thumb {
+        background: #569cd6;
+        border-radius: 3px;
+    }
+
+    .apps-sidebar::-webkit-scrollbar-thumb:hover {
+        background: #4ec9b0;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    .vote-btn:hover,
+    .vote-btn:active {
+        transform: none;
+    }
+
+    .app-nav li:hover {
+        transform: none;
+    }
+}
+
+/* Desktop scrollbar styling */
+.apps-sidebar::-webkit-scrollbar {
+    width: 8px;
+}
+
+.apps-sidebar::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.apps-sidebar::-webkit-scrollbar-thumb {
+    background: #569cd6;
+    border-radius: 4px;
+}
+
+.apps-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #4ec9b0;
+}
+
+.apps-main::-webkit-scrollbar {
+    width: 8px;
+}
+
+.apps-main::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.apps-main::-webkit-scrollbar-thumb {
+    background: #569cd6;
+    border-radius: 4px;
+}
+
+.apps-main::-webkit-scrollbar-thumb:hover {
+    background: #4ec9b0;
+}

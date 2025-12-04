@@ -1,0 +1,967 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+}
+
+body {
+    background: linear-gradient(135deg, #1e1e1e 0%, #252526 50%, #2d2d30 100%);
+}
+
+.rounds-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Join Season Screen */
+.join-season-container {
+    max-width: 700px;
+    margin: 4rem auto;
+    background: #252526;
+    border-radius: 12px;
+    padding: 3rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    border: 2px solid #4ec9b0;
+    position: relative;
+    overflow: hidden;
+}
+
+.join-season-container::before {
+    content: '>';
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 3rem;
+    opacity: 0.1;
+    color: #4ec9b0;
+}
+
+.join-season-container::after {
+    content: '{ }';
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+    font-size: 3rem;
+    opacity: 0.1;
+    color: #608b4e;
+}
+
+.join-season-icon {
+    text-align: center;
+    font-size: 5rem;
+    margin-bottom: 1.5rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.join-season-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #4ec9b0;
+    margin-bottom: 1rem;
+}
+
+.join-season-description {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #a0a0a0;
+    margin-bottom: 2.5rem;
+    line-height: 1.6;
+}
+
+.season-info-box {
+    background: #1e1e1e;
+    border: 2px solid #3e3e42;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.season-info-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #3e3e42;
+    color: #d4d4d4;
+}
+
+.season-info-item:last-child {
+    border-bottom: none;
+}
+
+.season-info-label {
+    color: #569cd6;
+    font-weight: 600;
+}
+
+.season-info-value {
+    color: #4ec9b0;
+    font-weight: 600;
+}
+
+.join-button {
+    width: 100%;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, #0e4429, #1e5a3e);
+    color: #d4d4d4;
+    border: 2px solid #4ec9b0;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(14, 68, 41, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.join-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 25px rgba(78, 201, 176, 0.6);
+    background: linear-gradient(135deg, #1e5a3e, #2e6a4e);
+}
+
+.join-button:active {
+    transform: translateY(0);
+}
+
+.welcome-message {
+    background: linear-gradient(135deg, #0e639c 0%, #1177bb 50%, #1c88d1 100%);
+    color: #d4d4d4;
+    padding: 2.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    box-shadow: 0 4px 20px rgba(14, 99, 156, 0.4);
+    border: 2px solid #1c88d1;
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-message::before {
+    content: '>';
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    font-size: 1.5rem;
+    opacity: 0.3;
+    color: #4ec9b0;
+}
+
+.welcome-message::after {
+    content: '//';
+    position: absolute;
+    bottom: 10px;
+    left: 20px;
+    font-size: 1.5rem;
+    opacity: 0.3;
+    color: #608b4e;
+}
+
+.welcome-message h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #4ec9b0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-message p {
+    font-size: 1.125rem;
+    opacity: 0.95;
+    font-weight: 500;
+}
+
+.rounds-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.round-card {
+    background: #252526;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #3e3e42;
+}
+
+.round-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #569cd6, #4ec9b0, #608b4e);
+}
+
+.round-card::after {
+    content: '{ }';
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    font-size: 2rem;
+    opacity: 0.05;
+    color: #4ec9b0;
+}
+
+.round-card.status-pending {
+    background: #1e1e1e;
+    cursor: not-allowed;
+    opacity: 0.6;
+    border-color: #2d2d30;
+}
+
+.round-card.status-pending::before {
+    background: linear-gradient(90deg, #3e3e42, #4e4e52);
+}
+
+.round-card.status-pending:hover {
+    transform: none;
+}
+
+.round-card.status-active {
+    border: 2px solid #4ec9b0;
+    background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
+    animation: terminal-pulse 2s ease-in-out infinite;
+}
+
+@keyframes terminal-pulse {
+    0%, 100% {
+        box-shadow: 0 4px 15px rgba(78, 201, 176, 0.4);
+    }
+    50% {
+        box-shadow: 0 6px 25px rgba(78, 201, 176, 0.6);
+    }
+}
+
+.round-card.status-active::before {
+    background: linear-gradient(90deg, #4ec9b0, #4ec9b0, #569cd6);
+}
+
+.round-card.status-active:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(78, 201, 176, 0.5);
+}
+
+.round-card.status-active.not-clickable {
+    cursor: not-allowed;
+    opacity: 0.6;
+    animation: none;
+}
+
+.round-card.status-active.not-clickable:hover {
+    transform: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.round-card.status-completed {
+    border: 2px solid #608b4e;
+    background: linear-gradient(135deg, #252526 0%, #2d2d30 100%);
+}
+
+.round-card.status-completed::before {
+    background: linear-gradient(90deg, #608b4e, #6a9955, #608b4e);
+}
+
+.round-card.status-completed:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(96, 139, 78, 0.4);
+}
+
+.round-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    margin-bottom: 1rem;
+}
+
+.round-number {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #569cd6;
+    text-shadow: 2px 2px 0px #3e3e42;
+}
+
+.status-pending .round-number {
+    color: #6e6e6e;
+    text-shadow: 2px 2px 0px #3e3e42;
+}
+
+.status-active .round-number {
+    color: #4ec9b0;
+    text-shadow: 2px 2px 0px #3e3e42;
+}
+
+.status-completed .round-number {
+    color: #608b4e;
+    text-shadow: 2px 2px 0px #3e3e42;
+}
+
+.round-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    border: 1px solid;
+}
+
+.badge-pending {
+    background: #3e3e42;
+    color: #858585;
+    border-color: #4e4e52;
+}
+
+.badge-active {
+    background: #0e4429;
+    color: #4ec9b0;
+    border-color: #4ec9b0;
+    animation: badge-blink 2s ease-in-out infinite;
+}
+
+@keyframes badge-blink {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.badge-completed {
+    background: #1e3a1e;
+    color: #6a9955;
+    border-color: #608b4e;
+}
+
+.badge-merge {
+    background: #1a1a2e;
+    color: #569cd6;
+    border-color: #569cd6;
+    margin-left: 0.5rem;
+}
+
+.round-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #d4d4d4;
+    margin-bottom: 0.5rem;
+}
+
+.status-pending .round-title {
+    color: #858585;
+}
+
+.status-active .round-title {
+    color: #4ec9b0;
+}
+
+.status-completed .round-title {
+    color: #6a9955;
+}
+
+.round-description {
+    color: #a0a0a0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    font-weight: 400;
+}
+
+.status-pending .round-description {
+    color: #6e6e6e;
+}
+
+.round-info {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #3e3e42;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #a0a0a0;
+    font-weight: 500;
+}
+
+.info-icon {
+    font-size: 1rem;
+    color: #569cd6;
+}
+
+.action-text {
+    text-align: center;
+    margin-top: 1.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.75rem;
+    border-radius: 4px;
+    border: 1px solid;
+}
+
+.status-pending .action-text {
+    color: #858585;
+    background: #1e1e1e;
+    border-color: #3e3e42;
+}
+
+.status-active .action-text {
+    color: #4ec9b0;
+    background: linear-gradient(135deg, #0e4429, #1e5a3e);
+    border-color: #4ec9b0;
+}
+
+.status-completed .action-text {
+    color: #6a9955;
+    background: linear-gradient(135deg, #1e3a1e, #2e4a2e);
+    border-color: #608b4e;
+}
+
+.status-active.not-clickable .action-text {
+    color: #858585;
+    background: #1e1e1e;
+    border-color: #3e3e42;
+}
+
+.no-rounds {
+    text-align: center;
+    padding: 4rem;
+    color: #a0a0a0;
+    font-size: 1.25rem;
+    font-weight: 500;
+    background: #252526;
+    border-radius: 8px;
+    border: 2px solid #3e3e42;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.3s;
+}
+
+.modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: #2d2d30;
+    border-radius: 8px;
+    padding: 2.5rem;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+    border: 2px solid #3e3e42;
+    animation: slideUp 0.3s;
+    position: relative;
+}
+
+.modal-content::before {
+    content: '>';
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 2rem;
+    color: #4ec9b0;
+    opacity: 0.3;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #4ec9b0;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.modal-description {
+    color: #a0a0a0;
+    text-align: center;
+    margin-bottom: 2rem;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+.group-buttons {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.group-button {
+    padding: 1.75rem 1rem;
+    background: linear-gradient(135deg, #0e639c, #1177bb);
+    color: #d4d4d4;
+    border: 2px solid #569cd6;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(14, 99, 156, 0.4);
+}
+
+.group-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(14, 99, 156, 0.6);
+    background: linear-gradient(135deg, #1177bb, #1c88d1);
+    border-color: #4ec9b0;
+}
+
+.action-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.action-button {
+    padding: 1.75rem 1rem;
+    background: linear-gradient(135deg, #0e4429, #1e5a3e);
+    color: #d4d4d4;
+    border: 2px solid #4ec9b0;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(14, 68, 41, 0.4);
+}
+
+.action-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(14, 68, 41, 0.6);
+    background: linear-gradient(135deg, #1e5a3e, #2e6a4e);
+    border-color: #6a9955;
+}
+
+.cancel-button {
+    width: 100%;
+    padding: 1rem;
+    background: #1e1e1e;
+    border: 2px solid #3e3e42;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: #a0a0a0;
+    font-size: 1rem;
+}
+
+.cancel-button:hover {
+    background: #252526;
+    border-color: #569cd6;
+    color: #d4d4d4;
+}
+
+.guest-message {
+    background: #252526;
+    padding: 3rem;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border: 2px solid #3e3e42;
+    position: relative;
+}
+
+.guest-message::before {
+    content: '//';
+    position: absolute;
+    top: 20px;
+    left: 30px;
+    font-size: 2rem;
+    color: #608b4e;
+    opacity: 0.3;
+}
+
+.guest-message::after {
+    content: '>';
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    font-size: 2rem;
+    color: #4ec9b0;
+    opacity: 0.3;
+}
+
+.guest-message h3 {
+    font-size: 1.75rem;
+    color: #4ec9b0;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.guest-message p {
+    color: #a0a0a0;
+    margin-bottom: 1.5rem;
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+/* ========== MOBILE RESPONSIVE STYLES ========== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .rounds-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+
+    .rounds-container {
+        padding: 1.5rem;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .rounds-container {
+        padding: 1rem;
+    }
+
+    /* Join Season Screen */
+    .join-season-container {
+        margin: 2rem auto;
+        padding: 2rem 1.5rem;
+    }
+
+    .join-season-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .join-season-title {
+        font-size: 1.75rem;
+    }
+
+    .join-season-description {
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .join-button {
+        padding: 1.25rem;
+        font-size: 1.25rem;
+        letter-spacing: 1px;
+    }
+
+    .season-info-box {
+        padding: 1rem;
+    }
+
+    .season-info-item {
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.5rem 0;
+    }
+
+    .season-info-label,
+    .season-info-value {
+        font-size: 0.9rem;
+    }
+
+    /* Welcome Message */
+    .welcome-message {
+        padding: 1.75rem;
+    }
+
+    .welcome-message h1 {
+        font-size: 1.5rem;
+    }
+
+    .welcome-message p {
+        font-size: 1rem;
+    }
+
+    /* Rounds Grid */
+    .rounds-grid {
+        grid-template-columns: 1fr;
+        gap: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    /* Round Cards */
+    .round-card {
+        padding: 1.5rem;
+    }
+
+    .round-number {
+        font-size: 2.25rem;
+    }
+
+    .round-title {
+        font-size: 1.25rem;
+    }
+
+    .round-description {
+        font-size: 0.9rem;
+    }
+
+    .round-badge {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.65rem;
+    }
+
+    .badge-merge {
+        display: block;
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+
+    .round-info {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .action-text {
+        margin-top: 1rem;
+        font-size: 0.9rem;
+        padding: 0.65rem;
+    }
+
+    /* Guest Message */
+    .guest-message {
+        padding: 2rem 1.5rem;
+    }
+
+    .guest-message h3 {
+        font-size: 1.5rem;
+    }
+
+    .guest-message p {
+        font-size: 1rem;
+    }
+
+    /* No Rounds */
+    .no-rounds {
+        padding: 2.5rem 1.5rem;
+        font-size: 1.1rem;
+    }
+
+    /* Modals */
+    .modal-content {
+        padding: 2rem 1.5rem;
+        width: 95%;
+    }
+
+    .modal-header {
+        font-size: 1.5rem;
+    }
+
+    .modal-description {
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .group-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .group-button {
+        padding: 1.25rem 1rem;
+        font-size: 1.1rem;
+    }
+
+    .action-buttons {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .action-button {
+        padding: 1.25rem 1rem;
+        font-size: 1.1rem;
+    }
+
+    .cancel-button {
+        padding: 0.85rem;
+        font-size: 0.95rem;
+    }
+
+    /* Decorative elements - reduce size on mobile */
+    .join-season-container::before,
+    .join-season-container::after {
+        font-size: 2rem;
+    }
+
+    .welcome-message::before,
+    .welcome-message::after {
+        font-size: 1.25rem;
+    }
+
+    .guest-message::before,
+    .guest-message::after {
+        font-size: 1.5rem;
+    }
+
+    .round-card::after {
+        font-size: 1.5rem;
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .modal-content::before {
+        font-size: 1.5rem;
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .rounds-container {
+        padding: 0.75rem;
+    }
+
+    .join-season-container {
+        padding: 1.5rem 1rem;
+        margin: 1rem auto;
+    }
+
+    .join-season-title {
+        font-size: 1.5rem;
+    }
+
+    .join-season-description {
+        font-size: 0.95rem;
+    }
+
+    .join-button {
+        padding: 1rem;
+        font-size: 1.1rem;
+    }
+
+    .welcome-message {
+        padding: 1.5rem 1rem;
+    }
+
+    .welcome-message h1 {
+        font-size: 1.35rem;
+    }
+
+    .welcome-message p {
+        font-size: 0.95rem;
+    }
+
+    .round-card {
+        padding: 1.25rem;
+    }
+
+    .round-number {
+        font-size: 2rem;
+    }
+
+    .round-title {
+        font-size: 1.15rem;
+    }
+
+    .round-description {
+        font-size: 0.85rem;
+    }
+
+    .info-item {
+        font-size: 0.8rem;
+    }
+
+    .modal-content {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .modal-header {
+        font-size: 1.35rem;
+    }
+
+    .group-button,
+    .action-button {
+        padding: 1rem 0.75rem;
+        font-size: 1rem;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    .round-card {
+        min-height: 48px;
+    }
+
+    .group-button,
+    .action-button,
+    .cancel-button,
+    .join-button {
+        min-height: 48px;
+        touch-action: manipulation;
+    }
+
+    /* Remove hover effects on touch devices */
+    .round-card:hover,
+    .group-button:hover,
+    .action-button:hover,
+    .cancel-button:hover,
+    .join-button:hover {
+        transform: none;
+    }
+
+    /* Add active states for touch feedback */
+    .round-card:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+
+    .group-button:active,
+    .action-button:active,
+    .cancel-button:active,
+    .join-button:active {
+        transform: scale(0.98);
+    }
+}

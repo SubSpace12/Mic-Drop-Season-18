@@ -1,0 +1,622 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: #1e1e1e;
+}
+
+.max-w-4xl {
+    background: #252526;
+    border-radius: 8px;
+    border: 2px solid #3e3e42;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+}
+
+.bg-white {
+    background: #252526 !important;
+}
+
+.border-gray-200 {
+    border-color: #3e3e42 !important;
+}
+
+.bg-blue-100 {
+    background: #1e3a5f !important;
+    border-color: #569cd6 !important;
+    color: #d4d4d4 !important;
+}
+
+.text-blue-700 {
+    color: #569cd6 !important;
+}
+
+.bg-red-100 {
+    background: #5a1e1e !important;
+    border-color: #c85050 !important;
+    color: #f48771 !important;
+}
+
+.text-red-700 {
+    color: #f48771 !important;
+}
+
+.text-gray-700 {
+    color: #d4d4d4 !important;
+}
+
+.bg-green-100 {
+    background: #1e3a1e !important;
+    border-color: #4ec9b0 !important;
+    color: #6a9955 !important;
+}
+
+.text-green-700 {
+    color: #6a9955 !important;
+}
+
+h2 {
+    color: #4ec9b0;
+    font-weight: 600;
+}
+
+label {
+    color: #d4d4d4;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+textarea,
+input[type="text"] {
+    background: #1e1e1e;
+    border: 2px solid #3e3e42;
+    color: #e0e0e0;
+    border-radius: 4px;
+    font-size: 15px;
+    line-height: 1.6;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+textarea:focus,
+input:focus {
+    outline: none;
+    border-color: #569cd6;
+    box-shadow: 0 0 0 3px rgba(86, 156, 214, 0.2);
+}
+
+.form-radio {
+    accent-color: #569cd6;
+    cursor: pointer;
+}
+
+.inline-flex {
+    cursor: pointer;
+}
+
+.inline-flex span {
+    color: #d4d4d4;
+    font-size: 15px;
+}
+
+button[type="submit"] {
+    background: linear-gradient(135deg, #0e639c, #1177bb);
+    color: #d4d4d4;
+    font-weight: 700;
+    border: 2px solid #569cd6;
+    border-radius: 4px;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background: linear-gradient(135deg, #1177bb, #1c88d1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(14, 99, 156, 0.6);
+    border-color: #4ec9b0;
+}
+
+button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+/* Alert/Banner styles */
+.bg-blue-100 strong,
+.bg-red-100 strong,
+.bg-green-100 strong {
+    font-weight: 700;
+}
+
+/* ========== MOBILE RESPONSIVE STYLES ========== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .max-w-4xl {
+        margin: 20px;
+    }
+
+    .py-12 {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .p-6 {
+        padding: 1.5rem !important;
+    }
+
+    textarea {
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    .py-12 {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    .max-w-4xl {
+        margin: 15px;
+        border-radius: 6px;
+    }
+
+    .sm\\:px-6 {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .lg\\:px-8 {
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    .p-6 {
+        padding: 1.25rem !important;
+    }
+
+    /* Headings */
+    h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem !important;
+    }
+
+    /* Alert banners */
+    .bg-blue-100,
+    .bg-red-100,
+    .bg-green-100 {
+        padding: 0.75rem !important;
+        margin-bottom: 1rem !important;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    /* Question sections */
+    .mb-6 {
+        margin-bottom: 1.25rem !important;
+    }
+
+    /* Labels */
+    label {
+        font-size: 14px;
+        margin-bottom: 0.5rem !important;
+        display: block;
+    }
+
+    /* Textareas and inputs */
+    textarea,
+    input[type="text"] {
+        width: 100%;
+        padding: 0.75rem !important;
+        font-size: 16px; /* Prevent iOS zoom */
+        line-height: 1.5;
+        min-height: 44px;
+    }
+
+    /* Adjust textarea rows for mobile */
+    textarea[rows="3"] {
+        min-height: 80px;
+    }
+
+    textarea[rows="4"] {
+        min-height: 100px;
+    }
+
+    textarea[rows="5"] {
+        min-height: 120px;
+    }
+
+    /* Radio button groups */
+    .flex.gap-4 {
+        gap: 1rem !important;
+        flex-wrap: wrap;
+    }
+
+    .inline-flex {
+        padding: 0.5rem 0;
+        min-height: 44px;
+        align-items: center;
+    }
+
+    .inline-flex span {
+        font-size: 14px;
+        margin-left: 0.5rem !important;
+    }
+
+    .form-radio {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Submit button */
+    .flex.justify-end {
+        justify-content: stretch !important;
+    }
+
+    button[type="submit"] {
+        width: 100%;
+        padding: 0.875rem 1.5rem !important;
+        font-size: 16px;
+        min-height: 48px;
+    }
+
+    .mt-6 {
+        margin-top: 1.5rem !important;
+    }
+
+    .mb-8 {
+        margin-bottom: 2rem !important;
+    }
+
+    /* Error list */
+    .bg-red-100 ul {
+        padding-left: 1.25rem !important;
+        margin: 0.5rem 0 !important;
+    }
+
+    .bg-red-100 li {
+        margin-bottom: 0.25rem;
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    .py-12 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    .max-w-4xl {
+        margin: 10px;
+        border-radius: 4px;
+    }
+
+    .sm\\:px-6,
+    .lg\\:px-8 {
+        padding-left: 0.5rem !important;
+        padding-right: 0.5rem !important;
+    }
+
+    .p-6 {
+        padding: 1rem !important;
+    }
+
+    /* Headings */
+    h2 {
+        font-size: 1.35rem;
+        margin-bottom: 1rem !important;
+    }
+
+    /* Alert banners */
+    .bg-blue-100,
+    .bg-red-100,
+    .bg-green-100 {
+        padding: 0.65rem !important;
+        margin-bottom: 0.875rem !important;
+        font-size: 13px;
+    }
+
+    /* Question sections */
+    .mb-6 {
+        margin-bottom: 1rem !important;
+    }
+
+    /* Labels */
+    label {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    /* Textareas and inputs */
+    textarea,
+    input[type="text"] {
+        padding: 0.65rem !important;
+        font-size: 16px;
+    }
+
+    textarea[rows="3"] {
+        min-height: 75px;
+    }
+
+    textarea[rows="4"] {
+        min-height: 90px;
+    }
+
+    textarea[rows="5"] {
+        min-height: 110px;
+    }
+
+    /* Radio button groups */
+    .inline-flex span {
+        font-size: 13px;
+    }
+
+    /* Submit button */
+    button[type="submit"] {
+        padding: 0.8rem 1.25rem !important;
+        font-size: 15px;
+    }
+
+    .mt-6 {
+        margin-top: 1.25rem !important;
+    }
+
+    .mb-8 {
+        margin-bottom: 1.5rem !important;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    /* Ensure minimum touch target sizes */
+    button[type="submit"],
+    textarea,
+    input[type="text"] {
+        min-height: 48px;
+        touch-action: manipulation;
+    }
+
+    textarea,
+    input[type="text"] {
+        font-size: 16px; /* Prevent zoom on iOS */
+    }
+
+    .inline-flex {
+        min-height: 48px;
+        padding: 0.5rem;
+        touch-action: manipulation;
+    }
+
+    .form-radio {
+        min-width: 24px;
+        min-height: 24px;
+    }
+
+    /* Remove hover effects on touch devices */
+    button[type="submit"]:hover {
+        transform: none;
+    }
+
+    /* Add active states for touch feedback */
+    button[type="submit"]:active {
+        transform: scale(0.98);
+        opacity: 0.9;
+    }
+
+    textarea:focus,
+    input[type="text"]:focus {
+        transform: scale(1.01);
+    }
+
+    .inline-flex:active {
+        background: rgba(86, 156, 214, 0.1);
+        border-radius: 4px;
+    }
+}
+
+/* Landscape mode adjustments for mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+    .py-12 {
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+    }
+
+    .max-w-4xl {
+        margin: 10px;
+    }
+
+    .p-6 {
+        padding: 1rem !important;
+    }
+
+    textarea[rows="3"] {
+        min-height: 60px;
+    }
+
+    textarea[rows="4"] {
+        min-height: 70px;
+    }
+
+    textarea[rows="5"] {
+        min-height: 85px;
+    }
+
+    .mb-6 {
+        margin-bottom: 1rem !important;
+    }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+    .max-w-4xl {
+        margin: 8px;
+    }
+
+    .p-6 {
+        padding: 0.875rem !important;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    label {
+        font-size: 12px;
+    }
+
+    textarea,
+    input[type="text"] {
+        padding: 0.6rem !important;
+        font-size: 16px;
+    }
+
+    .inline-flex span {
+        font-size: 12px;
+    }
+
+    button[type="submit"] {
+        padding: 0.75rem 1rem !important;
+        font-size: 14px;
+    }
+
+    .bg-blue-100,
+    .bg-red-100,
+    .bg-green-100 {
+        font-size: 12px;
+        padding: 0.6rem !important;
+    }
+}
+
+/* Prevent horizontal scroll */
+@media (max-width: 768px) {
+    body {
+        overflow-x: hidden;
+    }
+
+    .max-w-4xl {
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    /* Ensure long text doesn't break layout */
+    label,
+    textarea,
+    input[type="text"],
+    .bg-blue-100,
+    .bg-red-100,
+    .bg-green-100 {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+}
+
+/* Improve readability on small screens */
+@media (max-width: 480px) {
+    /* Better line height for reading */
+    label {
+        line-height: 1.5;
+    }
+
+    textarea {
+        line-height: 1.6;
+    }
+
+    /* Better spacing between form elements */
+    .mb-6 {
+        margin-bottom: 1.125rem !important;
+    }
+
+    /* Clearer visual hierarchy */
+    .max-w-4xl {
+        border-width: 2px;
+    }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    button[type="submit"]:hover,
+    button[type="submit"]:active {
+        transform: none;
+    }
+}
+
+/* Custom scrollbar for textareas */
+textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+textarea::-webkit-scrollbar-track {
+    background: #252526;
+    border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background: #569cd6;
+    border-radius: 4px;
+}
+
+textarea::-webkit-scrollbar-thumb:hover {
+    background: #4ec9b0;
+}
+
+/* Focus visible for keyboard navigation */
+textarea:focus-visible,
+input:focus-visible,
+button:focus-visible,
+.form-radio:focus-visible {
+    outline: 2px solid #4ec9b0;
+    outline-offset: 2px;
+}
+
+/* Improve contrast for better accessibility */
+@media (prefers-contrast: high) {
+    textarea,
+    input[type="text"] {
+        border-width: 3px;
+    }
+
+    button[type="submit"] {
+        border-width: 3px;
+    }
+
+    label {
+        font-weight: 700;
+    }
+}
+
+/* Print styles */
+@media print {
+    .max-w-4xl {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+
+    button[type="submit"] {
+        display: none;
+    }
+
+    textarea,
+    input[type="text"] {
+        border: 1px solid #000;
+        background: white;
+        color: black;
+    }
+}

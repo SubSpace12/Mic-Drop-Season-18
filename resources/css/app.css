@@ -1,3 +1,538 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+
+* {
+    font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+}
+
+body {
+    background: linear-gradient(135deg, #1e1e1e 0%, #252526 50%, #2d2d30 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+/* Code decoration */
+body::before,
+body::after {
+    content: '>';
+    position: fixed;
+    font-size: 2rem;
+    color: #4ec9b0;
+    opacity: 0.1;
+    animation: terminal-blink 3s ease-in-out infinite;
+    z-index: 0;
+}
+
+body::before {
+    top: 20%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+body::after {
+    top: 60%;
+    right: 10%;
+    animation-delay: 1.5s;
+    content: '//';
+}
+
+@keyframes terminal-blink {
+    0%, 100% {
+        opacity: 0.1;
+    }
+    50% {
+        opacity: 0.2;
+    }
+}
+
+.min-h-screen {
+    position: relative;
+    z-index: 1;
+}
+
+/* Navigation Bar Styles */
+nav {
+    background: #2d2d30;
+    border-bottom: 2px solid #3e3e42;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* User Profile Button */
+.user-profile-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border: 2px solid #3e3e42;
+    border-radius: 4px;
+    background: #252526;
+    color: #d4d4d4;
+    font-weight: 600;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.user-profile-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(78, 201, 176, 0.4);
+    border-color: #4ec9b0;
+}
+
+.user-avatar {
+    height: 2rem;
+    width: 2rem;
+    border-radius: 9999px;
+    object-fit: cover;
+    margin-right: 0.5rem;
+    border: 2px solid #569cd6;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.user-tag {
+    color: #4ec9b0;
+    font-weight: 700;
+}
+
+.user-username {
+    color: #a0a0a0;
+    font-weight: 500;
+    font-size: 0.875rem;
+}
+
+/* Dropdown Styles */
+.dropdown-content {
+    background: #2d2d30;
+    border-radius: 4px;
+    border: 2px solid #3e3e42;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+}
+
+.dropdown-link {
+    color: #d4d4d4;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s;
+    display: block;
+}
+
+.dropdown-link:hover {
+    background: #1e1e1e;
+    color: #4ec9b0;
+    padding-left: 1.5rem;
+}
+
+.dropdown-divider {
+    border-top: 1px solid #3e3e42;
+    margin: 0.5rem 0;
+}
+
+/* Hamburger Button */
+.hamburger-button {
+    padding: 0.5rem;
+    border-radius: 4px;
+    color: #4ec9b0;
+    background: #252526;
+    border: 2px solid #3e3e42;
+    transition: all 0.3s;
+}
+
+.hamburger-button:hover {
+    background: #1e1e1e;
+    border-color: #4ec9b0;
+}
+
+/* Responsive Nav Menu */
+.responsive-nav-menu {
+    background: #252526;
+    border-top: 2px solid #3e3e42;
+}
+
+.responsive-nav-link {
+    color: #4ec9b0;
+    font-weight: 600;
+    padding: 0.75rem 1rem;
+    margin: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: all 0.3s;
+    display: block;
+}
+
+.responsive-nav-link:hover {
+    background: #1e1e1e;
+    padding-left: 1.5rem;
+}
+
+.responsive-user-info {
+    padding: 0 1rem;
+    border-top: 1px solid #3e3e42;
+    padding-top: 1rem;
+    padding-bottom: 0.25rem;
+}
+
+.responsive-user-name {
+    font-weight: 700;
+    color: #4ec9b0;
+}
+
+.responsive-user-email {
+    font-weight: 500;
+    color: #a0a0a0;
+    font-size: 0.875rem;
+}
+
+/* Login Button */
+.login-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.login-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.75rem 2rem;
+    background: linear-gradient(135deg, #0e639c, #1177bb);
+    color: #d4d4d4;
+    font-weight: 700;
+    border-radius: 4px;
+    transition: all 0.3s;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(14, 99, 156, 0.4);
+    border: 2px solid #569cd6;
+}
+
+.login-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 99, 156, 0.6);
+    background: linear-gradient(135deg, #1177bb, #1c88d1);
+    border-color: #4ec9b0;
+}
+
+.login-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+}
+
+/* Page Header */
+.page-header {
+    background: linear-gradient(135deg, #0e639c 0%, #1177bb 50%, #1c88d1 100%);
+    border-bottom: 2px solid #569cd6;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.page-header-content {
+    color: #d4d4d4;
+    font-weight: 700;
+}
+
+/* Nav Links */
+.nav-link {
+    color: #4ec9b0;
+    font-weight: 600;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s;
+    padding: 0.5rem 1rem;
+}
+
+.nav-link:hover {
+    border-bottom-color: #4ec9b0;
+    color: #6a9955;
+}
+
+/* ========== MOBILE RESPONSIVE STYLES ========== */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+    .user-info {
+        display: none;
+    }
+
+    .user-avatar {
+        margin-right: 0;
+    }
+
+    .login-button {
+        padding: 0.65rem 1.5rem;
+        font-size: 0.95rem;
+    }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+    /* Adjust body decorations */
+    body::before,
+    body::after {
+        font-size: 1.5rem;
+    }
+
+    body::before {
+        top: 10%;
+        left: 5%;
+    }
+
+    body::after {
+        top: 70%;
+        right: 5%;
+    }
+
+    /* Navigation adjustments */
+    nav {
+        border-bottom: 1px solid #3e3e42;
+    }
+
+    /* User profile button - mobile version */
+    .user-profile-button {
+        padding: 0.4rem 0.6rem;
+    }
+
+    .user-avatar {
+        height: 2.5rem;
+        width: 2.5rem;
+        margin-right: 0;
+    }
+
+    /* Hide user info text on mobile */
+    .user-info {
+        display: none;
+    }
+
+    /* Dropdown adjustments */
+    .dropdown-content {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .dropdown-link {
+        padding: 0.85rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    /* Hamburger button */
+    .hamburger-button {
+        padding: 0.6rem;
+    }
+
+    /* Responsive nav menu */
+    .responsive-nav-menu {
+        border-top: 1px solid #3e3e42;
+    }
+
+    .responsive-nav-link {
+        padding: 0.85rem 1rem;
+        margin: 0.25rem 0.75rem;
+        font-size: 0.95rem;
+        touch-action: manipulation;
+    }
+
+    .responsive-user-info {
+        padding: 1rem;
+    }
+
+    .responsive-user-name {
+        font-size: 1rem;
+    }
+
+    .responsive-user-email {
+        font-size: 0.85rem;
+    }
+
+    /* Login button mobile */
+    .login-button {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.95rem;
+        width: 90%;
+        max-width: 300px;
+        justify-content: center;
+    }
+
+    .login-icon {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+
+    /* Page header mobile */
+    .page-header {
+        border-bottom: 1px solid #569cd6;
+    }
+
+    .page-header-content {
+        font-size: 1.25rem;
+        padding: 1rem;
+    }
+
+    /* Nav link text */
+    .nav-link {
+        font-size: 0.95rem;
+        padding: 0.5rem 0.75rem;
+    }
+}
+
+/* Small Mobile (max-width: 480px) */
+@media (max-width: 480px) {
+    /* Further reduce decorations */
+    body::before,
+    body::after {
+        font-size: 1.25rem;
+        opacity: 0.05;
+    }
+
+    /* Navigation */
+    .user-profile-button {
+        padding: 0.35rem 0.5rem;
+    }
+
+    .user-avatar {
+        height: 2.25rem;
+        width: 2.25rem;
+    }
+
+    /* Dropdown */
+    .dropdown-link {
+        padding: 0.75rem 0.85rem;
+        font-size: 0.9rem;
+    }
+
+    /* Hamburger */
+    .hamburger-button {
+        padding: 0.5rem;
+    }
+
+    .hamburger-button svg {
+        height: 1.5rem;
+        width: 1.5rem;
+    }
+
+    /* Responsive menu */
+    .responsive-nav-link {
+        padding: 0.75rem 0.85rem;
+        margin: 0.25rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .responsive-user-info {
+        padding: 0.85rem;
+    }
+
+    .responsive-user-name {
+        font-size: 0.95rem;
+    }
+
+    .responsive-user-email {
+        font-size: 0.8rem;
+    }
+
+    /* Login button */
+    .login-button {
+        padding: 0.65rem 1.25rem;
+        font-size: 0.9rem;
+        width: 95%;
+    }
+
+    /* Page header */
+    .page-header-content {
+        font-size: 1.125rem;
+        padding: 0.85rem;
+    }
+
+    .nav-link {
+        font-size: 0.9rem;
+        padding: 0.4rem 0.6rem;
+    }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+    /* Ensure all interactive elements are touch-friendly */
+    .user-profile-button,
+    .hamburger-button,
+    .login-button,
+    .dropdown-link,
+    .responsive-nav-link,
+    .nav-link {
+        min-height: 44px;
+        touch-action: manipulation;
+    }
+
+    /* Remove hover effects on touch */
+    .user-profile-button:hover,
+    .hamburger-button:hover,
+    .login-button:hover,
+    .dropdown-link:hover,
+    .responsive-nav-link:hover,
+    .nav-link:hover {
+        transform: none;
+        padding-left: inherit;
+    }
+
+    /* Add active/pressed states for touch feedback */
+    .user-profile-button:active {
+        transform: scale(0.97);
+        opacity: 0.9;
+    }
+
+    .hamburger-button:active {
+        transform: scale(0.95);
+    }
+
+    .login-button:active {
+        transform: scale(0.98);
+    }
+
+    .dropdown-link:active,
+    .responsive-nav-link:active {
+        background: #1e1e1e;
+        color: #4ec9b0;
+    }
+}
+
+/* Landscape mode adjustments for mobile */
+@media (max-width: 896px) and (orientation: landscape) {
+    .page-header-content {
+        padding: 0.75rem 1rem;
+        font-size: 1.125rem;
+    }
+
+    .responsive-nav-menu {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+}
+
+/* Fix for very small screens */
+@media (max-width: 360px) {
+    .nav-link {
+        font-size: 0.85rem;
+        padding: 0.35rem 0.5rem;
+    }
+
+    .user-avatar {
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .hamburger-button svg {
+        height: 1.25rem;
+        width: 1.25rem;
+    }
+
+    .login-button {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .dropdown-link,
+    .responsive-nav-link {
+        padding: 0.65rem 0.75rem;
+        font-size: 0.85rem;
+    }
+}
