@@ -1,7 +1,506 @@
 <x-app-layout>
 
-    {{-- Link to external CSS file --}}
-    @vite(['resources/css/results.css'])
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+
+        * {
+            font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+        }
+
+        .results-container {
+            display: flex;
+            height: calc(100vh - 64px);
+            overflow: hidden;
+            background: linear-gradient(135deg, #1e1e1e 0%, #252526 100%);
+        }
+
+        .sidebar {
+            width: 280px;
+            background: #2d2d30;
+            color: white;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.5);
+            border-right: 2px solid #3e3e42;
+        }
+
+        .sidebar h2 {
+            padding: 20px;
+            background: #1e1e1e;
+            font-size: 18px;
+            border-bottom: 2px solid #3e3e42;
+            color: #4ec9b0;
+            font-weight: 600;
+        }
+
+        .slide-nav {
+            list-style: none;
+        }
+
+        .slide-nav li {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #3e3e42;
+            transition: background 0.2s;
+            color: #d4d4d4;
+        }
+
+        .slide-nav li:hover {
+            background: #3e3e42;
+        }
+
+        .slide-nav li.active {
+            background: #0e639c;
+            border-left: 4px solid #4ec9b0;
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px;
+            background: linear-gradient(135deg, #1e1e1e 0%, #252526 100%);
+        }
+
+        .result-slide {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            position: relative;
+            border: 2px solid #3e3e42;
+        }
+
+        .result-slide.active {
+            display: block;
+        }
+
+        .slide-header {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #3e3e42;
+        }
+
+        .rank-box, .score-box {
+            background: #2d2d30;
+            color: #d4d4d4;
+            padding: 15px 25px;
+            border-radius: 4px;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            min-width: 80px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 2px solid #3e3e42;
+        }
+
+        .rank-box.gold {
+            background: linear-gradient(135deg, #d4a574, #b8935f);
+            color: #1e1e1e;
+            border-color: #d4a574;
+            box-shadow: 0 4px 15px rgba(212, 165, 116, 0.6);
+        }
+
+        .rank-box.silver {
+            background: linear-gradient(135deg, #858585, #6e6e6e);
+            color: #1e1e1e;
+            border-color: #858585;
+            box-shadow: 0 4px 15px rgba(133, 133, 133, 0.6);
+        }
+
+        .rank-box.bronze {
+            background: linear-gradient(135deg, #8b5a3c, #6d4428);
+            color: #d4d4d4;
+            border-color: #8b5a3c;
+            box-shadow: 0 4px 15px rgba(139, 90, 60, 0.6);
+        }
+
+        .rank-box.eliminated {
+            background: linear-gradient(135deg, #7a2828, #5a1e1e);
+            color: #d4d4d4;
+            border-color: #c85050;
+            box-shadow: 0 4px 15px rgba(200, 80, 80, 0.8);
+            animation: terminal-blink 2s infinite;
+        }
+
+        @keyframes terminal-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .score-box {
+            background: #0e4429;
+            color: #4ec9b0;
+            border-color: #4ec9b0;
+            box-shadow: 0 4px 15px rgba(78, 201, 176, 0.4);
+        }
+
+        .contestant-name {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            color: #4ec9b0;
+            background: #1e1e1e;
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: 2px solid #3e3e42;
+        }
+
+        .judge-block {
+            margin-bottom: 20px;
+            border: 2px solid #3e3e42;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #1e1e1e;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .judge-header {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            background: #2d2d30;
+            color: #d4d4d4;
+            padding: 12px 20px;
+            font-size: 14px;
+            align-items: center;
+            border-bottom: 2px solid #3e3e42;
+        }
+
+        .judge-name {
+            text-align: left;
+            font-weight: 600;
+            color: #569cd6;
+        }
+
+        .song-title {
+            text-align: center;
+            font-weight: 600;
+            color: #d4d4d4;
+        }
+
+        .song-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .song-title a:hover {
+            opacity: 0.7;
+            text-decoration: underline;
+        }
+
+        .judge-score {
+            text-align: right;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .judge-score.low {
+            color: #f48771;
+        }
+
+        .judge-score.high {
+            color: #6a9955;
+        }
+
+        .judge-score.perfect {
+            color: #d7ba7d;
+        }
+
+        .review-body {
+            padding: 20px;
+            background: #252526;
+            min-height: 80px;
+            line-height: 1.6;
+            color: #d4d4d4;
+            text-align: center;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #a0a0a0;
+            font-size: 18px;
+            background: #252526;
+            border-radius: 8px;
+            margin: 40px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border: 2px solid #3e3e42;
+        }
+
+        .announcement {
+            text-align: center;
+            padding: 60px 40px;
+            background: #2d2d30;
+            border-radius: 8px;
+            margin: 40px auto;
+            max-width: 800px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border-left: 6px solid #f48771;
+            border: 2px solid #3e3e42;
+        }
+
+        .announcement-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #d7ba7d;
+        }
+
+        .announcement h2 {
+            color: #f48771;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .announcement p {
+            color: #d4d4d4;
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .bg-upload-section {
+            background: #2d2d30;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border: 2px solid #3e3e42;
+        }
+
+        .bg-upload-section h3 {
+            color: #4ec9b0;
+            margin-bottom: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .bg-upload-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .bg-upload-item {
+            border: 2px dashed #3e3e42;
+            border-radius: 4px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s;
+            background: #1e1e1e;
+        }
+
+        .bg-upload-item:hover {
+            border-color: #569cd6;
+            background: #252526;
+        }
+
+        .bg-upload-item label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #d4d4d4;
+        }
+
+        .staff-tools-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            background: linear-gradient(135deg, #0e639c, #1177bb);
+            color: white;
+            border: 2px solid #569cd6;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(14, 99, 156, 0.6);
+            transition: all 0.3s;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .staff-tools-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(14, 99, 156, 0.8);
+            border-color: #4ec9b0;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9998;
+        }
+
+        .modal-overlay.active {
+            display: block;
+        }
+
+        .bg-upload-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #2d2d30;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.9);
+            border: 2px solid #3e3e42;
+            z-index: 9999;
+        }
+
+        .bg-upload-modal.active {
+            display: block;
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -45%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3e3e42;
+        }
+
+        .modal-header h3 {
+            color: #4ec9b0;
+            font-size: 24px;
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: #7a2828;
+            color: white;
+            border: 2px solid #c85050;
+            width: 35px;
+            height: 35px;
+            border-radius: 4px;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: #a03535;
+            transform: scale(1.1);
+        }
+
+        .debug-info-box {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            font-size: 12px;
+            color: #d4d4d4;
+            border: 2px solid #3e3e42;
+        }
+
+        .debug-info-box strong {
+            color: #569cd6;
+        }
+
+        .bg-upload-item input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 8px;
+            font-size: 12px;
+            background: #252526;
+            color: #d4d4d4;
+            border: 2px solid #3e3e42;
+            border-radius: 4px;
+        }
+
+        .bg-upload-item button {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #0e639c;
+            color: white;
+            border: 2px solid #569cd6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .bg-upload-item button:hover {
+            background: #1177bb;
+            border-color: #4ec9b0;
+        }
+
+        .bg-preview {
+            margin-top: 10px;
+            max-width: 100%;
+            max-height: 100px;
+            border-radius: 4px;
+            border: 2px solid #3e3e42;
+        }
+
+        .access-denied {
+            text-align: center;
+            padding: 60px 40px;
+            background: #2d2d30;
+            border-radius: 8px;
+            margin: 40px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+            border-left: 6px solid #f48771;
+            border: 2px solid #3e3e42;
+        }
+
+        .access-denied-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            color: #f48771;
+        }
+
+        .access-denied h2 {
+            color: #f48771;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .access-denied p {
+            color: #d4d4d4;
+            font-size: 18px;
+        }
+    </style>
 
     @php
     // Get the active season
@@ -17,17 +516,29 @@
         $group = -1;
     }
 
-    // Get round information
+    // Get round information for the round we're viewing
     $roundInfo = $seasonId ? DB::table('round')
         ->where('round_number', $round)
         ->where('season_id', $seasonId)
         ->first() : null;
 
-    // If this is a merge round but the season hasn't merged yet, treat all contestants as group 0
-    $effectiveGroup = $group;
-    if ($roundInfo && $roundInfo->is_merge && $activeSeason && !$activeSeason->is_merged) {
-        $effectiveGroup = 0;
+    // Get the currently active round
+    $activeRound = $seasonId ? DB::table('round')
+        ->where('status', 1)
+        ->where('season_id', $seasonId)
+        ->orderBy('round_number')
+        ->first() : null;
+
+    // Determine which group column to use
+    $groupColumn = 'md_group';
+    if ($activeRound && $roundInfo) {
+        // If merge status doesn't match between active and viewed round, use group_legacy
+        if ($activeRound->is_merge != $roundInfo->is_merge) {
+            $groupColumn = 'group_legacy';
+        }
     }
+
+    $effectiveGroup = $group;
 
     // Check permissions
     $userPerms = auth()->user()->perms ?? 0;
@@ -55,23 +566,16 @@
         ->whereNull('score')
         ->exists() : false;
 
-    // Determine if we should ignore group filtering for contestants
-    $ignoreGroupFilter = ($roundInfo && $roundInfo->is_merge && $activeSeason && !$activeSeason->is_merged);
-
     $contestants = $seasonId ? DB::table('contestants')
         ->join('users', 'users.id', '=', 'contestants.id')
         ->where('contestants.season_id', $seasonId)
-        ->when(!$ignoreGroupFilter, function ($query) use ($effectiveGroup) {
-            return $query->where('contestants.md_group', $effectiveGroup);
-        })
+        ->where("contestants.$groupColumn", $effectiveGroup)
         ->get() : collect();
 
     // Count contestants with null submission_date and not eliminated
     $missedSubmissions = $seasonId ? DB::table('contestants')
         ->where('season_id', $seasonId)
-        ->when(!$ignoreGroupFilter, function ($query) use ($effectiveGroup) {
-            return $query->where('md_group', $effectiveGroup);
-        })
+        ->where($groupColumn, $effectiveGroup)
         ->where('eliminated', false)
         ->whereNull('submission_date')
         ->count() : 0;
@@ -345,13 +849,8 @@
             </div>
         </div>
     @else
-        <!-- Mobile Menu Toggle -->
-        <button class="mobile-menu-toggle" id="mobileMenuToggle" onclick="toggleMobileMenu()">
-            ☰
-        </button>
-
         <div class="results-container">
-            <div class="sidebar" id="sidebar">
+            <div class="sidebar">
                 <h2>Results Navigation</h2>
                 <ul class="slide-nav">
                     @foreach ($subsTable as $index => $table)
@@ -407,31 +906,7 @@
             </div>
         </div>
 
-        <!-- Mobile Navigation Controls -->
-        <div class="mobile-nav-controls">
-            <div class="mobile-nav-buttons">
-                <button class="mobile-nav-button" id="prevButton" onclick="prevSlide()">
-                    ◀ Previous
-                </button>
-                <div class="mobile-slide-counter" id="slideCounter">
-                    1 / {{ count($subsTable) }}
-                </div>
-                <button class="mobile-nav-button" id="nextButton" onclick="nextSlide()">
-                    Next ▶
-                </button>
-            </div>
-        </div>
-
-        <!-- Swipe Indicators -->
-        <div class="swipe-indicator left">◀</div>
-        <div class="swipe-indicator right">▶</div>
-
         <script>
-            let currentSlide = 0;
-            const totalSlides = {{ count($subsTable) }};
-            let touchStartX = 0;
-            let touchEndX = 0;
-
             function showSlide(index) {
                 // Hide all slides
                 document.querySelectorAll('.result-slide').forEach(slide => {
@@ -446,105 +921,7 @@
                 // Show selected slide
                 document.querySelector(`.result-slide[data-slide="${index}"]`).classList.add('active');
                 document.querySelector(`.slide-nav li[data-slide="${index}"]`).classList.add('active');
-                
-                // Update current slide
-                currentSlide = index;
-                
-                // Update mobile counter
-                updateMobileControls();
-                
-                // Close mobile menu if open
-                const sidebar = document.getElementById('sidebar');
-                if (sidebar.classList.contains('active')) {
-                    sidebar.classList.remove('active');
-                }
             }
-
-            function nextSlide() {
-                if (currentSlide < totalSlides - 1) {
-                    showSlide(currentSlide + 1);
-                }
-            }
-
-            function prevSlide() {
-                if (currentSlide > 0) {
-                    showSlide(currentSlide - 1);
-                }
-            }
-
-            function updateMobileControls() {
-                const prevButton = document.getElementById('prevButton');
-                const nextButton = document.getElementById('nextButton');
-                const counter = document.getElementById('slideCounter');
-                
-                if (counter) {
-                    counter.textContent = `${currentSlide + 1} / ${totalSlides}`;
-                }
-                
-                if (prevButton) {
-                    prevButton.disabled = currentSlide === 0;
-                }
-                
-                if (nextButton) {
-                    nextButton.disabled = currentSlide === totalSlides - 1;
-                }
-            }
-
-            function toggleMobileMenu() {
-                const sidebar = document.getElementById('sidebar');
-                sidebar.classList.toggle('active');
-            }
-
-            // Touch/Swipe Navigation
-            const mainContent = document.querySelector('.main-content');
-            
-            mainContent.addEventListener('touchstart', (e) => {
-                touchStartX = e.changedTouches[0].screenX;
-            });
-
-            mainContent.addEventListener('touchend', (e) => {
-                touchEndX = e.changedTouches[0].screenX;
-                handleSwipe();
-            });
-
-            function handleSwipe() {
-                const swipeThreshold = 50;
-                const diff = touchStartX - touchEndX;
-                
-                if (Math.abs(diff) > swipeThreshold) {
-                    if (diff > 0) {
-                        // Swipe left - next slide
-                        nextSlide();
-                    } else {
-                        // Swipe right - previous slide
-                        prevSlide();
-                    }
-                }
-            }
-
-            // Keyboard navigation
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'ArrowRight') {
-                    nextSlide();
-                } else if (e.key === 'ArrowLeft') {
-                    prevSlide();
-                }
-            });
-
-            // Close sidebar when clicking outside on mobile
-            document.addEventListener('click', function(e) {
-                const sidebar = document.getElementById('sidebar');
-                const menuToggle = document.getElementById('mobileMenuToggle');
-                
-                if (window.innerWidth <= 768) {
-                    if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                        sidebar.classList.remove('active');
-                    }
-                }
-            });
-
-            // Initialize mobile controls
-            updateMobileControls();
         </script>
     @endif
 </x-app-layout>
