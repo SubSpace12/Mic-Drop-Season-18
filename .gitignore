@@ -24,7 +24,6 @@ yarn-error.log
 Thumbs.db
 
 # Build files
-/public/build
 /public/mix-manifest.json
 /public/css/app.css
 /public/js/app.js
@@ -57,7 +56,6 @@ package-lock.json
 yarn.lock
 
 # Compiled assets (Tailwind/Vite output)
-/public/hot
 /public/storage
 /storage/*.key
 
