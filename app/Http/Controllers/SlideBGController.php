@@ -61,11 +61,13 @@ class SlideBGController extends Controller
                 if (!empty($round->$bgField)) {
                     Storage::disk('public')->delete($round->$bgField);
                 }
-
+                
                 // Store new file
                 $file = $request->file($bgField);
-                $filename = 'slides/' . $roundNumber . '_' . $bgField . '_' . time() . '.' . $file->getClientOriginalExtension();
-                $path = $file->storeAs('slides', basename($filename), 'public');
+                $filename = $roundNumber . '_' . $bgField . '_' . time() . '.' . $file->getClientOriginalExtension();
+                
+                // Store in slides directory
+                $path = $file->storeAs('slides', $filename, 'public');
                 
                 $updateData[$bgField] = $path;
             }
