@@ -36,7 +36,7 @@ body::after {
     top: 60%;
     right: 10%;
     animation-delay: 1.5s;
-    content: '//';
+    content: '////';
 }
 
 @keyframes terminal-blink {
