@@ -155,14 +155,14 @@
     border: 2px solid #3e3e42;
     border-radius: 4px;
     overflow: hidden;
-    background: rgba(30, 30, 30, 0.85);  /* Added alpha */
+    background: rgba(30, 30, 30, 0.75);  /* Added alpha */
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .judge-header {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
-    background: rgba(45, 45, 48, 0.85);  /* Added alpha */
+    background: rgba(45, 45, 48, 0.75);  /* Added alpha */
     color: #d4d4d4;
     padding: 12px 20px;
     font-size: 14px;
@@ -214,7 +214,7 @@
 
 .review-body {
     padding: 20px;
-    background: rgba(37, 37, 38, 0.85);  /* Added alpha */
+    background: rgba(37, 37, 38, 0.75);  /* Added alpha */
     min-height: 80px;
     line-height: 1.6;
     color: #d4d4d4;
