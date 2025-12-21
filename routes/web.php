@@ -129,3 +129,7 @@ Route::get('/test-simple', function () {
 Route::get('/test-with-layout', function () {
     return view('test-with-layout');
 });
+
+Route::get('/judge-comments/{appId}', [AppVoteController::class, 'getComments'])
+    ->middleware(['auth'])
+    ->name('judge.comments');

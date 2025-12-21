@@ -19,20 +19,37 @@ $user_apps = DB::table('apps')
 
 $current_user_id = auth()->id();
 
-// Get all upvotes for the current user
-$user_votes = DB::table('judge_upvotes')
+// Get all votes and comments for the current user
+$user_entries = DB::table('judge_upvotes')
     ->where('staff_id', $current_user_id)
-    ->pluck('score', 'app_id')
-    ->toArray();
+    ->get()
+    ->keyBy('app_id');
 
 // Get vote counts for each app
 $vote_counts = DB::table('judge_upvotes')
     ->select('app_id', 
-        DB::raw('SUM(CASE WHEN score = true THEN 1 ELSE 0 END) as thumbs_up'),
-        DB::raw('SUM(CASE WHEN score = false THEN 1 ELSE 0 END) as thumbs_down'))
+        DB::raw('SUM(CASE WHEN score = 2 THEN 1 ELSE 0 END) as strong_like'),
+        DB::raw('SUM(CASE WHEN score = 1 THEN 1 ELSE 0 END) as thumbs_up'),
+        DB::raw('SUM(CASE WHEN score = -1 THEN 1 ELSE 0 END) as thumbs_down'))
     ->groupBy('app_id')
     ->get()
     ->keyBy('app_id');
+
+// Get all comments for all apps
+$all_comments = DB::table('judge_upvotes')
+    ->join('users', 'judge_upvotes.staff_id', '=', 'users.id')
+    ->whereNotNull('judge_upvotes.comment')
+    ->where('judge_upvotes.comment', '!=', '')
+    ->select(
+        'judge_upvotes.app_id',
+        'judge_upvotes.comment',
+        'judge_upvotes.score',
+        'users.global_name',
+        'judge_upvotes.staff_id'
+    )
+    ->orderBy('judge_upvotes.staff_id', 'asc')
+    ->get()
+    ->groupBy('app_id');
 
 // Get judging history for each user in the active season
 $judging_history = [];
@@ -72,10 +89,13 @@ if ($seasonId) {
                     <li onclick="showApp({{ $index }})" data-app="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}">
                         <div class="app-nav-name">{{ $app->global_name }}</div>
                         <div class="app-nav-votes">
-                            <span class="vote-count">
+                            <span class="vote-count vote-strong">
+                                💖 {{ $vote_counts[$app->id]->strong_like ?? 0 }}
+                            </span>
+                            <span class="vote-count vote-up">
                                 👍 {{ $vote_counts[$app->id]->thumbs_up ?? 0 }}
                             </span>
-                            <span class="vote-count">
+                            <span class="vote-count vote-down">
                                 👎 {{ $vote_counts[$app->id]->thumbs_down ?? 0 }}
                             </span>
                         </div>
@@ -139,37 +159,112 @@ if ($seasonId) {
                             <h3>Would you prefer to judge more or less submissions in a round?</h3>
                             <p>{{ $app->longer == 0 ? 'Less' : 'More' }}</p>
                         </div>
+
+                        <!-- Comments Section -->
+                        <div class="comments-section">
+                            <h2>Comments</h2>
+                            
+                            <!-- Comment Form -->
+                            <div class="comment-form">
+                                <textarea 
+                                    id="comment-textarea-{{ $app->id }}" 
+                                    class="comment-textarea" 
+                                    placeholder="Leave a comment about this application (optional)..."
+                                    maxlength="5000"
+                                >{{ $user_entries[$app->id]->comment ?? '' }}</textarea>
+                                <div class="comment-form-actions">
+                                    <span class="char-counter">
+                                        <span id="char-count-{{ $app->id }}">{{ isset($user_entries[$app->id]) ? strlen($user_entries[$app->id]->comment ?? '') : 0 }}</span>/5000
+                                    </span>
+                                    <button 
+                                        class="submit-comment-btn" 
+                                        onclick="submitComment({{ $app->id }})"
+                                    >
+                                        Save Comment
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Existing Comments -->
+                            <div class="comments-list" id="comments-list-{{ $app->id }}">
+                                @if(isset($all_comments[$app->id]) && count($all_comments[$app->id]) > 0)
+                                    @foreach($all_comments[$app->id] as $comment)
+                                        <div class="comment-item {{ $comment->staff_id == $current_user_id ? 'own-comment' : '' }}">
+                                            <div class="comment-header">
+                                                <span class="comment-author">{{ $comment->global_name }}</span>
+                                                @if($comment->score !== null)
+                                                    <span class="comment-score score-{{ $comment->score }}">
+                                                        @if($comment->score == 2)
+                                                            💖 Strong Like
+                                                        @elseif($comment->score == 1)
+                                                            👍 Thumbs Up
+                                                        @else
+                                                            👎 Thumbs Down
+                                                        @endif
+                                                    </span>
+                                                @endif
+                                            </div>
+                                            <div class="comment-text">{{ $comment->comment }}</div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <p class="no-comments">No comments yet.</p>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 @endforeach
             </div>
 
             <div class="vote-buttons">
-                <button class="vote-btn thumbs-up" onclick="handleVote(true)" id="thumbs-up-btn">👍</button>
-                <button class="vote-btn thumbs-down" onclick="handleVote(false)" id="thumbs-down-btn">👎</button>
+                <button class="vote-btn strong-like" onclick="handleVote(2)" id="strong-like-btn" title="Strong Like">💖</button>
+                <button class="vote-btn thumbs-up" onclick="handleVote(1)" id="thumbs-up-btn" title="Thumbs Up">👍</button>
+                <button class="vote-btn thumbs-down" onclick="handleVote(-1)" id="thumbs-down-btn" title="Thumbs Down">👎</button>
             </div>
         </div>
     </div>
 
     <script>
-        const userVotes = @json($user_votes);
+        const userEntries = @json($user_entries);
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Character counter for comment textareas
+        document.addEventListener('DOMContentLoaded', function() {
+            const textareas = document.querySelectorAll('.comment-textarea');
+            textareas.forEach(textarea => {
+                textarea.addEventListener('input', function() {
+                    const appId = this.id.replace('comment-textarea-', '');
+                    const counter = document.getElementById(`char-count-${appId}`);
+                    counter.textContent = this.value.length;
+                });
+            });
+            
+            updateVoteButtons();
+        });
 
         function updateVoteButtons() {
             const activeSheet = document.querySelector('.app-sheet.active');
             const appId = parseInt(activeSheet.getAttribute('data-app-id'));
             
+            const strongLikeBtn = document.getElementById('strong-like-btn');
             const thumbsUpBtn = document.getElementById('thumbs-up-btn');
             const thumbsDownBtn = document.getElementById('thumbs-down-btn');
             
-            // Remove voted class from both
+            // Remove voted class from all
+            strongLikeBtn.classList.remove('voted');
             thumbsUpBtn.classList.remove('voted');
             thumbsDownBtn.classList.remove('voted');
             
             // Add voted class based on user's vote
-            if (userVotes[appId] === true) {
-                thumbsUpBtn.classList.add('voted');
-            } else if (userVotes[appId] === false) {
-                thumbsDownBtn.classList.add('voted');
+            if (userEntries[appId]) {
+                const score = userEntries[appId].score;
+                if (score === 2) {
+                    strongLikeBtn.classList.add('voted');
+                } else if (score === 1) {
+                    thumbsUpBtn.classList.add('voted');
+                } else if (score === -1) {
+                    thumbsDownBtn.classList.add('voted');
+                }
             }
         }
 
@@ -210,7 +305,6 @@ if ($seasonId) {
                     })
                 });
 
-                // Check if response is ok
                 if (!response.ok) {
                     const text = await response.text();
                     console.error('Server response:', text);
@@ -222,7 +316,10 @@ if ($seasonId) {
                 
                 if (data.success) {
                     // Update local vote data
-                    userVotes[appId] = score;
+                    if (!userEntries[appId]) {
+                        userEntries[appId] = {};
+                    }
+                    userEntries[appId].score = score;
                     updateVoteButtons();
                     
                     // Update vote counts in sidebar
@@ -233,6 +330,105 @@ if ($seasonId) {
             } catch (error) {
                 console.error('Error:', error);
                 alert('Failed to record vote. Please try again.');
+            }
+        }
+
+        async function submitComment(appId) {
+            const textarea = document.getElementById(`comment-textarea-${appId}`);
+            const comment = textarea.value.trim();
+            
+            try {
+                const response = await fetch('/judge-vote', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        app_id: appId,
+                        comment: comment
+                    })
+                });
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    console.error('Server response:', text);
+                    alert('Server error: ' + response.status);
+                    return;
+                }
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Update local comment data
+                    if (!userEntries[appId]) {
+                        userEntries[appId] = {};
+                    }
+                    userEntries[appId].comment = comment;
+                    
+                    // Reload comments
+                    await loadComments(appId);
+                    
+                    alert('Comment saved successfully!');
+                } else {
+                    alert('Error: ' + (data.message || 'Failed to save comment'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to save comment. Please try again.');
+            }
+        }
+
+        async function loadComments(appId) {
+            try {
+                const response = await fetch(`/judge-comments/${appId}`, {
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to fetch comments');
+                    return;
+                }
+
+                const data = await response.json();
+                const commentsList = document.getElementById(`comments-list-${appId}`);
+                const currentUserId = {{ $current_user_id }};
+                
+                if (data.comments.length === 0) {
+                    commentsList.innerHTML = '<p class="no-comments">No comments yet.</p>';
+                } else {
+                    commentsList.innerHTML = data.comments.map(comment => {
+                        const isOwnComment = comment.staff_id === currentUserId;
+                        let scoreHtml = '';
+                        
+                        if (comment.score !== null) {
+                            let scoreText = '';
+                            if (comment.score === 2) {
+                                scoreText = '💖 Strong Like';
+                            } else if (comment.score === 1) {
+                                scoreText = '👍 Thumbs Up';
+                            } else {
+                                scoreText = '👎 Thumbs Down';
+                            }
+                            scoreHtml = `<span class="comment-score score-${comment.score}">${scoreText}</span>`;
+                        }
+                        
+                        return `
+                            <div class="comment-item ${isOwnComment ? 'own-comment' : ''}">
+                                <div class="comment-header">
+                                    <span class="comment-author">${comment.global_name}</span>
+                                    ${scoreHtml}
+                                </div>
+                                <div class="comment-text">${comment.comment}</div>
+                            </div>
+                        `;
+                    }).join('');
+                }
+            } catch (error) {
+                console.error('Error loading comments:', error);
             }
         }
 
@@ -257,9 +453,10 @@ if ($seasonId) {
                     const sheet = document.querySelector(`.app-sheet[data-app="${item.getAttribute('data-app')}"]`);
                     if (sheet && parseInt(sheet.getAttribute('data-app-id')) === appId) {
                         const voteCountSpans = item.querySelectorAll('.vote-count');
-                        if (voteCountSpans.length >= 2) {
-                            voteCountSpans[0].textContent = `👍 ${data.thumbs_up}`;
-                            voteCountSpans[1].textContent = `👎 ${data.thumbs_down}`;
+                        if (voteCountSpans.length >= 3) {
+                            voteCountSpans[0].textContent = `💖 ${data.strong_like}`;
+                            voteCountSpans[1].textContent = `👍 ${data.thumbs_up}`;
+                            voteCountSpans[2].textContent = `👎 ${data.thumbs_down}`;
                         }
                     }
                 });
@@ -267,11 +464,6 @@ if ($seasonId) {
                 console.error('Error updating vote counts:', error);
             }
         }
-
-        // Initialize vote buttons on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            updateVoteButtons();
-        });
     </script>
 @endif
 </x-app-layout>
