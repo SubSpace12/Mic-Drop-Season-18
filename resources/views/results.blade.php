@@ -177,27 +177,27 @@
         // Check podium positions FIRST (highest priority)
         if ($rank == 1 && !empty($roundInfo->slidebg_first)) {
             $url = $getUrl($roundInfo->slidebg_first);
-            return "background: url('{$url}') center/cover no-repeat;";
+            return "background: url('{$url}') center/100% 100% no-repeat;";
         }
         if ($rank == 2 && !empty($roundInfo->slidebg_second)) {
             $url = $getUrl($roundInfo->slidebg_second);
-            return "background: url('{$url}') center/cover no-repeat;";
+            return "background: url('{$url}') center/100% 100% no-repeat;";
         }
         if ($rank == 3 && !empty($roundInfo->slidebg_third)) {
             $url = $getUrl($roundInfo->slidebg_third);
-            return "background: url('{$url}') center/cover no-repeat;";
+            return "background: url('{$url}') center/100% 100% no-repeat;";
         }
         
         // Check if eliminated (lower priority than podium)
         if ($rank > $total - $elimThreshold && !empty($roundInfo->slidebg_elim)) {
             $url = $getUrl($roundInfo->slidebg_elim);
-            return "background: url('{$url}') center/cover no-repeat;";
+            return "background: url('{$url}') center/100% 100% no-repeat;";
         }
         
         // Normal background
         if (!empty($roundInfo->slidebg_normal)) {
             $url = $getUrl($roundInfo->slidebg_normal);
-            return "background: url('{$url}') center/cover no-repeat;";
+            return "background: url('{$url}') center/100% 100% no-repeat;";
         }
         
         return '';
