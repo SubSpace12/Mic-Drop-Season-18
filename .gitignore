@@ -89,3 +89,4 @@ yarn.lock
 # Sublime Text
 *.sublime-project
 *.sublime-workspace
+/public/adminer.php
