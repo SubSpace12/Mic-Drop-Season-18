@@ -652,6 +652,38 @@ body {
     font-size: 1.1rem;
 }
 
+.round-subtitle {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #d4d4d4;
+    margin-bottom: 0.75rem;
+    opacity: 0.9;
+}
+
+.status-pending .round-subtitle {
+    color: #6e6e6e;
+}
+
+.status-active .round-subtitle {
+    color: #9cdccc;
+}
+
+.status-completed .round-subtitle {
+    color: #9dbd8d;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .round-subtitle {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .round-subtitle {
+        font-size: 0.95rem;
+    }
+}
 /* ========== MOBILE RESPONSIVE STYLES ========== */
 
 /* Tablet (768px - 1024px) */
