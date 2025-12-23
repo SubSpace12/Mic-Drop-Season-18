@@ -119,7 +119,7 @@
                                 ->select('judges.id as judge_id', 'users.global_name', 'apps.*')
                                 ->where('judges.round', $round)
                                 ->where('judges.md_group', $group)
-                                ->where('judges.season_id', $seasonId)
+                                ->where('judges.season_id', $seasonId)->orderBy('judge_number')
                                 ->get();
                 }
         @endphp
