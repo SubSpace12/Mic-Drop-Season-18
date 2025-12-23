@@ -16,15 +16,12 @@
                     <div class="p-6 bg-white border-b border-gray-200 text-center">
                         <h2 class="text-2xl font-bold mb-4">Login Required</h2>
                         <p class="text-gray-600 mb-6">You must be logged in to submit a judge application.</p>
-                        <a href="{{ route('login') }}" 
-                           class="inline-block px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                            Login with Discord
-                        </a>
                     </div>
                 </div>
             </div>
         </div>
     @endguest
+    @auth
     @php
         // Check if the logged-in user has an existing application
         $existingApp = DB::table('apps')
@@ -233,6 +230,7 @@
             </div>
         </div>
     </div>
+    @endauth
 </x-app-layout>
 </body>
 </html>
