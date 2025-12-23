@@ -43,10 +43,7 @@
 
                     <x-slot name="content">
                         <div class="dropdown-content">
-                            <x-dropdown-link :href="route('profile.edit')" class="dropdown-link">
-                                {{ __('Profile') }}
-                            </x-dropdown-link>
-
+                       
                             <x-dropdown-link :href="url('/submit-judge-app')" class="dropdown-link">
                                 {{ $hasJudgeApp ? __('Edit Judging Application') : __('Submit Judging Application') }}
                             </x-dropdown-link>
