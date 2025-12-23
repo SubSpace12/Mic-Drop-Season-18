@@ -30,10 +30,7 @@
                                  alt="{{ Auth::user()->getTagAttribute() }}" />
 
                             <div class="user-info">
-                                <span class="user-tag">{{ Auth::user()->getTagAttribute() }}</span>
-                                @if (Auth::user()->global_name)
-                                    <small class="user-username">{{ Auth::user()->username }}</small>
-                                @endif
+                                <span class="user-tag">{{ Auth::user()->global_name ?? Auth::user()->username }}</span>
                             </div>
 
                             <div class="ml-1">
