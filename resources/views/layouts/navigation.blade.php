@@ -110,9 +110,7 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')" class="responsive-nav-link">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
+                
 
                 <x-responsive-nav-link :href="url('/submit-judge-app')" class="responsive-nav-link">
                     {{ $hasJudgeApp ? __('Edit Judging Application') : __('Submit Judging Application') }}
