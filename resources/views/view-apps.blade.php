@@ -464,6 +464,21 @@ if ($seasonId) {
                 console.error('Error updating vote counts:', error);
             }
         }
+
+        const appQuestionElements = document.querySelectorAll('.app-question p');
+
+        appQuestionElements.forEach(element => {
+            const text = element.innerHTML;
+            // Regular expression to find URLs starting with http:// or https://
+            const urlRegex = /(https?:\/\/[^\s<]+)/g;
+            
+            // Replace URLs with clickable links
+            const linkedText = text.replace(urlRegex, function(url) {
+                return '<a href="' + url + '" target="_blank" rel="noopener noreferrer" style="color: #569cd6; text-decoration: underline;">' + url + '</a>';
+            });
+            
+            element.innerHTML = linkedText;
+        });
     </script>
 @endif
 </x-app-layout>
