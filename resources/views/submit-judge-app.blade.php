@@ -5,7 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
 </head>
 <body>
     <x-app-layout>
@@ -85,7 +84,7 @@
                         <!-- Question 2 -->
                         <div class="mb-6">
                             <label for="least_fav_artists" class="block text-sm font-medium text-gray-700 mb-2">
-                                2. Do you have any least favourite artists? This question is optional, write N/A if none.
+                                2. Do you have any least favourite artists, and/or artists that won't score well with you? Try to include at least three.
                             </label>
                             <textarea 
                                 id="least_fav_artists" 
