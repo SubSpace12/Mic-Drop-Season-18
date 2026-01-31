@@ -121,7 +121,7 @@ if ($seasonId) {
                         </div>
 
                         <div class="app-question">
-                            <h3>Do you have any least favourite artists? This question is optional, write N/A if none.</h3>
+                            <h3>Do you have any least favourite artists, and/or artists that won't score well with you? Try to include at least three.</h3>
                             <p>{{ $app->least_fav_artists }}</p>
                         </div>
 
