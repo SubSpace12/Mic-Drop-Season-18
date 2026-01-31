@@ -83,6 +83,14 @@ input[type="text"] {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
 
+/* Auto-height textarea styles */
+textarea {
+    overflow: hidden; /* Hide scrollbar */
+    resize: none; /* Disable manual resize since it auto-resizes */
+    min-height: 80px; /* Minimum height */
+    height: auto;
+}
+
 textarea:focus,
 input:focus {
     outline: none;
@@ -222,17 +230,9 @@ button[type="submit"]:active {
         min-height: 44px;
     }
 
-    /* Adjust textarea rows for mobile */
-    textarea[rows="3"] {
-        min-height: 80px;
-    }
-
-    textarea[rows="4"] {
-        min-height: 100px;
-    }
-
-    textarea[rows="5"] {
-        min-height: 120px;
+    /* Auto-height textarea minimum heights for mobile */
+    textarea {
+        min-height: 70px;
     }
 
     /* Radio button groups */
@@ -343,16 +343,8 @@ button[type="submit"]:active {
         font-size: 16px;
     }
 
-    textarea[rows="3"] {
-        min-height: 75px;
-    }
-
-    textarea[rows="4"] {
-        min-height: 90px;
-    }
-
-    textarea[rows="5"] {
-        min-height: 110px;
+    textarea {
+        min-height: 60px;
     }
 
     /* Radio button groups */
@@ -438,16 +430,8 @@ button[type="submit"]:active {
         padding: 1rem !important;
     }
 
-    textarea[rows="3"] {
-        min-height: 60px;
-    }
-
-    textarea[rows="4"] {
-        min-height: 70px;
-    }
-
-    textarea[rows="5"] {
-        min-height: 85px;
+    textarea {
+        min-height: 50px;
     }
 
     .mb-6 {
@@ -477,6 +461,10 @@ button[type="submit"]:active {
     input[type="text"] {
         padding: 0.6rem !important;
         font-size: 16px;
+    }
+
+    textarea {
+        min-height: 50px;
     }
 
     .inline-flex span {
@@ -558,7 +546,7 @@ button[type="submit"]:active {
     }
 }
 
-/* Custom scrollbar for textareas */
+/* Custom scrollbar for textareas - only shows if content overflows max-height */
 textarea::-webkit-scrollbar {
     width: 8px;
 }

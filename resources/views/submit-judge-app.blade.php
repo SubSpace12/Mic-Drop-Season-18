@@ -76,8 +76,7 @@
                             <textarea 
                                 id="fav_artists" 
                                 name="fav_artists" 
-                                rows="4" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
                                 required>{{ old('fav_artists', $existingApp->fav_artists ?? '') }}</textarea>
                         </div>
 
@@ -89,8 +88,7 @@
                             <textarea 
                                 id="least_fav_artists" 
                                 name="least_fav_artists" 
-                                rows="3" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">{{ old('least_fav_artists', $existingApp->least_fav_artists ?? '') }}</textarea>
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize">{{ old('least_fav_artists', $existingApp->least_fav_artists ?? '') }}</textarea>
                         </div>
 
                         <!-- Question 3 -->
@@ -101,8 +99,7 @@
                             <textarea 
                                 id="fav_genres" 
                                 name="fav_genres" 
-                                rows="4" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
                                 required>{{ old('fav_genres', $existingApp->fav_genres ?? '') }}</textarea>
                         </div>
 
@@ -114,8 +111,7 @@
                             <textarea 
                                 id="least_fav_genres" 
                                 name="least_fav_genres" 
-                                rows="3" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
                                 required>{{ old('least_fav_genres', $existingApp->least_fav_genres ?? '') }}</textarea>
                         </div>
 
@@ -127,8 +123,7 @@
                             <textarea 
                                 id="judging_style" 
                                 name="judging_style" 
-                                rows="5" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
                                 required>{{ old('judging_style', $existingApp->judging_style ?? '') }}</textarea>
                         </div>
 
@@ -140,8 +135,7 @@
                             <textarea 
                                 id="safe_pick_criteria" 
                                 name="safe_pick_criteria" 
-                                rows="4" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
                                 required>{{ old('safe_pick_criteria', $existingApp->safe_pick_criteria ?? '') }}</textarea>
                         </div>
 
@@ -182,8 +176,7 @@
                             <textarea 
                                 id="banned_artists" 
                                 name="banned_artists" 
-                                rows="3" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
                                 required>{{ old('banned_artists', $existingApp->banned_artists ?? '') }}</textarea>
                         </div>
 
@@ -229,6 +222,39 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Auto-resize textarea function
+        function autoResize(textarea) {
+            // Reset height to auto to get the correct scrollHeight
+            textarea.style.height = 'auto';
+            // Set the height to the scrollHeight
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        // Initialize auto-resize for all textareas
+        document.addEventListener('DOMContentLoaded', function() {
+            const textareas = document.querySelectorAll('textarea.auto-resize');
+            
+            textareas.forEach(function(textarea) {
+                // Auto-resize on input
+                textarea.addEventListener('input', function() {
+                    autoResize(this);
+                });
+
+                // Initial resize for pre-filled content (editing mode)
+                autoResize(textarea);
+            });
+        });
+
+        // Also resize on window resize (for responsive layouts)
+        window.addEventListener('resize', function() {
+            const textareas = document.querySelectorAll('textarea.auto-resize');
+            textareas.forEach(function(textarea) {
+                autoResize(textarea);
+            });
+        });
+    </script>
     @endauth
 </x-app-layout>
 </body>
