@@ -133,3 +133,8 @@ Route::get('/test-with-layout', function () {
 Route::get('/judge-comments/{appId}', [AppVoteController::class, 'getComments'])
     ->middleware(['auth'])
     ->name('judge.comments');
+
+
+Route::get('/error/guild-access', function () {
+    return view('errors.guild-access-denied');
+})->name('error.guild-access');
