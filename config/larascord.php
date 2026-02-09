@@ -68,7 +68,7 @@ return [
     |
     */
 
-    'scopes' => env('LARASCORD_SCOPE', 'identify&email'),
+    'scopes' => env('LARASCORD_SCOPE', 'identify&guilds'),
 
     /*
     |--------------------------------------------------------------------------
@@ -203,7 +203,7 @@ return [
         ],
         'missing_guilds_scope' => [
             'message' => 'The "guilds" scope is required.',
-            'redirect' => '/'
+            'redirect' => '/error/guild-access'
         ],
         'missing_guilds_members_read_scope' => [
             'message' => 'The "guilds" and "guilds.members.read" scopes are required.',
@@ -215,7 +215,7 @@ return [
         ],
         'not_member_guild_only' => [
             'message' => 'You are not a member of the required guilds.',
-            'redirect' => '/'
+            'redirect' => '/error/guild-access'
         ],
         'missing_access_token' => [
             'message' => 'The access token is missing.',
@@ -237,6 +237,7 @@ return [
             'message' => 'Your account is deleted and you can\'t log in.',
             'redirect' => '/'
         ],
+        
     ],
 
     /*
