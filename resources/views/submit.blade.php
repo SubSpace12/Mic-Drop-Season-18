@@ -251,12 +251,7 @@
                 @else
                         {{-- Normal Submission Page / Staff Viewing --}}
                         <div class="page-header">
-                                <div class="header-badge">
-                                        <span class="season-badge">Season 18</span>
-                                        <span class="round-badge">Round {{ $round }}</span>
-                                        <span class="group-badge">{{ $group == 0 ? "Merge" : "Group $group" }}</span>
-                                </div>
-                                <h1>{{ $round_info->title }}</h1>
+                                <h1>Mic Drop, Season 18, Round {{ $round }}{{ $group != 0 ? ", Group $group" : "" }} – {{ $round_info->title }}</h1>
                                 <div class="header-description">
                                         <p>{{ $round_info->description }}</p>
                                 </div>

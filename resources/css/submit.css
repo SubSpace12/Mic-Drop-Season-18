@@ -16,107 +16,58 @@
 /* ========== NEW PAGE HEADER STYLES ========== */
 
 .page-header {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #1a1a2e 100%);
-    border-radius: 12px;
-    padding: 35px 30px;
+    background: #252526;
+    border-radius: 8px;
+    padding: 30px;
     margin-bottom: 30px;
-    border: 2px solid #3a3a5c;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    position: relative;
-    overflow: hidden;
-}
-
-.page-header::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, #c792ea, #82aaff, #89ddff, #c3e88d);
-}
-
-.header-badge {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-}
-
-.header-badge span {
-    padding: 6px 14px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-.season-badge {
-    background: linear-gradient(135deg, #c792ea, #a86bdb);
-    color: #fff;
-}
-
-.round-badge {
-    background: linear-gradient(135deg, #82aaff, #6b9bff);
-    color: #fff;
-}
-
-.group-badge {
-    background: linear-gradient(135deg, #c3e88d, #a8d86b);
-    color: #1a1a2e;
+    border: 2px solid #3e3e42;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .page-header h1 {
-    color: #ffffff;
-    font-size: 32px;
+    color: #e0e0e0;
+    font-size: 26px;
     margin-bottom: 20px;
-    font-weight: 700;
-    line-height: 1.3;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    line-height: 1.4;
+    border-bottom: 2px solid #3e3e42;
+    padding-bottom: 15px;
 }
 
 .header-description {
-    background: rgba(255, 255, 255, 0.05);
-    border-left: 4px solid #82aaff;
+    background: #1e1e1e;
+    border-left: 4px solid #858585;
     padding: 15px 20px;
-    border-radius: 0 8px 8px 0;
+    border-radius: 0 4px 4px 0;
     margin-bottom: 20px;
 }
 
 .header-description p {
-    color: #e0e0e0;
-    font-size: 17px;
+    color: #d4d4d4;
+    font-size: 16px;
     line-height: 1.6;
     margin: 0;
 }
 
 .theme-details {
-    background: rgba(199, 146, 234, 0.1);
-    border: 1px solid rgba(199, 146, 234, 0.3);
-    border-radius: 8px;
+    background: #1e1e1e;
+    border: 1px solid #4e4e52;
+    border-radius: 4px;
     padding: 20px;
     margin-top: 5px;
 }
 
 .theme-details-label {
-    color: #c792ea;
+    color: #a0a0a0;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.theme-details-label::before {
-    content: '📋';
 }
 
 .theme-details-content {
-    color: #e8e8e8;
+    color: #d4d4d4;
     font-size: 15px;
     line-height: 1.7;
     white-space: pre-line;
@@ -288,7 +239,7 @@
 }
 
 .judge-info h3 {
-    color: #c9a0dc;
+    color: #a0a0a0;
     font-size: 17px;
     font-weight: 600;
     margin-bottom: 10px;
@@ -300,7 +251,7 @@
     background: #1e1e1e;
     padding: 15px;
     border-radius: 4px;
-    border-left: 4px solid #5a5a7a;
+    border-left: 4px solid #4e4e52;
     line-height: 1.8;
     font-size: 15px;
     /* FIX: Preserve line breaks from database */
@@ -319,11 +270,11 @@
     padding: 25px;
     border-radius: 4px;
     margin-top: 25px;
-    border: 2px solid #c792ea;
+    border: 2px solid #4ec9b0;
 }
 
 .submission-block h2 {
-    color: #c792ea;
+    color: #4ec9b0;
     font-size: 18px;
     margin-bottom: 20px;
     font-weight: 600;
@@ -353,7 +304,7 @@
 .input-group input[type="url"]:focus,
 .submission-block input[type="url"]:focus {
     outline: none;
-    border-color: #c792ea;
+    border-color: #4ec9b0;
     background: #2d2d30;
 }
 
@@ -362,25 +313,25 @@
 }
 
 .submit-button {
-    background: linear-gradient(135deg, #7c3aed, #a855f7);
+    background: linear-gradient(135deg, #0e639c, #1177bb);
     color: #ffffff;
     padding: 15px 40px;
-    border: 2px solid #a855f7;
+    border: 2px solid #569cd6;
     border-radius: 4px;
     font-size: 18px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s;
-    box-shadow: 0 4px 15px rgba(124, 58, 237, 0.4);
+    box-shadow: 0 4px 15px rgba(14, 99, 156, 0.4);
     display: block;
     margin: 30px auto 0;
 }
 
 .submit-button:hover {
-    background: linear-gradient(135deg, #8b5cf6, #c084fc);
+    background: linear-gradient(135deg, #1177bb, #1c88d1);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(124, 58, 237, 0.6);
-    border-color: #c084fc;
+    box-shadow: 0 6px 20px rgba(14, 99, 156, 0.6);
+    border-color: #4ec9b0;
 }
 
 .submit-button:active {
@@ -434,7 +385,7 @@
     }
 
     .page-header {
-        padding: 30px 25px;
+        padding: 25px 20px;
     }
 
     .judge-section {
@@ -454,24 +405,14 @@
 
     /* Page Header */
     .page-header {
-        padding: 25px 20px;
+        padding: 20px 15px;
         margin-bottom: 25px;
-        border-radius: 8px;
-    }
-
-    .header-badge {
-        gap: 8px;
-        margin-bottom: 15px;
-    }
-
-    .header-badge span {
-        padding: 5px 12px;
-        font-size: 11px;
     }
 
     .page-header h1 {
-        font-size: 24px;
+        font-size: 20px;
         margin-bottom: 15px;
+        padding-bottom: 12px;
     }
 
     .header-description {
@@ -652,21 +593,13 @@
     }
 
     .page-header {
-        padding: 20px 15px;
-    }
-
-    .header-badge {
-        gap: 6px;
-    }
-
-    .header-badge span {
-        padding: 4px 10px;
-        font-size: 10px;
+        padding: 15px 12px;
     }
 
     .page-header h1 {
-        font-size: 20px;
+        font-size: 18px;
         margin-bottom: 12px;
+        padding-bottom: 10px;
     }
 
     .header-description p {
@@ -840,7 +773,7 @@
     }
 
     .page-header {
-        padding: 20px;
+        padding: 15px 20px;
     }
 
     .judge-section {
@@ -870,11 +803,12 @@
     }
 
     .page-header {
-        padding: 15px 12px;
+        padding: 12px 10px;
     }
 
     .page-header h1 {
-        font-size: 18px;
+        font-size: 16px;
+        padding-bottom: 8px;
     }
 
     .header-description p {
