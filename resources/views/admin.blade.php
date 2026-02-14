@@ -678,7 +678,7 @@
                             <div class="actions-bar">
                                 <button type="button" class="btn btn-edit" data-round="{{ $nextRound->round_number }}"
                                     data-title="{{ $nextRound->title }}" data-description="{{ $nextRound->description }}"
-                                    data-theme-details="{{ $activeRound->theme_details }}"
+                                    data-theme-details="{{ $nextRound->theme_details }}"
                                     data-eliminate="{{ $nextRound->eliminate_number }}"
                                     data-deadline="{{ date('Y-m-d\TH:i', strtotime($nextRound->deadline)) }}"
                                     onclick="openEditModalFromButton(this)">
@@ -815,7 +815,7 @@
                                 <div class="actions-bar">
                                     <button type="button" class="btn btn-edit" data-round="{{ $nextRound->round_number }}"
                                         data-title="{{ $nextRound->title }}" data-description="{{ $nextRound->description }}"
-                                        data-theme-details="{{ $activeRound->theme_details }}"
+                                        data-theme-details="{{ $nextRound->theme_details }}"
                                         data-eliminate="{{ $nextRound->eliminate_number }}"
                                         data-deadline="{{ date('Y-m-d\TH:i', strtotime($nextRound->deadline)) }}"
                                         onclick="openEditModalFromButton(this)">
