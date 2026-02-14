@@ -310,33 +310,28 @@
                                                         {{ ($loop->iteration == 1 ? "Head Judge" : "Guest Judge " . ($loop->iteration - 1)) . ": " . $judge->global_name }}
                                                 </h2>
                                                 <div class="judge-info">
-                                                        <h3>1. Who are some of your favourite artists? Provide at least 5.</h3>
+                                                        <h3>1. Who are some of your favourite artists?</h3>
                                                         <p>{{ $judge->fav_artists }}</p>
                                                 </div>
                                                 <div class="judge-info">
-                                                        <h3>2. Do you have any least favourite artists? This question is optional, write
-                                                                N/A if none.</h3>
+                                                        <h3>2. Do you have any least favourite artists, or artists you know won't score well with you?</h3>
                                                         <p>{{ $judge->least_fav_artists }}</p>
                                                 </div>
                                                 <div class="judge-info">
-                                                        <h3>3. What are some of your favourite genres? Be as specific as possible.</h3>
+                                                        <h3>3. What are some of your favourite genres?</h3>
                                                         <p>{{ $judge->fav_genres }}</p>
                                                 </div>
                                                 <div class="judge-info">
-                                                        <h3>4. Do you have any least favourite genres? If not, explain why.</h3>
+                                                        <h3>4. Do you have any least favourite genres?</h3>
                                                         <p>{{ $judge->least_fav_genres }}</p>
                                                 </div>
                                                 <div class="judge-info">
                                                         <h3>5. Is there anything else you would like to mention about your judging
-                                                                style? An in-depth
-                                                                explanation about what you look for in songs, the vibe you usually
-                                                                enjoy, etc. will be
-                                                                appreciated.</h3>
+                                                                style?</h3>
                                                         <p>{{ $judge->judging_style }}</p>
                                                 </div>
                                                 <div class="judge-info">
-                                                        <h3>6. Describe what you would consider a safe pick. You may include any helpful
-                                                                links here.</h3>
+                                                        <h3>6. Describe what you would consider a safe pick.</h3>
                                                         <p>{{ $judge->safe_pick_criteria }}</p>
                                                 </div>
                                                 <div class="judge-info">
@@ -345,8 +340,7 @@
                                                 </div>
                                                 <div class="judge-info">
                                                         <h3>8. Provide up to 6 artists you want to ban contestants from submitting.
-                                                                Write N/A if you want to
-                                                                ban none.</h3>
+                                                               </h3>
                                                         <p><b>{{ $judge->banned_artists }}</b></p>
                                                 </div>
                                                 <div class="submission-block">
