@@ -251,8 +251,21 @@
                 @else
                         {{-- Normal Submission Page / Staff Viewing --}}
                         <div class="page-header">
-                                <h1>Mic Drop Season 18, Round {{ $round }}, {{ $group == 0 ? "Merge" : "Group $group" }}</h1>
-                                <h2>{{ $round_info->description }}</h2>
+                                <div class="header-badge">
+                                        <span class="season-badge">Season 18</span>
+                                        <span class="round-badge">Round {{ $round }}</span>
+                                        <span class="group-badge">{{ $group == 0 ? "Merge" : "Group $group" }}</span>
+                                </div>
+                                <h1>{{ $round_info->title }}</h1>
+                                <div class="header-description">
+                                        <p>{{ $round_info->description }}</p>
+                                </div>
+                                @if($round_info->theme_details)
+                                        <div class="theme-details">
+                                                <div class="theme-details-label">Theme Details</div>
+                                                <div class="theme-details-content">{{ $round_info->theme_details }}</div>
+                                        </div>
+                                @endif
                         </div>
 
                         @if($isStaffViewing)
@@ -268,9 +281,8 @@
                                 </div>
                         @endif
                         @if($errors->any())
-                                <div
-                                        style="background: #5a1e1e; color: #f48771; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 2px solid #f48771;">
-                                        <ul style="margin: 0; padding-left: 20px;">
+                                <div class="error-message">
+                                        <ul>
                                                 @foreach($errors->all() as $error)
                                                         <li>{{ $error }}</li>
                                                 @endforeach

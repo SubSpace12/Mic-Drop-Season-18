@@ -130,10 +130,6 @@
                                 <span class="season-info-label">First Round Deadline:</span>
                                 <span class="season-info-value">{{ date('M j, Y g:i A', strtotime($firstRound->deadline)) }}</span>
                             </div>
-                            <div class="season-info-item">
-                                <span class="season-info-label">Status:</span>
-                                <span class="season-info-value">Registration Open</span>
-                            </div>
                         </div>
                     @endif
 

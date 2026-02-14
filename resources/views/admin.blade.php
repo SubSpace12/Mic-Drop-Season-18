@@ -553,6 +553,7 @@
                         <div class="actions-bar" style="border-top-color: #17a2b8;">
                             <button type="button" class="btn btn-edit" data-round="{{ $activeRound->round_number }}"
                                 data-title="{{ $activeRound->title }}" data-description="{{ $activeRound->description }}"
+                                data-theme-details="{{ $activeRound->theme_details }}"
                                 data-eliminate="{{ $activeRound->eliminate_number }}"
                                 data-deadline="{{ date('Y-m-d\TH:i', strtotime($activeRound->deadline)) }}"
                                 onclick="openEditModalFromButton(this)">
@@ -677,6 +678,7 @@
                             <div class="actions-bar">
                                 <button type="button" class="btn btn-edit" data-round="{{ $nextRound->round_number }}"
                                     data-title="{{ $nextRound->title }}" data-description="{{ $nextRound->description }}"
+                                    data-theme-details="{{ $activeRound->theme_details }}"
                                     data-eliminate="{{ $nextRound->eliminate_number }}"
                                     data-deadline="{{ date('Y-m-d\TH:i', strtotime($nextRound->deadline)) }}"
                                     onclick="openEditModalFromButton(this)">
@@ -813,6 +815,7 @@
                                 <div class="actions-bar">
                                     <button type="button" class="btn btn-edit" data-round="{{ $nextRound->round_number }}"
                                         data-title="{{ $nextRound->title }}" data-description="{{ $nextRound->description }}"
+                                        data-theme-details="{{ $activeRound->theme_details }}"
                                         data-eliminate="{{ $nextRound->eliminate_number }}"
                                         data-deadline="{{ date('Y-m-d\TH:i', strtotime($nextRound->deadline)) }}"
                                         onclick="openEditModalFromButton(this)">
@@ -1074,20 +1077,22 @@
                     @endif
 
                         // Edit Round Modal Functions
-                        function openEditModalFromButton(button) {
-                            const roundNumber = button.getAttribute('data-round');
-                            const title = button.getAttribute('data-title');
-                            const description = button.getAttribute('data-description');
-                            const eliminateNumber = button.getAttribute('data-eliminate');
-                            const deadline = button.getAttribute('data-deadline');
+                    function openEditModalFromButton(button) {
+                        const roundNumber = button.getAttribute('data-round');
+                        const title = button.getAttribute('data-title');
+                        const description = button.getAttribute('data-description');
+                        const themeDetails = button.getAttribute('data-theme-details');
+                        const eliminateNumber = button.getAttribute('data-eliminate');
+                        const deadline = button.getAttribute('data-deadline');
 
-                            openEditModal(roundNumber, title, description, eliminateNumber, deadline);
-                        }
+                        openEditModal(roundNumber, title, description, themeDetails, eliminateNumber, deadline);
+                    }
 
-                    function openEditModal(roundNumber, title, description, eliminateNumber, deadline) {
+                    function openEditModal(roundNumber, title, description, themeDetails, eliminateNumber, deadline) {
                         document.getElementById('edit_round_number').value = roundNumber;
                         document.getElementById('edit_title').value = title;
                         document.getElementById('edit_description').value = description;
+                        document.getElementById('edit_theme_details').value = themeDetails || '';
                         document.getElementById('edit_eliminate_number').value = eliminateNumber;
                         document.getElementById('edit_deadline').value = deadline;
 
@@ -1229,6 +1234,11 @@
                             <div class="edit-form-group">
                                 <label for="edit_description">Description / Theme</label>
                                 <textarea id="edit_description" name="description" required rows="4"></textarea>
+                            </div>
+                            
+                            <div class="edit-form-group">
+                                <label for="edit_theme_details">Theme Details</label>
+                                <textarea id="edit_theme_details" name="theme_details" rows="4"></textarea>
                             </div>
 
                             <div class="edit-form-group">

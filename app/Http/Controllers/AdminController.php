@@ -282,6 +282,7 @@ class AdminController extends Controller
             'round_number' => 'required|integer',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
+            'theme_details' => 'nullable|string',
             'eliminate_number' => 'required|integer|min:0',
             'deadline' => 'required|date'
         ]);
@@ -300,6 +301,7 @@ class AdminController extends Controller
                 ->update([
                     'title' => $request->input('title'),
                     'description' => $request->input('description'),
+                    'theme_details' => $request->input('theme_details'),
                     'eliminate_number' => $request->input('eliminate_number'),
                     'deadline' => $request->input('deadline')
                 ]);
