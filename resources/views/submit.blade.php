@@ -335,12 +335,15 @@
                                                         <p>{{ $judge->safe_pick_criteria }}</p>
                                                 </div>
                                                 <div class="judge-info">
-                                                        <h3>7. Will you give a 0.5 bonus to songs you haven't heard before?</h3>
+                                                        <h3>7. Aside from browser-based music platforms, is there a streaming service you'd be able to receive submissions on?</h3>
+                                                        <p><b>{{ $judge->extra_streaming ?? 'Not specified' }}</b></p>
+                                                </div>
+                                                <div class="judge-info">
+                                                        <h3>8. Will you give a 0.5 bonus to songs you haven't heard before?</h3>
                                                         <p><b>{{ $judge->bonus == 1 ? 'Yes' : 'No' }}</b></p>
                                                 </div>
                                                 <div class="judge-info">
-                                                        <h3>8. Provide up to 6 artists you want to ban contestants from submitting.
-                                                               </h3>
+                                                        <h3>9. Provide up to 6 artists you want to ban contestants from submitting.</h3>
                                                         <p><b>{{ $judge->banned_artists }}</b></p>
                                                 </div>
                                                 <div class="submission-block">

@@ -28,6 +28,15 @@
             ->first();
         
         $isEditing = !is_null($existingApp);
+        
+        // Parse extra_streaming for "Other" case
+        $extraStreaming = old('extra_streaming', $existingApp->extra_streaming ?? '');
+        $extraStreamingOther = '';
+        $knownServices = ['Spotify', 'Apple Music', 'Tidal', 'Deezer', 'Qobuz', 'None'];
+        if ($extraStreaming && !in_array($extraStreaming, $knownServices)) {
+            $extraStreamingOther = $extraStreaming;
+            $extraStreaming = 'Other';
+        }
     @endphp
 
         
@@ -139,10 +148,54 @@
                                 required>{{ old('safe_pick_criteria', $existingApp->safe_pick_criteria ?? '') }}</textarea>
                         </div>
 
-                        <!-- Question 7 -->
+                        <!-- Question 7 (NEW - Extra Streaming) -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                7. Will you give a 0.5 bonus to songs you haven't heard before?
+                                7. Aside from browser-based music platforms, is there a streaming service you'd be able to receive submissions on?
+                            </label>
+                            <div class="flex flex-wrap gap-4">
+                                @php
+                                    $streamingOptions = ['Spotify', 'Apple Music', 'Tidal', 'Deezer', 'Qobuz', 'None'];
+                                @endphp
+                                @foreach($streamingOptions as $option)
+                                    <label class="inline-flex items-center">
+                                        <input 
+                                            type="radio" 
+                                            name="extra_streaming" 
+                                            value="{{ $option }}" 
+                                            class="form-radio text-blue-600 uncheckable-radio"
+                                            {{ $extraStreaming === $option ? 'checked' : '' }}
+                                            required>
+                                        <span class="ml-2">{{ $option }}</span>
+                                    </label>
+                                @endforeach
+                                <label class="inline-flex items-center">
+                                    <input 
+                                        type="radio" 
+                                        name="extra_streaming" 
+                                        value="Other" 
+                                        class="form-radio text-blue-600 uncheckable-radio"
+                                        id="extra_streaming_other_radio"
+                                        {{ $extraStreaming === 'Other' ? 'checked' : '' }}
+                                        required>
+                                    <span class="ml-2">Other (specify)</span>
+                                </label>
+                            </div>
+                            <div id="extra_streaming_other_container" class="mt-3 {{ $extraStreaming === 'Other' ? '' : 'hidden' }}">
+                                <input 
+                                    type="text" 
+                                    name="extra_streaming_other" 
+                                    id="extra_streaming_other_input"
+                                    placeholder="Please specify your streaming service"
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    value="{{ $extraStreamingOther }}">
+                            </div>
+                        </div>
+
+                        <!-- Question 8 -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                8. Will you give a 0.5 bonus to songs you haven't heard before?
                             </label>
                             <div class="flex gap-4">
                                 <label class="inline-flex items-center">
@@ -168,10 +221,10 @@
                             </div>
                         </div>
 
-                        <!-- Question 8 -->
+                        <!-- Question 9 -->
                         <div class="mb-6">
                             <label for="banned_artists" class="block text-sm font-medium text-gray-700 mb-2">
-                                8. Provide up to 6 artists you want to ban contestants from submitting. Write N/A if you want to ban none.
+                                9. Provide up to 6 artists you want to ban contestants from submitting. Write N/A if you want to ban none.
                             </label>
                             <textarea 
                                 id="banned_artists" 
@@ -180,10 +233,10 @@
                                 required>{{ old('banned_artists', $existingApp->banned_artists ?? '') }}</textarea>
                         </div>
 
-                        <!-- Question 9 -->
+                        <!-- Question 10 -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                9. Would you prefer to judge more or less submissions in a round?
+                                10. Would you prefer to judge more or less submissions in a round?
                             </label>
                             <div class="flex gap-4">
                                 <label class="inline-flex items-center">
@@ -245,6 +298,47 @@
                 // Initial resize for pre-filled content (editing mode)
                 autoResize(textarea);
             });
+
+            // Uncheckable radio buttons functionality
+            const uncheckableRadios = document.querySelectorAll('.uncheckable-radio');
+            uncheckableRadios.forEach(function(radio) {
+                radio.addEventListener('click', function(e) {
+                    if (this.dataset.wasChecked === 'true') {
+                        this.checked = false;
+                        this.dataset.wasChecked = 'false';
+                    } else {
+                        uncheckableRadios.forEach(r => r.dataset.wasChecked = 'false');
+                        this.dataset.wasChecked = 'true';
+                    }
+                    // Toggle the "Other" input visibility
+                    toggleOtherInput();
+                });
+                // Initialize wasChecked state
+                radio.dataset.wasChecked = radio.checked ? 'true' : 'false';
+            });
+
+            // Show/hide "Other" input based on selection
+            const otherRadio = document.getElementById('extra_streaming_other_radio');
+            const otherContainer = document.getElementById('extra_streaming_other_container');
+            const otherInput = document.getElementById('extra_streaming_other_input');
+
+            function toggleOtherInput() {
+                if (otherRadio.checked) {
+                    otherContainer.classList.remove('hidden');
+                    otherInput.setAttribute('required', 'required');
+                } else {
+                    otherContainer.classList.add('hidden');
+                    otherInput.removeAttribute('required');
+                }
+            }
+
+            // Listen for changes on all streaming radios
+            document.querySelectorAll('input[name="extra_streaming"]').forEach(function(radio) {
+                radio.addEventListener('change', toggleOtherInput);
+            });
+
+            // Initial toggle
+            toggleOtherInput();
         });
 
         // Also resize on window resize (for responsive layouts)

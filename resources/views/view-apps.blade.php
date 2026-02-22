@@ -146,6 +146,11 @@ if ($seasonId) {
                         </div>
 
                         <div class="app-question">
+                            <h3>Aside from browser-based music platforms, is there a streaming service you'd be able to receive submissions on?</h3>
+                            <p>{{ $app->extra_streaming ?? 'Not specified' }}</p>
+                        </div>
+
+                        <div class="app-question">
                             <h3>Will you give a 0.5 bonus to songs you haven't heard before?</h3>
                             <p>{{ $app->bonus == 0 ? 'No' : 'Yes' }}</p>
                         </div>

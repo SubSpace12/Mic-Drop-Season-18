@@ -18,10 +18,18 @@ class JudgeAppController extends Controller
             'least_fav_genres' => 'required|string',
             'judging_style' => 'required|string',
             'safe_pick_criteria' => 'required|string',
+            'extra_streaming' => 'required|string|in:Spotify,Apple Music,Tidal,Deezer,Qobuz,None,Other',
+            'extra_streaming_other' => 'nullable|required_if:extra_streaming,Other|string|max:255',
             'bonus' => 'required|boolean',
             'banned_artists' => 'required|string',
             'longer' => 'required|boolean',
         ]);
+
+        // Handle "Other" streaming service - store the actual value
+        $extraStreaming = $validated['extra_streaming'];
+        if ($extraStreaming === 'Other' && !empty($validated['extra_streaming_other'])) {
+            $extraStreaming = $validated['extra_streaming_other'];
+        }
 
         $userId = Auth::id();
         $isEditing = $request->input('is_editing') == '1';
@@ -42,6 +50,7 @@ class JudgeAppController extends Controller
                     'least_fav_genres' => $validated['least_fav_genres'],
                     'judging_style' => $validated['judging_style'],
                     'safe_pick_criteria' => $validated['safe_pick_criteria'],
+                    'extra_streaming' => $extraStreaming,
                     'bonus' => $validated['bonus'],
                     'banned_artists' => $validated['banned_artists'],
                     'longer' => $validated['longer'],
@@ -59,6 +68,7 @@ class JudgeAppController extends Controller
                 'least_fav_genres' => $validated['least_fav_genres'],
                 'judging_style' => $validated['judging_style'],
                 'safe_pick_criteria' => $validated['safe_pick_criteria'],
+                'extra_streaming' => $extraStreaming,
                 'bonus' => $validated['bonus'],
                 'banned_artists' => $validated['banned_artists'],
                 'longer' => $validated['longer'],
