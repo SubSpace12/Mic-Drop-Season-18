@@ -14,7 +14,7 @@ $seasonId = $activeSeason ? $activeSeason->season_id : null;
 
 $user_apps = DB::table('apps')
     ->join('users', 'apps.user_id', '=', 'users.id')
-    ->select('apps.*', 'users.global_name')->OrderBy('apps.id', 'asc')
+    ->select('apps.*', 'users.global_name', 'users.perms')->OrderBy('apps.id', 'asc')
     ->get();
 
 $current_user_id = auth()->id();
@@ -74,6 +74,76 @@ if ($seasonId) {
 @endphp
 
 @vite(['resources/css/view-apps.css'])
+<style>
+    /* Permission-based color coding */
+    .app-nav li.perms-0 .app-nav-name {
+        color: #4ade80; /* Green for regular users */
+    }
+    .app-nav li.perms-1 .app-nav-name {
+        color: #f87171; /* Red for contestants */
+    }
+    .app-nav li.perms-staff .app-nav-name {
+        color: #c084fc; /* Purple for staff */
+    }
+    
+    /* Active state overrides */
+    .app-nav li.active.perms-0 .app-nav-name {
+        color: #22c55e;
+    }
+    .app-nav li.active.perms-1 .app-nav-name {
+        color: #ef4444;
+    }
+    .app-nav li.active.perms-staff .app-nav-name {
+        color: #a855f7;
+    }
+
+    /* Filter controls */
+    .filter-controls {
+        padding: 12px 15px;
+        border-bottom: 1px solid #3c3c3c;
+        background: #252526;
+    }
+    .filter-controls label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #cccccc;
+        cursor: pointer;
+    }
+    .filter-controls input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+        cursor: pointer;
+        accent-color: #569cd6;
+    }
+    .filter-legend {
+        display: flex;
+        gap: 12px;
+        margin-top: 10px;
+        font-size: 11px;
+    }
+    .filter-legend span {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+    .legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+    .legend-dot.green { background-color: #4ade80; }
+    .legend-dot.red { background-color: #f87171; }
+    .legend-dot.purple { background-color: #c084fc; }
+
+    /* Hidden state for filtered items */
+    .app-nav li.hidden-by-filter {
+        display: none;
+    }
+</style>
+
 @if (count($user_apps) == 0)
     <div class="apps-container">
         <div class="no-apps">
@@ -84,9 +154,31 @@ if ($seasonId) {
     <div class="apps-container">
         <div class="apps-sidebar">
             <h2>Judge Applications</h2>
+            
+            <!-- Filter Controls -->
+            <div class="filter-controls">
+                <label>
+                    <input type="checkbox" id="hide-contestants" onchange="toggleContestantVisibility()">
+                    Hide contestants (red)
+                </label>
+                <div class="filter-legend">
+                    <span><span class="legend-dot green"></span> User</span>
+                    <span><span class="legend-dot red"></span> Contestant</span>
+                    <span><span class="legend-dot purple"></span> Staff</span>
+                </div>
+            </div>
+
             <ul class="app-nav">
                 @foreach($user_apps as $index => $app)
-                    <li onclick="showApp({{ $index }})" data-app="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}">
+                    @php
+                        $permsClass = 'perms-0';
+                        if ($app->perms == 1) {
+                            $permsClass = 'perms-1';
+                        } elseif ($app->perms >= 6) {
+                            $permsClass = 'perms-staff';
+                        }
+                    @endphp
+                    <li onclick="showApp({{ $index }})" data-app="{{ $index }}" data-perms="{{ $app->perms }}" class="{{ $index === 0 ? 'active' : '' }} {{ $permsClass }}">
                         <div class="app-nav-name">{{ $app->global_name }}</div>
                         <div class="app-nav-votes">
                             <span class="vote-count vote-strong">
@@ -232,6 +324,30 @@ if ($seasonId) {
     <script>
         const userEntries = @json($user_entries);
         const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        // Toggle contestant visibility
+        function toggleContestantVisibility() {
+            const checkbox = document.getElementById('hide-contestants');
+            const contestantItems = document.querySelectorAll('.app-nav li[data-perms="1"]');
+            
+            contestantItems.forEach(item => {
+                if (checkbox.checked) {
+                    item.classList.add('hidden-by-filter');
+                } else {
+                    item.classList.remove('hidden-by-filter');
+                }
+            });
+
+            // If the currently active item is now hidden, switch to the first visible one
+            const activeItem = document.querySelector('.app-nav li.active');
+            if (activeItem && activeItem.classList.contains('hidden-by-filter')) {
+                const firstVisible = document.querySelector('.app-nav li:not(.hidden-by-filter)');
+                if (firstVisible) {
+                    const index = parseInt(firstVisible.getAttribute('data-app'));
+                    showApp(index);
+                }
+            }
+        }
 
         // Character counter for comment textareas
         document.addEventListener('DOMContentLoaded', function() {

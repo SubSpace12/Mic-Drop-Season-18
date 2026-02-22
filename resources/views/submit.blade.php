@@ -355,7 +355,7 @@
                                                                 <input type="text" name="title_{{ $judge->judge_id }}"
                                                                         placeholder="Song Title" {{ $isStaffViewing ? 'disabled' : 'required' }}>
                                                                 <input type="url" name="link_{{ $judge->judge_id }}"
-                                                                        placeholder="YouTube Link" {{ $isStaffViewing ? 'disabled' : 'required' }}>
+                                                                        placeholder="Submission Link" {{ $isStaffViewing ? 'disabled' : 'required' }}>
                                                         </div>
                                                 </div>
                                         </div>
