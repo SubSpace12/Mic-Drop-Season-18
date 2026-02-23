@@ -280,8 +280,8 @@
                     <div class="round-info-card" style="border: 3px solid #17a2b8;">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                             <div>
-                                <span class="status-badge active">🔄 ACTIVE ROUND</span>
-                                <h3 style="margin-top: 1rem;">📋 Round {{ $activeRound->round_number }}: {{ $activeRound->title }}
+                                <span class="status-badge active">ACTIVE ROUND</span>
+                                <h3 style="margin-top: 1rem;">Round {{ $activeRound->round_number }}: {{ $activeRound->title }}
                                 </h3>
                                 <p style="color: #666; font-size: 1.125rem;">{{ $activeRound->description }}</p>
                             </div>
@@ -291,7 +291,7 @@
                             <div class="info-item" style="border-left-color: #17a2b8;">
                                 <label>Round Type</label>
                                 <div class="value">
-                                    {{ $activeRound->is_merge ? '🔀 Merge Round' : '👥 Group Round' }}
+                                    {{ $activeRound->is_merge ? 'Merged Round' : 'Group Round' }}
                                 </div>
                             </div>
                             <div class="info-item" style="border-left-color: #17a2b8;">
@@ -306,7 +306,7 @@
 
                         @if($activeJudges && $activeJudges->count() > 0)
                             <div class="judges-display" style="background: #d1ecf1; border-color: #17a2b8;">
-                                <h4 style="color: #17a2b8;">👨‍⚖️ Assigned Judges</h4>
+                                <h4 style="color: #17a2b8;">Assigned Judges</h4>
                                 @if($activeRound->is_merge)
                                     <div class="judge-group" style="border-color: #17a2b8;">
                                         <div class="judge-group-title" style="color: #17a2b8;">Merge Round Judges</div>
@@ -363,7 +363,7 @@
                             <h4>👤 Contestant Management</h4>
 
                             <div class="search-container">
-                                <input type="text" class="search-input" placeholder="🔍 Search contestants by name or ID..."
+                                <input type="text" class="search-input" placeholder="Search contestants by name or ID..."
                                     id="contestant-search" oninput="filterContestants()">
                             </div>
 
@@ -399,7 +399,7 @@
                                                         <input type="hidden" name="contestant_id" value="{{ $contestant->id }}">
                                                         <input type="hidden" name="round_number" value="{{ $activeRound->round_number }}">
                                                         <button type="submit" class="btn btn-sm btn-info">
-                                                            ↩️ Restore
+                                                            Restore
                                                         </button>
                                                     </form>
                                                 @else
@@ -422,10 +422,10 @@
                         {{-- Elimination Preview Section --}}
                         @if($canEliminate)
                             <div class="elimination-section">
-                                <h4>⚠️ Round Completion & Contestant Elimination</h4>
+                                <h4>Round Completion & Contestant Elimination</h4>
 
                                 <div class="elimination-warning">
-                                    ⚠️ <strong>Warning:</strong> Completing this round will eliminate the contestants shown below. This
+                                    <strong>Warning:</strong> Completing this round will eliminate the contestants shown below. This
                                     action is irreversible.
                                 </div>
 
@@ -534,14 +534,14 @@
 
                             @if(!$deadlinePassed || !$allScoresSubmitted)
                                 <div class="alert alert-info" style="margin-top: 1.5rem;">
-                                    <strong>ℹ️ Round Cannot Be Completed Yet</strong>
+                                    <strong>Round Cannot Be Completed Yet</strong>
                                     <ul style="margin: 0.5rem 0 0 1.5rem;">
                                         @if(!$deadlinePassed)
-                                            <li>⏰ Deadline has not passed yet ({{ date('M j, Y g:i A', strtotime($activeRound->deadline)) }})
+                                            <li>Deadline has not passed yet ({{ date('M j, Y g:i A', strtotime($activeRound->deadline)) }})
                                             </li>
                                         @endif
                                         @if(!$allScoresSubmitted)
-                                            <li>📝 {{ $nullScores }} score(s) still pending from judges</li>
+                                            <li>{{ $nullScores }} score(s) still pending from judges</li>
                                         @endif
                                     </ul>
                                 </div>
@@ -555,12 +555,12 @@
                                 data-eliminate="{{ $activeRound->eliminate_number }}"
                                 data-deadline="{{ date('Y-m-d\TH:i', strtotime($activeRound->deadline)) }}"
                                 onclick="openEditModalFromButton(this)">
-                                <span class="edit-icon">✏️ Edit Round Details</span>
+                                <span class="edit-icon">Edit Round Details</span>
                             </button>
 
                             @if($canEliminate)
                                 <form method="POST" action="/admin/complete-round" style="display: inline;"
-                                    onsubmit="return confirm('⚠️ Are you ABSOLUTELY SURE you want to complete this round?\n\nThis will:\n- Eliminate {{ $activeRound->eliminate_number }} contestant(s)\n- Mark the round as completed\n\nThis action CANNOT be undone!');">
+                                    onsubmit="return confirm('Are you ABSOLUTELY SURE you want to complete this round?\n\nThis will:\n- Eliminate {{ $activeRound->eliminate_number }} contestant(s)\n- Mark the round as completed\n\nThis action CANNOT be undone!');">
                                     @csrf
                                     <input type="hidden" name="round_number" value="{{ $activeRound->round_number }}">
                                     @if($activeRound->is_merge)
@@ -579,12 +579,12 @@
                                         <input type="hidden" name="contestants" value="{{ json_encode($allContestants) }}">
                                     @endif
                                     <button type="submit" class="btn btn-success">
-                                        ✅ Complete Round & Eliminate Contestants
+                                        Complete Round & Eliminate Contestants
                                     </button>
                                 </form>
                             @else
                                 <button type="button" class="btn btn-success" disabled style="opacity: 0.5; cursor: not-allowed;">
-                                    ✅ Complete Round (Conditions Not Met)
+                                    Complete Round (Conditions Not Met)
                                 </button>
                             @endif
                         </div>
@@ -596,15 +596,15 @@
                 {{-- Next Round Section --}}
                 @if(!$nextRound)
                     <div class="no-round">
-                        <p style="font-size: 1.5rem; margin-bottom: 1rem;">✅ All Rounds Processed</p>
+                        <p style="font-size: 1.5rem; margin-bottom: 1rem;">All Rounds Processed</p>
                         <p>There are no rounds pending judge assignment.</p>
                     </div>
                 @else
                     <div class="round-info-card">
                         <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
                             <div>
-                                <span class="status-badge pending">⏳ PENDING</span>
-                                <h3 style="margin-top: 1rem;">📋 Round {{ $nextRound->round_number }}: {{ $nextRound->title }}</h3>
+                                <span class="status-badge pending">PENDING</span>
+                                <h3 style="margin-top: 1rem;">Round {{ $nextRound->round_number }}: {{ $nextRound->title }}</h3>
                                 <p style="color: #666; font-size: 1.125rem;">{{ $nextRound->description }}</p>
                             </div>
                         </div>
@@ -613,7 +613,7 @@
                             <div class="info-item">
                                 <label>Round Type</label>
                                 <div class="value">
-                                    {{ $nextRound->is_merge ? '🔀 Merge Round' : '👥 Group Round' }}
+                                    {{ $nextRound->is_merge ? 'Merge Round' : 'Group Round' }}
                                 </div>
                             </div>
                             <div class="info-item">
@@ -635,12 +635,12 @@
                         @if($judgesAssigned)
                             {{-- Judges already assigned - show them with options to reset or start --}}
                             <div class="alert alert-info" style="margin-top: 1.5rem;">
-                                <strong>✅ Judges Already Assigned</strong> - This round has judges assigned. You can start the round or
+                                <strong>Judges Already Assigned</strong> - This round has judges assigned. You can start the round or
                                 choose new judges.
                             </div>
 
                             <div class="judges-display">
-                                <h4>👨‍⚖️ Currently Assigned Judges</h4>
+                                <h4>Currently Assigned Judges</h4>
                                 @if($nextRound->is_merge)
                                     <div class="judge-group">
                                         <div class="judge-group-title">Merge Round Judges</div>
@@ -680,14 +680,14 @@
                                     data-eliminate="{{ $nextRound->eliminate_number }}"
                                     data-deadline="{{ date('Y-m-d\TH:i', strtotime($nextRound->deadline)) }}"
                                     onclick="openEditModalFromButton(this)">
-                                    <span class="edit-icon">✏️ Edit Round Details</span>
+                                    <span class="edit-icon">Edit Round Details</span>
                                 </button>
                                 <form method="POST" action="/admin/reset-judges" style="display: inline;"
                                     onsubmit="return confirm('Are you sure you want to reset the judges for this round? This will delete all current judge assignments.');">
                                     @csrf
                                     <input type="hidden" name="round_number" value="{{ $nextRound->round_number }}">
                                     <button type="submit" class="btn btn-warning">
-                                        🔄 Choose New Judges
+                                        Choose New Judges
                                     </button>
                                 </form>
                                 <form method="POST" action="/admin/start-round" style="display: inline;"
@@ -695,7 +695,7 @@
                                     @csrf
                                     <input type="hidden" name="round_number" value="{{ $nextRound->round_number }}">
                                     <button type="submit" class="btn btn-success">
-                                        🚀 Start Round
+                                        Start Round
                                     </button>
                                 </form>
                             </div>
@@ -817,13 +817,13 @@
                                         data-eliminate="{{ $nextRound->eliminate_number }}"
                                         data-deadline="{{ date('Y-m-d\TH:i', strtotime($nextRound->deadline)) }}"
                                         onclick="openEditModalFromButton(this)">
-                                        <span class="edit-icon">✏️ Edit Round Details</span>
+                                        <span class="edit-icon">Edit Round Details</span>
                                     </button>
                                     <button type="button" class="btn btn-primary" onclick="resetSelections()">
-                                        🔄 Reset All
+                                        Reset All
                                     </button>
                                     <button type="submit" class="btn btn-success" id="submitBtn" disabled>
-                                        ✅ Generate Round Assignments
+                                        Generate Round Assignments
                                     </button>
                                 </div>
                             </form>
@@ -1218,7 +1218,7 @@
                 <!-- Edit Round Modal -->
                 <div id="editModal" class="edit-modal">
                     <div class="edit-modal-content">
-                        <h2 class="edit-modal-header">✏️ Edit Round Details</h2>
+                        <h2 class="edit-modal-header">Edit Round Details</h2>
 
                         <form id="editRoundForm" method="POST" action="/admin/update-round">
                             @csrf
@@ -1255,7 +1255,7 @@
                                     Cancel
                                 </button>
                                 <button type="submit" class="btn btn-success">
-                                    ✅ Save Changes
+                                    Save Changes
                                 </button>
                             </div>
                         </form>
@@ -1293,7 +1293,7 @@
                                     Cancel
                                 </button>
                                 <button type="submit" class="btn btn-success">
-                                    ✅ Grant Extension
+                                    Grant Extension
                                 </button>
                             </div>
                         </form>
