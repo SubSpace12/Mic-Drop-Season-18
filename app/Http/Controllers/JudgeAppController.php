@@ -22,7 +22,7 @@ class JudgeAppController extends Controller
             'extra_streaming_other' => 'nullable|required_if:extra_streaming,Other|string|max:255',
             'bonus' => 'required|boolean',
             'banned_artists' => 'required|string',
-            'longer' => 'required|boolean',
+            'longer' => 'nullable|boolean',
         ]);
 
         // Handle "Other" streaming service - store the actual value
@@ -30,6 +30,9 @@ class JudgeAppController extends Controller
         if ($extraStreaming === 'Other' && !empty($validated['extra_streaming_other'])) {
             $extraStreaming = $validated['extra_streaming_other'];
         }
+
+        // Handle nullable longer field
+        $longer = isset($validated['longer']) ? $validated['longer'] : null;
 
         $userId = Auth::id();
         $isEditing = $request->input('is_editing') == '1';
@@ -53,7 +56,7 @@ class JudgeAppController extends Controller
                     'extra_streaming' => $extraStreaming,
                     'bonus' => $validated['bonus'],
                     'banned_artists' => $validated['banned_artists'],
-                    'longer' => $validated['longer'],
+                    'longer' => $longer,
                     'updated_at' => now(),
                 ]);
 
@@ -71,7 +74,7 @@ class JudgeAppController extends Controller
                 'extra_streaming' => $extraStreaming,
                 'bonus' => $validated['bonus'],
                 'banned_artists' => $validated['banned_artists'],
-                'longer' => $validated['longer'],
+                'longer' => $longer,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

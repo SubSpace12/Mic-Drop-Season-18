@@ -159,7 +159,7 @@ if ($seasonId) {
             <div class="filter-controls">
                 <label>
                     <input type="checkbox" id="hide-contestants" onchange="toggleContestantVisibility()">
-                    Hide contestants
+                    Hide contestants (red)
                 </label>
                 <div class="filter-legend">
                     <span><span class="legend-dot green"></span> User</span>
@@ -254,7 +254,7 @@ if ($seasonId) {
 
                         <div class="app-question">
                             <h3>Would you prefer to judge more or less submissions in a round?</h3>
-                            <p>{{ $app->longer == 0 ? 'Less' : 'More' }}</p>
+                            <p>{{ is_null($app->longer) ? 'No preference' : ($app->longer == 0 ? 'Less' : 'More') }}</p>
                         </div>
 
                         <!-- Comments Section -->

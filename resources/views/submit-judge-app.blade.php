@@ -148,7 +148,7 @@
                                 required>{{ old('safe_pick_criteria', $existingApp->safe_pick_criteria ?? '') }}</textarea>
                         </div>
 
-                        <!-- Question 7 (NEW - Extra Streaming) -->
+                        <!-- Question 7 (Extra Streaming) -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
                                 7. Aside from browser-based music platforms, is there a streaming service you'd be able to receive submissions on?
@@ -164,6 +164,7 @@
                                             name="extra_streaming" 
                                             value="{{ $option }}" 
                                             class="form-radio text-blue-600 uncheckable-radio"
+                                            data-group="extra_streaming"
                                             {{ $extraStreaming === $option ? 'checked' : '' }}
                                             required>
                                         <span class="ml-2">{{ $option }}</span>
@@ -175,6 +176,7 @@
                                         name="extra_streaming" 
                                         value="Other" 
                                         class="form-radio text-blue-600 uncheckable-radio"
+                                        data-group="extra_streaming"
                                         id="extra_streaming_other_radio"
                                         {{ $extraStreaming === 'Other' ? 'checked' : '' }}
                                         required>
@@ -233,10 +235,10 @@
                                 required>{{ old('banned_artists', $existingApp->banned_artists ?? '') }}</textarea>
                         </div>
 
-                        <!-- Question 10 -->
+                        <!-- Question 10 (Optional, uncheckable) -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                10. Would you prefer to judge more or less submissions in a round?
+                                10. Would you prefer to judge more or less submissions in a round? If no preference, leave unchecked. <span class="text-gray-500 font-normal">(optional)</span>
                             </label>
                             <div class="flex gap-4">
                                 <label class="inline-flex items-center">
@@ -244,9 +246,9 @@
                                         type="radio" 
                                         name="longer" 
                                         value="1" 
-                                        class="form-radio text-blue-600"
-                                        {{ old('longer', $existingApp->longer ?? null) == '1' || old('longer', $existingApp->longer ?? null) === true ? 'checked' : '' }}
-                                        required>
+                                        class="form-radio text-blue-600 uncheckable-radio"
+                                        data-group="longer"
+                                        {{ old('longer', $existingApp->longer ?? null) == '1' || old('longer', $existingApp->longer ?? null) === true ? 'checked' : '' }}>
                                     <span class="ml-2">More</span>
                                 </label>
                                 <label class="inline-flex items-center">
@@ -254,9 +256,9 @@
                                         type="radio" 
                                         name="longer" 
                                         value="0" 
-                                        class="form-radio text-blue-600"
-                                        {{ old('longer', $existingApp->longer ?? null) == '0' || old('longer', $existingApp->longer ?? null) === false ? 'checked' : '' }}
-                                        required>
+                                        class="form-radio text-blue-600 uncheckable-radio"
+                                        data-group="longer"
+                                        {{ old('longer', $existingApp->longer ?? null) == '0' || old('longer', $existingApp->longer ?? null) === false ? 'checked' : '' }}>
                                     <span class="ml-2">Less</span>
                                 </label>
                             </div>
@@ -303,11 +305,13 @@
             const uncheckableRadios = document.querySelectorAll('.uncheckable-radio');
             uncheckableRadios.forEach(function(radio) {
                 radio.addEventListener('click', function(e) {
+                    const group = this.dataset.group;
                     if (this.dataset.wasChecked === 'true') {
                         this.checked = false;
                         this.dataset.wasChecked = 'false';
                     } else {
-                        uncheckableRadios.forEach(r => r.dataset.wasChecked = 'false');
+                        // Only reset wasChecked for radios in the same group
+                        document.querySelectorAll(`.uncheckable-radio[data-group="${group}"]`).forEach(r => r.dataset.wasChecked = 'false');
                         this.dataset.wasChecked = 'true';
                     }
                     // Toggle the "Other" input visibility
@@ -323,10 +327,10 @@
             const otherInput = document.getElementById('extra_streaming_other_input');
 
             function toggleOtherInput() {
-                if (otherRadio.checked) {
+                if (otherRadio && otherRadio.checked) {
                     otherContainer.classList.remove('hidden');
                     otherInput.setAttribute('required', 'required');
-                } else {
+                } else if (otherContainer) {
                     otherContainer.classList.add('hidden');
                     otherInput.removeAttribute('required');
                 }
