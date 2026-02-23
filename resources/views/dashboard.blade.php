@@ -199,12 +199,8 @@
                             @if($round->status != 0)
                                 <div class="round-info">
                                     <div class="info-item">
-                                        <span class="info-icon">[DATE]</span>
+                                        <span class="info-icon">[DEADLINE]</span>
                                         <span>{{ date('M j, Y', strtotime($round->deadline)) }}</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <span class="info-icon">[GROUPS]</span>
-                                        <span>{{ $round->is_merge ? 'All Groups' : '3 Groups' }}</span>
                                     </div>
                                 </div>
                             @endif
