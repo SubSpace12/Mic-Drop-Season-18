@@ -238,7 +238,7 @@
                         <!-- Question 10 (Optional, uncheckable) -->
                         <div class="mb-6">
                             <label class="block text-sm font-medium text-gray-700 mb-2">
-                                10. Would you prefer to judge more or less submissions in a round? If no preference, leave unchecked. <span class="text-gray-500 font-normal">(optional)</span>
+                                10. Would you prefer to judge more or less submissions in a round? If no preference, leave unchecked. </span>
                             </label>
                             <div class="flex gap-4">
                                 <label class="inline-flex items-center">
