@@ -22,8 +22,6 @@
                 <div class="access-message error">
                     <p style="font-size: 1.5rem; margin-bottom: 1rem;">🚫 Access Denied</p>
                     <p>You do not have permission to access the admin panel.</p>
-                    <p style="margin-top: 0.5rem; font-size: 0.875rem;">Required permission level: 6 or higher</p>
-                </div>
             @else
                 @php
                     // Get the active season

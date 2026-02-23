@@ -159,7 +159,7 @@ if ($seasonId) {
             <div class="filter-controls">
                 <label>
                     <input type="checkbox" id="hide-contestants" onchange="toggleContestantVisibility()">
-                    Hide contestants (red)
+                    Hide contestants
                 </label>
                 <div class="filter-legend">
                     <span><span class="legend-dot green"></span> User</span>
