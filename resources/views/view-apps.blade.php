@@ -14,7 +14,9 @@ $seasonId = $activeSeason ? $activeSeason->season_id : null;
 
 $user_apps = DB::table('apps')
     ->join('users', 'apps.user_id', '=', 'users.id')
-    ->select('apps.*', 'users.global_name', 'users.perms')->OrderBy('apps.id', 'asc')
+    ->select('apps.*', 'users.global_name', 'users.perms')
+    ->where('apps.draft', false)
+    ->orderBy('apps.id', 'asc')
     ->get();
 
 $current_user_id = auth()->id();

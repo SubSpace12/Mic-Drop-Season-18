@@ -179,28 +179,88 @@
     border-color: #4ec9b0;
 }
 
-.success-message {
-    background: linear-gradient(135deg, #0e4429, #1e5a3e);
-    color: #d4d4d4;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 30px;
+/* ========== THANK YOU SCREEN (post-submit) ========== */
+
+.thank-you-screen {
     text-align: center;
-    box-shadow: 0 4px 15px rgba(14, 68, 41, 0.4);
-    border: 2px solid #4ec9b0;
+    padding: 80px 20px;
+    max-width: 600px;
+    margin: 80px auto;
 }
 
-.success-message h3 {
-    font-size: 24px;
-    margin-bottom: 10px;
-    color: #6a9955;
+.thank-you-screen h1 {
+    color: #d4d4d4;
+    font-size: 28px;
     font-weight: 600;
+    margin-bottom: 12px;
 }
 
-.success-message p {
+.thank-you-screen p {
     font-size: 16px;
-    opacity: 0.95;
+    color: #a0a0a0;
+    margin-bottom: 32px;
 }
+
+/* ========== SUBMITTED SONGS LIST ========== */
+
+.submitted-songs-list {
+    text-align: left;
+    margin-top: 24px;
+    width: 100%;
+    max-width: 600px;
+}
+
+.submitted-songs-list h2 {
+    color: #d4d4d4;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.submitted-song-item {
+    background: #1e1e1e;
+    border: 1px solid #3e3e42;
+    border-radius: 8px;
+    padding: 14px 18px;
+    margin-bottom: 12px;
+}
+
+.submitted-song-judge {
+    font-size: 13px;
+    color: #858585;
+    margin-bottom: 6px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.submitted-song-details {
+    font-size: 16px;
+    color: #d4d4d4;
+    margin-bottom: 4px;
+}
+
+.submitted-song-artist {
+    font-weight: 600;
+    color: #4ec9b0;
+}
+
+.submitted-song-title {
+    color: #d4d4d4;
+}
+
+.submitted-song-link {
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.submitted-song-link a {
+    color: #569cd6;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+/* ========== END SUBMITTED SONGS ========== */
 
 .error-message {
     background: #5a1e1e;
@@ -376,6 +436,69 @@
     font-weight: 400;
 }
 
+/* ========== DRAFT SYSTEM ========== */
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.save-draft-button {
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid #569cd6;
+    background: transparent;
+    color: #569cd6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-draft-button:hover {
+    background: rgba(86, 156, 214, 0.1);
+}
+
+.save-draft-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.draft-status {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    min-height: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.draft-status.saving {
+    color: #d7ba7d;
+}
+
+.draft-status.success {
+    color: #608b4e;
+}
+
+.draft-status.error {
+    color: #f48771;
+}
+
+.draft-restored-banner {
+    background: rgba(86, 156, 214, 0.1);
+    border: 1px solid rgba(86, 156, 214, 0.3);
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    color: #569cd6;
+    font-size: 15px;
+    text-align: center;
+}
+
 /* ========== MOBILE RESPONSIVE STYLES ========== */
 
 /* Tablet (768px - 1024px) */
@@ -485,19 +608,31 @@
         max-width: 300px;
     }
 
-    /* Success Message */
-    .success-message {
-        padding: 15px;
-        margin-bottom: 20px;
+    /* Thank You Screen */
+    .thank-you-screen {
+        padding: 50px 15px;
+        margin: 40px auto;
     }
 
-    .success-message h3 {
-        font-size: 20px;
-        margin-bottom: 8px;
+    .thank-you-screen h1 {
+        font-size: 22px;
     }
 
-    .success-message p {
+    .thank-you-screen p {
         font-size: 15px;
+    }
+
+    /* Submitted Songs */
+    .submitted-song-item {
+        padding: 12px 14px;
+    }
+
+    .submitted-song-details {
+        font-size: 15px;
+    }
+
+    .submitted-song-judge {
+        font-size: 12px;
     }
 
     /* Deadline Info */
@@ -579,6 +714,24 @@
         margin: 25px 0 0;
     }
 
+    /* Draft Button */
+    .save-draft-button {
+        padding: 12px 24px;
+        font-size: 15px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .form-actions .save-draft-button,
+    .form-actions .submit-button {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+    }
+
     /* Error Messages */
     .error-message {
         padding: 12px;
@@ -655,6 +808,37 @@
         font-size: 14px;
     }
 
+    /* Thank You Screen */
+    .thank-you-screen {
+        padding: 40px 12px;
+        margin: 30px auto;
+    }
+
+    .thank-you-screen h1 {
+        font-size: 20px;
+    }
+
+    .thank-you-screen p {
+        font-size: 14px;
+    }
+
+    /* Submitted Songs */
+    .submitted-song-item {
+        padding: 10px 12px;
+    }
+
+    .submitted-song-details {
+        font-size: 14px;
+    }
+
+    .submitted-song-judge {
+        font-size: 11px;
+    }
+
+    .submitted-song-link {
+        font-size: 12px;
+    }
+
     .judge-section {
         padding: 15px 12px;
         margin-bottom: 20px;
@@ -715,25 +899,14 @@
     .deadline-info .extension-note {
         font-size: 12px;
     }
-
-    .success-message {
-        padding: 12px;
-    }
-
-    .success-message h3 {
-        font-size: 18px;
-    }
-
-    .success-message p {
-        font-size: 14px;
-    }
 }
 
 /* Touch-friendly improvements */
 @media (hover: none) and (pointer: coarse) {
     /* Ensure minimum touch target sizes */
     .back-button,
-    .submit-button {
+    .submit-button,
+    .save-draft-button {
         min-height: 48px;
         touch-action: manipulation;
     }
@@ -857,6 +1030,14 @@
     }
 
     .access-denied p {
+        font-size: 13px;
+    }
+
+    .thank-you-screen h1 {
+        font-size: 18px;
+    }
+
+    .thank-you-screen p {
         font-size: 13px;
     }
 }

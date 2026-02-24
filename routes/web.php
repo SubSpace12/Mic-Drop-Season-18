@@ -66,6 +66,10 @@ Route::post('/submit-songs', [SubmissionController::class, 'submitSongs'])
     ->name('submit.songs')
     ->middleware('auth');
 
+Route::post('/submit/draft', [SubmissionController::class, 'saveDraft'])
+    ->name('submit.draft')
+    ->middleware('auth');
+
 
 Route::get('/judge-vote-counts/{appId}', [AppVoteController::class, 'getVoteCounts'])->middleware('auth');
 
@@ -138,3 +142,7 @@ Route::get('/judge-comments/{appId}', [AppVoteController::class, 'getComments'])
 Route::get('/error/guild-access', function () {
     return view('errors.guild-access-denied');
 })->name('error.guild-access');
+
+Route::post('/apps/draft', [JudgeAppController::class, 'saveDraft'])
+    ->name('apps.draft')
+    ->middleware('auth');

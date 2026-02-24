@@ -101,6 +101,18 @@
                 $userRole = 'staff';
             }
         }
+
+        // Check which active rounds the contestant has already submitted for
+        $submittedRounds = [];
+        if ($userRole === 'contestant' && $contestant && $seasonId) {
+            $submittedRounds = DB::table('submissions')
+                ->where('contestant_id', auth()->id())
+                ->where('season_id', $seasonId)
+                ->where('draft', false)
+                ->pluck('round')
+                ->unique()
+                ->toArray();
+        }
     @endphp
 
     {{-- Link to external CSS file --}}
@@ -149,12 +161,18 @@
                 <div class="rounds-grid">
                     @foreach($rounds as $round)
                         @php
+                            $hasSubmitted = $round->status == 1 && in_array($round->round_number, $submittedRounds);
+
                             $statusClass = match ($round->status) {
                                 0 => 'status-pending',
                                 1 => 'status-active',
                                 2 => 'status-completed',
                                 default => 'status-pending'
                             };
+
+                            if ($hasSubmitted) {
+                                $statusClass .= ' status-submitted';
+                            }
 
                             if ($round->status == 1 && $userRole == 'spectator') {
                                 $statusClass .= ' not-clickable';
@@ -185,6 +203,9 @@
                                     @if($round->is_merge && $round->status != 0)
                                         <span class="round-badge badge-merge">MERGE</span>
                                     @endif
+                                    @if($hasSubmitted)
+                                        <span class="round-badge badge-submitted">SUBMITTED</span>
+                                    @endif
                                 </div>
                             </div>
 
@@ -212,7 +233,7 @@
                                     @if($userRole == 'spectator')
                                         SPECTATING
                                     @elseif($userRole == 'contestant')
-                                        SUBMIT SONGS
+                                        {{ $hasSubmitted ? 'VIEW YOUR SONGS' : 'SUBMIT SONGS' }}
                                     @elseif($userRole == 'judge')
                                         JUDGE NOW
                                     @elseif($userRole == 'staff')

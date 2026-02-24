@@ -18,6 +18,133 @@ class SubmissionController extends Controller
         return $activeSeason ? $activeSeason->season_id : null;
     }
 
+    /**
+     * Save draft submissions (autosave or manual save)
+     */
+    public function saveDraft(Request $request)
+    {
+        try {
+            if (!auth()->check()) {
+                return response()->json(['success' => false, 'message' => 'Not authenticated'], 401);
+            }
+
+            $seasonId = $this->getActiveSeasonId();
+            if (!$seasonId) {
+                return response()->json(['success' => false, 'message' => 'No active season'], 404);
+            }
+
+            $group = $request->input('group', 0);
+            $round = $request->input('round', -1);
+            $contestantId = auth()->id();
+
+            // Validate round is active
+            $roundInfo = DB::table('round')
+                ->where('round_number', $round)
+                ->where('season_id', $seasonId)
+                ->first();
+
+            if (!$roundInfo || $roundInfo->status != 1) {
+                return response()->json(['success' => false, 'message' => 'Round not active'], 400);
+            }
+
+            // Check deadline with extension
+            $contestant = DB::table('contestants')
+                ->where('id', $contestantId)
+                ->where('season_id', $seasonId)
+                ->first();
+
+            if ($contestant) {
+                $baseDeadline = new \DateTime($roundInfo->deadline);
+                $extensionHours = $contestant->extension_hours ?? 0;
+                $baseDeadline->modify("+{$extensionHours} hours");
+                $now = new \DateTime();
+                if ($now > $baseDeadline) {
+                    return response()->json(['success' => false, 'message' => 'Deadline passed'], 400);
+                }
+            }
+
+            // Check if a non-draft submission already exists
+            $finalExists = DB::table('submissions')
+                ->where('contestant_id', $contestantId)
+                ->where('round', $round)
+                ->where('md_group', $group)
+                ->where('season_id', $seasonId)
+                ->where('draft', false)
+                ->exists();
+
+            if ($finalExists) {
+                return response()->json(['success' => false, 'message' => 'Already submitted'], 400);
+            }
+
+            $entries = $request->input('entries', []);
+            $savedCount = 0;
+
+            foreach ($entries as $entry) {
+                $judgeId = $entry['judge_id'] ?? null;
+                $artist = $entry['artist'] ?? '';
+                $title = $entry['title'] ?? '';
+                $url = $entry['url'] ?? '';
+
+                if (!$judgeId) continue;
+
+                // Skip completely empty entries
+                if (empty($artist) && empty($title) && empty($url)) {
+                    // Delete existing draft for this judge if all fields cleared
+                    DB::table('submissions')
+                        ->where('contestant_id', $contestantId)
+                        ->where('round', $round)
+                        ->where('md_group', $group)
+                        ->where('season_id', $seasonId)
+                        ->where('judge_id', $judgeId)
+                        ->where('draft', true)
+                        ->delete();
+                    continue;
+                }
+
+                // Upsert: update existing draft or create new one
+                $existingDraft = DB::table('submissions')
+                    ->where('contestant_id', $contestantId)
+                    ->where('round', $round)
+                    ->where('md_group', $group)
+                    ->where('season_id', $seasonId)
+                    ->where('judge_id', $judgeId)
+                    ->where('draft', true)
+                    ->first();
+
+                if ($existingDraft) {
+                    DB::table('submissions')
+                        ->where('submission_id', $existingDraft->submission_id)
+                        ->update([
+                            'artist' => $artist,
+                            'title' => $title,
+                            'url' => $url,
+                        ]);
+                } else {
+                    DB::table('submissions')->insert([
+                        'contestant_id' => $contestantId,
+                        'season_id' => $seasonId,
+                        'judge_id' => $judgeId,
+                        'round' => $round,
+                        'md_group' => $group,
+                        'artist' => $artist,
+                        'title' => $title,
+                        'url' => $url,
+                        'status' => 0,
+                        'override' => false,
+                        'is_valid' => false,
+                        'draft' => true,
+                    ]);
+                }
+                $savedCount++;
+            }
+
+            return response()->json(['success' => true, 'saved' => $savedCount]);
+        } catch (\Exception $e) {
+            \Log::error('Draft save error: ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Server error'], 500);
+        }
+    }
+
     public function update(Request $request)
     {
         $data = $request->only(['submission_id', 'score', 'review', 'is_valid']);
@@ -147,12 +274,13 @@ class SubmissionController extends Controller
                 }
             }
 
-            // Check if already submitted
+            // Check if already submitted (non-draft)
             $existing = DB::table('submissions')
                 ->where('contestant_id', $contestant_id)
                 ->where('round', $round)
                 ->where('md_group', $group)
                 ->where('season_id', $seasonId)
+                ->where('draft', false)
                 ->exists();
 
             if ($existing) {
@@ -172,26 +300,52 @@ class SubmissionController extends Controller
 
             $submitted_count = 0;
 
-            // Insert submissions for each judge
+            // Insert/update submissions for each judge
             foreach ($judges as $judge_id) {
                 $artist = $request->input("artist_{$judge_id}");
                 $title = $request->input("title_{$judge_id}");
                 $url = $request->input("link_{$judge_id}");
 
                 if ($artist && $title && $url) {
-                    DB::table('submissions')->insert([
-                        'contestant_id' => $contestant_id,
-                        'season_id' => $seasonId,
-                        'judge_id' => $judge_id,
-                        'round' => $round,
-                        'md_group' => $group,
-                        'artist' => $artist,
-                        'title' => $title,
-                        'url' => $url,
-                        'status' => 0,
-                        'override' => false,
-                        'is_valid' => false  // Default to false for new submissions
-                    ]);
+                    // Check if a draft exists for this judge
+                    $existingDraft = DB::table('submissions')
+                        ->where('contestant_id', $contestant_id)
+                        ->where('round', $round)
+                        ->where('md_group', $group)
+                        ->where('season_id', $seasonId)
+                        ->where('judge_id', $judge_id)
+                        ->where('draft', true)
+                        ->first();
+
+                    if ($existingDraft) {
+                        // Update the draft to a final submission
+                        DB::table('submissions')
+                            ->where('submission_id', $existingDraft->submission_id)
+                            ->update([
+                                'artist' => $artist,
+                                'title' => $title,
+                                'url' => $url,
+                                'draft' => false,
+                                'status' => 0,
+                                'is_valid' => false,
+                            ]);
+                    } else {
+                        // Insert new final submission
+                        DB::table('submissions')->insert([
+                            'contestant_id' => $contestant_id,
+                            'season_id' => $seasonId,
+                            'judge_id' => $judge_id,
+                            'round' => $round,
+                            'md_group' => $group,
+                            'artist' => $artist,
+                            'title' => $title,
+                            'url' => $url,
+                            'status' => 0,
+                            'override' => false,
+                            'is_valid' => false,
+                            'draft' => false,
+                        ]);
+                    }
                     $submitted_count++;
                 }
             }

@@ -16,15 +16,28 @@
 
     @auth
         @php
-            // Check if the logged-in user has an existing application
+            // Check for a final (non-draft) application first
             $existingApp = DB::table('apps')
                 ->where('user_id', auth()->id())
+                ->where('draft', false)
                 ->first();
             
+            // If no final app, check for a draft
+            $draftApp = null;
+            if (!$existingApp) {
+                $draftApp = DB::table('apps')
+                    ->where('user_id', auth()->id())
+                    ->where('draft', true)
+                    ->first();
+            }
+
+            // Use final app for editing, or draft for pre-fill
+            $formSource = $existingApp ?? $draftApp;
             $isEditing = !is_null($existingApp);
+            $hasDraft = !is_null($draftApp);
             
             // Parse extra_streaming for "Other" case
-            $extraStreaming = old('extra_streaming', $existingApp->extra_streaming ?? '');
+            $extraStreaming = old('extra_streaming', $formSource->extra_streaming ?? '');
             $extraStreamingOther = '';
             $knownServices = ['Spotify', 'Apple Music', 'Tidal', 'Deezer', 'Qobuz', 'None'];
             if ($extraStreaming && !in_array($extraStreaming, $knownServices)) {
@@ -40,6 +53,10 @@
                         @if($isEditing)
                             <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
                                 <strong>Editing Mode:</strong> You have already submitted a judge application. You can update it below.
+                            </div>
+                        @elseif($hasDraft)
+                            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+                                <strong>Draft Restored:</strong> Your previously saved draft has been loaded.
                             </div>
                         @endif
 
@@ -63,7 +80,7 @@
                             </div>
                         @endif
 
-                        <form action="{{ route('apps.store') }}" method="POST">
+                        <form action="{{ route('apps.store') }}" method="POST" id="judgeAppForm">
                             @csrf
                             @if($isEditing)
                                 <input type="hidden" name="is_editing" value="1">
@@ -77,8 +94,8 @@
                                 <textarea 
                                     id="fav_artists" 
                                     name="fav_artists" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
-                                    required>{{ old('fav_artists', $existingApp->fav_artists ?? '') }}</textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize draft-field"
+                                    required>{{ old('fav_artists', $formSource->fav_artists ?? '') }}</textarea>
                             </div>
 
                             <!-- Question 2 -->
@@ -89,7 +106,7 @@
                                 <textarea 
                                     id="least_fav_artists" 
                                     name="least_fav_artists" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize">{{ old('least_fav_artists', $existingApp->least_fav_artists ?? '') }}</textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize draft-field">{{ old('least_fav_artists', $formSource->least_fav_artists ?? '') }}</textarea>
                             </div>
 
                             <!-- Question 3 -->
@@ -100,8 +117,8 @@
                                 <textarea 
                                     id="fav_genres" 
                                     name="fav_genres" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
-                                    required>{{ old('fav_genres', $existingApp->fav_genres ?? '') }}</textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize draft-field"
+                                    required>{{ old('fav_genres', $formSource->fav_genres ?? '') }}</textarea>
                             </div>
 
                             <!-- Question 4 -->
@@ -112,8 +129,8 @@
                                 <textarea 
                                     id="least_fav_genres" 
                                     name="least_fav_genres" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
-                                    required>{{ old('least_fav_genres', $existingApp->least_fav_genres ?? '') }}</textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize draft-field"
+                                    required>{{ old('least_fav_genres', $formSource->least_fav_genres ?? '') }}</textarea>
                             </div>
 
                             <!-- Question 5 -->
@@ -124,8 +141,8 @@
                                 <textarea 
                                     id="judging_style" 
                                     name="judging_style" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
-                                    required>{{ old('judging_style', $existingApp->judging_style ?? '') }}</textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize draft-field"
+                                    required>{{ old('judging_style', $formSource->judging_style ?? '') }}</textarea>
                             </div>
 
                             <!-- Question 6 -->
@@ -136,8 +153,8 @@
                                 <textarea 
                                     id="safe_pick_criteria" 
                                     name="safe_pick_criteria" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
-                                    required>{{ old('safe_pick_criteria', $existingApp->safe_pick_criteria ?? '') }}</textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize draft-field"
+                                    required>{{ old('safe_pick_criteria', $formSource->safe_pick_criteria ?? '') }}</textarea>
                             </div>
 
                             <!-- Question 7 (Extra Streaming) -->
@@ -155,7 +172,7 @@
                                                 type="radio" 
                                                 name="extra_streaming" 
                                                 value="{{ $option }}" 
-                                                class="form-radio text-blue-600 uncheckable-radio"
+                                                class="form-radio text-blue-600 uncheckable-radio draft-field"
                                                 data-group="extra_streaming"
                                                 {{ $extraStreaming === $option ? 'checked' : '' }}
                                                 required>
@@ -167,7 +184,7 @@
                                             type="radio" 
                                             name="extra_streaming" 
                                             value="Other" 
-                                            class="form-radio text-blue-600 uncheckable-radio"
+                                            class="form-radio text-blue-600 uncheckable-radio draft-field"
                                             data-group="extra_streaming"
                                             id="extra_streaming_other_radio"
                                             {{ $extraStreaming === 'Other' ? 'checked' : '' }}
@@ -181,7 +198,7 @@
                                         name="extra_streaming_other" 
                                         id="extra_streaming_other_input"
                                         placeholder="Please specify your streaming service"
-                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 draft-field"
                                         value="{{ $extraStreamingOther }}">
                                 </div>
                             </div>
@@ -197,8 +214,8 @@
                                             type="radio" 
                                             name="bonus" 
                                             value="1" 
-                                            class="form-radio text-blue-600"
-                                            {{ old('bonus', $existingApp->bonus ?? null) == '1' || old('bonus', $existingApp->bonus ?? null) === true ? 'checked' : '' }}
+                                            class="form-radio text-blue-600 draft-field"
+                                            {{ old('bonus', $formSource->bonus ?? null) == '1' || old('bonus', $formSource->bonus ?? null) === true ? 'checked' : '' }}
                                             required>
                                         <span class="ml-2">Yes</span>
                                     </label>
@@ -207,8 +224,8 @@
                                             type="radio" 
                                             name="bonus" 
                                             value="0" 
-                                            class="form-radio text-blue-600"
-                                            {{ old('bonus', $existingApp->bonus ?? null) == '0' || old('bonus', $existingApp->bonus ?? null) === false ? 'checked' : '' }}
+                                            class="form-radio text-blue-600 draft-field"
+                                            {{ old('bonus', $formSource->bonus ?? null) == '0' || old('bonus', $formSource->bonus ?? null) === false ? 'checked' : '' }}
                                             required>
                                         <span class="ml-2">No</span>
                                     </label>
@@ -223,8 +240,8 @@
                                 <textarea 
                                     id="banned_artists" 
                                     name="banned_artists" 
-                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize"
-                                    required>{{ old('banned_artists', $existingApp->banned_artists ?? '') }}</textarea>
+                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 auto-resize draft-field"
+                                    required>{{ old('banned_artists', $formSource->banned_artists ?? '') }}</textarea>
                             </div>
 
                             <!-- Question 10 (Optional, uncheckable) -->
@@ -238,9 +255,9 @@
                                             type="radio" 
                                             name="longer" 
                                             value="1" 
-                                            class="form-radio text-blue-600 uncheckable-radio"
+                                            class="form-radio text-blue-600 uncheckable-radio draft-field"
                                             data-group="longer"
-                                            {{ old('longer', $existingApp->longer ?? null) == '1' || old('longer', $existingApp->longer ?? null) === true ? 'checked' : '' }}>
+                                            {{ old('longer', $formSource->longer ?? null) == '1' || old('longer', $formSource->longer ?? null) === true ? 'checked' : '' }}>
                                         <span class="ml-2">More</span>
                                     </label>
                                     <label class="inline-flex items-center">
@@ -248,22 +265,31 @@
                                             type="radio" 
                                             name="longer" 
                                             value="0" 
-                                            class="form-radio text-blue-600 uncheckable-radio"
+                                            class="form-radio text-blue-600 uncheckable-radio draft-field"
                                             data-group="longer"
-                                            {{ old('longer', $existingApp->longer ?? null) == '0' || old('longer', $existingApp->longer ?? null) === false ? 'checked' : '' }}>
+                                            {{ old('longer', $formSource->longer ?? null) == '0' || old('longer', $formSource->longer ?? null) === false ? 'checked' : '' }}>
                                         <span class="ml-2">Less</span>
                                     </label>
                                 </div>
                             </div>
 
-                            <!-- Submit Button -->
-                            <div class="flex justify-end mt-6 mb-8">
+                            <!-- Buttons -->
+                            <div class="flex justify-end mt-6 mb-8 gap-3">
+                                @if(!$isEditing)
+                                    <button 
+                                        type="button" 
+                                        id="saveDraftBtn"
+                                        class="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                                        Save Draft
+                                    </button>
+                                @endif
                                 <button 
                                     type="submit" 
                                     class="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                     {{ $isEditing ? 'Update Application' : 'Submit Application' }}
                                 </button>
                             </div>
+                            <div id="draftStatus" class="text-center text-sm mb-4" style="min-height: 20px;"></div>
                         </form>
                     </div>
                 </div>
@@ -300,6 +326,7 @@
                             this.dataset.wasChecked = 'true';
                         }
                         toggleOtherInput();
+                        scheduleDraftSave();
                     });
                     radio.dataset.wasChecked = radio.checked ? 'true' : 'false';
                 });
@@ -320,7 +347,10 @@
                 }
 
                 document.querySelectorAll('input[name="extra_streaming"]').forEach(function(radio) {
-                    radio.addEventListener('change', toggleOtherInput);
+                    radio.addEventListener('change', function() {
+                        toggleOtherInput();
+                        scheduleDraftSave();
+                    });
                 });
 
                 toggleOtherInput();
@@ -332,6 +362,151 @@
                     autoResize(textarea);
                 });
             });
+
+            // --- Draft autosave logic ---
+            @if(!$isEditing)
+            (function() {
+                const AUTOSAVE_DELAY = 3000;
+                let autosaveTimer = null;
+                let isSaving = false;
+
+                const draftStatus = document.getElementById('draftStatus');
+                const saveDraftBtn = document.getElementById('saveDraftBtn');
+                const form = document.getElementById('judgeAppForm');
+
+                function showDraftStatus(message, type) {
+                    if (!draftStatus) return;
+                    draftStatus.textContent = message;
+                    draftStatus.className = 'text-center text-sm mb-4';
+                    if (type === 'saving') draftStatus.style.color = '#b45309';
+                    else if (type === 'success') draftStatus.style.color = '#15803d';
+                    else if (type === 'error') draftStatus.style.color = '#dc2626';
+                    else draftStatus.style.color = '#6b7280';
+
+                    if (type === 'success' || type === 'error') {
+                        setTimeout(() => {
+                            draftStatus.textContent = '';
+                        }, 4000);
+                    }
+                }
+
+                function collectFormData() {
+                    const data = {};
+
+                    // Textareas
+                    ['fav_artists', 'least_fav_artists', 'fav_genres', 'least_fav_genres',
+                     'judging_style', 'safe_pick_criteria', 'banned_artists'].forEach(field => {
+                        const el = document.getElementById(field);
+                        if (el) data[field] = el.value.trim();
+                    });
+
+                    // Radio: extra_streaming
+                    const streamingRadio = document.querySelector('input[name="extra_streaming"]:checked');
+                    if (streamingRadio) {
+                        if (streamingRadio.value === 'Other') {
+                            const otherInput = document.getElementById('extra_streaming_other_input');
+                            data.extra_streaming = otherInput ? otherInput.value.trim() : '';
+                        } else {
+                            data.extra_streaming = streamingRadio.value;
+                        }
+                    } else {
+                        data.extra_streaming = '';
+                    }
+
+                    // Radio: bonus
+                    const bonusRadio = document.querySelector('input[name="bonus"]:checked');
+                    data.bonus = bonusRadio ? bonusRadio.value : '';
+
+                    // Radio: longer
+                    const longerRadio = document.querySelector('input[name="longer"]:checked');
+                    data.longer = longerRadio ? longerRadio.value : '';
+
+                    return data;
+                }
+
+                async function saveDraft(manual) {
+                    if (isSaving) return;
+                    isSaving = true;
+
+                    if (manual && saveDraftBtn) {
+                        saveDraftBtn.disabled = true;
+                        saveDraftBtn.textContent = 'Saving...';
+                    }
+                    showDraftStatus('Saving draft...', 'saving');
+
+                    const data = collectFormData();
+
+                    // Check if anything has content
+                    const hasData = Object.values(data).some(v => v !== '' && v !== null);
+                    if (!hasData) {
+                        showDraftStatus('Nothing to save', '');
+                        isSaving = false;
+                        if (manual && saveDraftBtn) {
+                            saveDraftBtn.disabled = false;
+                            saveDraftBtn.textContent = 'Save Draft';
+                        }
+                        return;
+                    }
+
+                    try {
+                        const response = await fetch('{{ route("apps.draft") }}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify(data)
+                        });
+                        const result = await response.json();
+                        if (result.success) {
+                            const now = new Date();
+                            const timeStr = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+                            showDraftStatus('Draft saved at ' + timeStr, 'success');
+                        } else {
+                            showDraftStatus('Could not save draft: ' + (result.message || 'Unknown error'), 'error');
+                        }
+                    } catch (err) {
+                        console.error('Draft save error:', err);
+                        showDraftStatus('Could not save draft — network error', 'error');
+                    } finally {
+                        isSaving = false;
+                        if (manual && saveDraftBtn) {
+                            saveDraftBtn.disabled = false;
+                            saveDraftBtn.textContent = 'Save Draft';
+                        }
+                    }
+                }
+
+                // Expose for radio button handlers
+                window.scheduleDraftSave = function() {
+                    clearTimeout(autosaveTimer);
+                    autosaveTimer = setTimeout(() => saveDraft(false), AUTOSAVE_DELAY);
+                };
+
+                // Autosave on input change (debounced)
+                form.addEventListener('input', function(e) {
+                    if (e.target.classList.contains('draft-field')) {
+                        window.scheduleDraftSave();
+                    }
+                });
+
+                // Also catch change events for radios
+                form.addEventListener('change', function(e) {
+                    if (e.target.classList.contains('draft-field')) {
+                        window.scheduleDraftSave();
+                    }
+                });
+
+                // Manual save button
+                if (saveDraftBtn) {
+                    saveDraftBtn.addEventListener('click', function() {
+                        clearTimeout(autosaveTimer);
+                        saveDraft(true);
+                    });
+                }
+            })();
+            @endif
         </script>
     @endauth
 </x-app-layout>

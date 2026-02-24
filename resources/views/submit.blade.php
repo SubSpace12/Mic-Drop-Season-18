@@ -97,20 +97,56 @@
                         }
                 }
                 // Only check for existing submissions if round is active and deadline hasn't passed
+                // Now we only count non-draft submissions as "already submitted"
                 $existing_submissions = false;
                 $alreadySubmitted = false;
                 if (!$statusError && !$accessDenied && !$isStaffViewing && !$deadlinePassed) {
-                        // Check if user has already submitted for this round
                         $existing_submissions = DB::table('submissions')
                                 ->where('contestant_id', auth()->id())
                                 ->where('round', $round)
                                 ->where('md_group', $group)
                                 ->where('season_id', $seasonId)
+                                ->where('draft', false)
                                 ->exists();
                         if ($existing_submissions) {
                                 $alreadySubmitted = true;
                         }
                 }
+
+                // Load final submissions with judge info for the "already submitted" screen
+                $submittedSongs = collect();
+                if ($alreadySubmitted) {
+                        $submittedSongs = DB::table('submissions')
+                                ->join('users', 'users.id', '=', 'submissions.judge_id')
+                                ->join('judges', function ($join) use ($round, $group, $seasonId) {
+                                        $join->on('judges.id', '=', 'submissions.judge_id')
+                                                ->where('judges.round', $round)
+                                                ->where('judges.md_group', $group)
+                                                ->where('judges.season_id', $seasonId);
+                                })
+                                ->select('submissions.artist', 'submissions.title', 'submissions.url', 'users.global_name', 'judges.judge_number')
+                                ->where('submissions.contestant_id', auth()->id())
+                                ->where('submissions.round', $round)
+                                ->where('submissions.md_group', $group)
+                                ->where('submissions.season_id', $seasonId)
+                                ->where('submissions.draft', false)
+                                ->orderBy('judges.judge_number')
+                                ->get();
+                }
+
+                // Load draft submissions to pre-fill the form
+                $drafts = collect();
+                if (!$statusError && !$accessDenied && !$isStaffViewing && !$deadlinePassed && !$alreadySubmitted && auth()->check()) {
+                        $drafts = DB::table('submissions')
+                                ->where('contestant_id', auth()->id())
+                                ->where('round', $round)
+                                ->where('md_group', $group)
+                                ->where('season_id', $seasonId)
+                                ->where('draft', true)
+                                ->get()
+                                ->keyBy('judge_id');
+                }
+
                 $judges = [];
                 if (!$statusError && !$accessDenied && (!$deadlinePassed || $isStaffViewing) && (!$alreadySubmitted || $isStaffViewing)) {
                         $judges = DB::table('judges')
@@ -225,24 +261,44 @@
                                 </p>
                                 <a href="/dashboard" class="back-button">Back to Dashboard</a>
                         </div>
+                @elseif(!$isStaffViewing && $alreadySubmitted && session('success'))
+                        {{-- Just Submitted - Simple Thank You --}}
+                        <div class="thank-you-screen">
+                                <h1>Thank you for submitting</h1>
+                                <p>Your response has been recorded.</p>
+                                <a href="/dashboard" class="back-button">Back to Dashboard</a>
+                        </div>
                 @elseif(!$isStaffViewing && $alreadySubmitted)
-                        {{-- Already Submitted Screen --}}
+                        {{-- Already Submitted - Returning Visit --}}
                         <div class="access-denied already-submitted">
                                 <div class="access-denied-icon">SUBMITTED</div>
-                                <h1>Submission Already Received</h1>
+                                <h1>Already Submitted</h1>
                                 <p>You have already submitted your songs for this round.</p>
                                 <div class="round-info">
                                         <h3>{{ $round_info->title }}</h3>
                                         <p><strong>Round:</strong> {{ $round }}</p>
                                         <p><strong>Group:</strong> {{ $group == 0 ? 'Merge' : 'Group ' . $group }}</p>
-                                        <p><strong>Status:</strong>
-                                                <span style="color: #608b4e; font-weight: 600;">Submitted</span>
-                                        </p>
                                 </div>
-                                <p style="font-size: 16px; color: #a0a0a0;">
-                                        Your submission has been recorded successfully.
-                                        Good luck with your songs!
-                                </p>
+                                @if($submittedSongs->isNotEmpty())
+                                        <div class="submitted-songs-list">
+                                                <h2>Your Submissions</h2>
+                                                @foreach($submittedSongs as $song)
+                                                        <div class="submitted-song-item">
+                                                                <div class="submitted-song-judge">
+                                                                        {{ $song->judge_number == 1 ? 'Head Judge' : 'Guest Judge ' . ($song->judge_number - 1) }}: {{ $song->global_name }}
+                                                                </div>
+                                                                <div class="submitted-song-details">
+                                                                        <span class="submitted-song-artist">{{ $song->artist }}</span>
+                                                                        &mdash;
+                                                                        <span class="submitted-song-title">{{ $song->title }}</span>
+                                                                </div>
+                                                                <div class="submitted-song-link">
+                                                                        <a href="{{ $song->url }}" target="_blank" rel="noopener noreferrer">{{ $song->url }}</a>
+                                                                </div>
+                                                        </div>
+                                                @endforeach
+                                        </div>
+                                @endif
                                 <p style="font-size: 14px; color: #858585; margin-top: 20px;">
                                         Need to make changes? Contact an administrator for assistance.
                                 </p>
@@ -269,12 +325,7 @@
                                 </div>
                         @endif
 
-                        @if(session('success'))
-                                <div class="success-message">
-                                        <h3>{{ session('success') }}</h3>
-                                        <p>Your songs have been submitted successfully. Good luck!</p>
-                                </div>
-                        @endif
+
                         @if($errors->any())
                                 <div class="error-message">
                                         <ul>
@@ -300,11 +351,22 @@
                                         @endif
                                 </div>
                         @endif
+
+                        {{-- Draft status indicator --}}
+                        @if(!$isStaffViewing && $drafts->isNotEmpty())
+                                <div class="draft-restored-banner">
+                                        Draft restored — your previously saved entries have been loaded.
+                                </div>
+                        @endif
+
                         <form action="{{ route('submit.songs') }}" method="POST" id="submissionForm">
                                 @csrf
                                 <input type="hidden" name="group" value="{{ $group }}">
                                 <input type="hidden" name="round" value="{{ $round }}">
                                 @foreach($judges as $judge)
+                                        @php
+                                                $draft = $drafts[$judge->judge_id] ?? null;
+                                        @endphp
                                         <div class="judge-section">
                                                 <h2 class="judge-name">
                                                         {{ ($loop->iteration == 1 ? "Head Judge" : "Guest Judge " . ($loop->iteration - 1)) . ": " . $judge->global_name }}
@@ -351,18 +413,43 @@
                                                                 {{ $judge->judge_id }})</h2>
                                                         <div class="input-group">
                                                                 <input type="text" name="artist_{{ $judge->judge_id }}"
-                                                                        placeholder="Artist Name" {{ $isStaffViewing ? 'disabled' : 'required' }}>
+                                                                        placeholder="Artist Name"
+                                                                        value="{{ $draft->artist ?? old('artist_' . $judge->judge_id, '') }}"
+                                                                        data-judge-id="{{ $judge->judge_id }}"
+                                                                        data-field="artist"
+                                                                        {{ $isStaffViewing ? 'disabled' : 'required' }}>
                                                                 <input type="text" name="title_{{ $judge->judge_id }}"
-                                                                        placeholder="Song Title" {{ $isStaffViewing ? 'disabled' : 'required' }}>
+                                                                        placeholder="Song Title"
+                                                                        value="{{ $draft->title ?? old('title_' . $judge->judge_id, '') }}"
+                                                                        data-judge-id="{{ $judge->judge_id }}"
+                                                                        data-field="title"
+                                                                        {{ $isStaffViewing ? 'disabled' : 'required' }}>
                                                                 <input type="url" name="link_{{ $judge->judge_id }}"
-                                                                        placeholder="Submission Link" {{ $isStaffViewing ? 'disabled' : 'required' }}>
+                                                                        placeholder="Submission Link"
+                                                                        value="{{ $draft->url ?? old('link_' . $judge->judge_id, '') }}"
+                                                                        data-judge-id="{{ $judge->judge_id }}"
+                                                                        data-field="url"
+                                                                        {{ $isStaffViewing ? 'disabled' : 'required' }}>
                                                         </div>
                                                 </div>
                                         </div>
                                 @endforeach
-                                <button type="submit" class="submit-button" {{ $isStaffViewing ? 'disabled' : '' }}>
-                                        {{ $isStaffViewing ? 'Submission Disabled (Staff View)' : 'Submit All Songs' }}
-                                </button>
+
+                                @if(!$isStaffViewing)
+                                        <div class="form-actions">
+                                                <button type="button" class="save-draft-button" id="saveDraftBtn">
+                                                        Save Draft
+                                                </button>
+                                                <button type="submit" class="submit-button">
+                                                        Submit All Songs
+                                                </button>
+                                        </div>
+                                        <div class="draft-status" id="draftStatus"></div>
+                                @else
+                                        <button type="submit" class="submit-button" disabled>
+                                                Submission Disabled (Staff View)
+                                        </button>
+                                @endif
                         </form>
                 @endif
         </div>
@@ -395,6 +482,124 @@
                                 alert('Staff members cannot submit songs. This is a view-only mode.');
                                 return false;
                         });
+                @endif
+
+                // --- Draft autosave logic ---
+                @if(!$isStaffViewing && !$statusError && !$accessDenied && !$deadlinePassed && !$alreadySubmitted)
+                (function () {
+                        const AUTOSAVE_DELAY = 3000; // 3 seconds after last input
+                        let autosaveTimer = null;
+                        let isSaving = false;
+
+                        const draftStatus = document.getElementById('draftStatus');
+                        const saveDraftBtn = document.getElementById('saveDraftBtn');
+                        const form = document.getElementById('submissionForm');
+
+                        function showDraftStatus(message, type) {
+                                if (!draftStatus) return;
+                                draftStatus.textContent = message;
+                                draftStatus.className = 'draft-status ' + (type || '');
+                                if (type === 'success' || type === 'error') {
+                                        setTimeout(() => {
+                                                draftStatus.textContent = '';
+                                                draftStatus.className = 'draft-status';
+                                        }, 4000);
+                                }
+                        }
+
+                        function collectEntries() {
+                                const entries = [];
+                                const inputs = form.querySelectorAll('.input-group');
+                                inputs.forEach(group => {
+                                        const artistInput = group.querySelector('[data-field="artist"]');
+                                        const titleInput = group.querySelector('[data-field="title"]');
+                                        const urlInput = group.querySelector('[data-field="url"]');
+                                        if (artistInput) {
+                                                entries.push({
+                                                        judge_id: artistInput.dataset.judgeId,
+                                                        artist: artistInput.value.trim(),
+                                                        title: titleInput ? titleInput.value.trim() : '',
+                                                        url: urlInput ? urlInput.value.trim() : ''
+                                                });
+                                        }
+                                });
+                                return entries;
+                        }
+
+                        async function saveDraft(manual) {
+                                if (isSaving) return;
+                                isSaving = true;
+
+                                if (manual && saveDraftBtn) {
+                                        saveDraftBtn.disabled = true;
+                                        saveDraftBtn.textContent = 'Saving...';
+                                }
+                                showDraftStatus('Saving draft...', 'saving');
+
+                                const entries = collectEntries();
+                                // Don't save if all fields are empty
+                                const hasData = entries.some(e => e.artist || e.title || e.url);
+                                if (!hasData) {
+                                        showDraftStatus('Nothing to save', '');
+                                        isSaving = false;
+                                        if (manual && saveDraftBtn) {
+                                                saveDraftBtn.disabled = false;
+                                                saveDraftBtn.textContent = 'Save Draft';
+                                        }
+                                        return;
+                                }
+
+                                try {
+                                        const response = await fetch('{{ route("submit.draft") }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                        'Content-Type': 'application/json',
+                                                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                                                        'Accept': 'application/json'
+                                                },
+                                                body: JSON.stringify({
+                                                        group: {{ $group }},
+                                                        round: {{ $round }},
+                                                        entries: entries
+                                                })
+                                        });
+                                        const data = await response.json();
+                                        if (data.success) {
+                                                const now = new Date();
+                                                const timeStr = now.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
+                                                showDraftStatus('Draft saved at ' + timeStr, 'success');
+                                        } else {
+                                                showDraftStatus('Could not save draft: ' + (data.message || 'Unknown error'), 'error');
+                                        }
+                                } catch (err) {
+                                        console.error('Draft save error:', err);
+                                        showDraftStatus('Could not save draft — network error', 'error');
+                                } finally {
+                                        isSaving = false;
+                                        if (manual && saveDraftBtn) {
+                                                saveDraftBtn.disabled = false;
+                                                saveDraftBtn.textContent = 'Save Draft';
+                                        }
+                                }
+                        }
+
+                        // Autosave on input change (debounced)
+                        form.addEventListener('input', function (e) {
+                                if (e.target.matches('[data-field]')) {
+                                        clearTimeout(autosaveTimer);
+                                        autosaveTimer = setTimeout(() => saveDraft(false), AUTOSAVE_DELAY);
+                                }
+                        });
+
+                        // Manual save button
+                        if (saveDraftBtn) {
+                                saveDraftBtn.addEventListener('click', function () {
+                                        clearTimeout(autosaveTimer);
+                                        saveDraft(true);
+                                });
+                        }
+
+                })();
                 @endif
 
                 document.addEventListener('DOMContentLoaded', function () {

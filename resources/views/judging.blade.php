@@ -74,8 +74,15 @@
                         ->where('submissions.round', $round)
                         ->where('submissions.md_group', $group_raw)
                         ->where('submissions.season_id', $seasonId)
+                        ->where('submissions.draft', false)
                         ->orderBy('judges.judge_number')
                         ->get() : collect();
+
+                    // Skip contestants with no final submissions
+                    if ($subs->isEmpty()) {
+                        continue;
+                    }
+
                     // Collect scores from each judge
                     foreach ($subs as $sub) {
                         if ($sub->score !== null) {
@@ -123,6 +130,7 @@
                         ->where('round', $round)
                         ->where('submissions.md_group', $group_raw)
                         ->where('submissions.season_id', $seasonId)
+                        ->where('submissions.draft', false)
                         ->orderBy('submission_date', 'asc')
                         ->get() : collect();
                     $judgeSubmissions[$judge->id] = $submissions;

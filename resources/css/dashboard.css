@@ -965,3 +965,49 @@ body {
         transform: scale(0.98);
     }
 }
+
+.round-card.status-active.status-submitted {
+    border-color: #569cd6;
+    background: linear-gradient(135deg, #1a2332 0%, #243447 100%);
+    animation: none;
+    box-shadow: 0 4px 15px rgba(86, 156, 214, 0.25);
+}
+
+.round-card.status-active.status-submitted::before {
+    background: linear-gradient(90deg, #569cd6, #569cd6, #4ec9b0);
+}
+
+.round-card.status-active.status-submitted:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 30px rgba(86, 156, 214, 0.4);
+}
+
+.status-active.status-submitted .round-number {
+    color: #569cd6;
+}
+
+.status-active.status-submitted .round-title {
+    color: #569cd6;
+}
+
+.status-active.status-submitted .action-text {
+    color: #569cd6;
+    background: linear-gradient(135deg, #1a2332, #243447);
+    border-color: #569cd6;
+}
+
+.badge-submitted {
+    background: #1a2332;
+    color: #569cd6;
+    border-color: #569cd6;
+    margin-left: 0.5rem;
+}
+
+/* Mobile fix for submitted badge stacking */
+@media (max-width: 768px) {
+    .badge-submitted {
+        display: block;
+        margin-left: 0;
+        margin-top: 0.5rem;
+    }
+}
