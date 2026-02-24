@@ -490,6 +490,7 @@
                         const AUTOSAVE_DELAY = 3000; // 3 seconds after last input
                         let autosaveTimer = null;
                         let isSaving = false;
+                        let autosaveDisabled = false;
 
                         const draftStatus = document.getElementById('draftStatus');
                         const saveDraftBtn = document.getElementById('saveDraftBtn');
@@ -527,7 +528,7 @@
                         }
 
                         async function saveDraft(manual) {
-                                if (isSaving) return;
+                                if (isSaving || autosaveDisabled) return;
                                 isSaving = true;
 
                                 if (manual && saveDraftBtn) {
@@ -563,6 +564,15 @@
                                                         entries: entries
                                                 })
                                         });
+                                        if (response.status === 419) {
+                                                autosaveDisabled = true;
+                                                showDraftStatus('Session expired — please reload the page', 'error');
+                                                return;
+                                        }
+                                        if (!response.ok) {
+                                                showDraftStatus('Could not save draft (server error ' + response.status + ')', 'error');
+                                                return;
+                                        }
                                         const data = await response.json();
                                         if (data.success) {
                                                 const now = new Date();

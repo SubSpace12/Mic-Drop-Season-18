@@ -608,3 +608,100 @@ button:focus-visible,
         color: black;
     }
 }
+
+.form-actions {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.save-draft-button {
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border: 2px solid #569cd6;
+    background: transparent;
+    color: #569cd6;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-draft-button:hover {
+    background: rgba(86, 156, 214, 0.1);
+}
+
+.save-draft-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.submit-button {
+    background: linear-gradient(135deg, #0e639c, #1177bb);
+    color: #ffffff;
+    padding: 14px 32px;
+    border: 2px solid #569cd6;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(14, 99, 156, 0.4);
+}
+
+.submit-button:hover {
+    background: linear-gradient(135deg, #1177bb, #1c88d1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(14, 99, 156, 0.6);
+    border-color: #4ec9b0;
+}
+
+.submit-button:active {
+    transform: translateY(0);
+}
+
+.draft-status {
+    text-align: center;
+    margin-top: 12px;
+    font-size: 14px;
+    min-height: 20px;
+    transition: opacity 0.3s ease;
+}
+
+.draft-status.saving {
+    color: #d7ba7d;
+}
+
+.draft-status.success {
+    color: #608b4e;
+}
+
+.draft-status.error {
+    color: #f48771;
+}
+
+.draft-restored-banner {
+    background: rgba(86, 156, 214, 0.1);
+    border: 1px solid rgba(86, 156, 214, 0.3);
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 20px;
+    color: #569cd6;
+    font-size: 15px;
+    text-align: center;
+}
+
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .form-actions .save-draft-button,
+    .form-actions .submit-button {
+        width: 100%;
+    }
+}

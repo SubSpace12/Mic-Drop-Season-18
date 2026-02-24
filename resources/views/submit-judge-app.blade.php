@@ -55,8 +55,8 @@
                                 <strong>Editing Mode:</strong> You have already submitted a judge application. You can update it below.
                             </div>
                         @elseif($hasDraft)
-                            <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
-                                <strong>Draft Restored:</strong> Your previously saved draft has been loaded.
+                            <div class="draft-restored-banner">
+                                Draft restored — your previously saved entries have been loaded.
                             </div>
                         @endif
 
@@ -274,22 +274,22 @@
                             </div>
 
                             <!-- Buttons -->
-                            <div class="flex justify-end mt-6 mb-8 gap-3">
+                            <div class="form-actions">
                                 @if(!$isEditing)
                                     <button 
                                         type="button" 
                                         id="saveDraftBtn"
-                                        class="px-6 py-2 bg-gray-200 text-gray-700 font-medium rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2">
+                                        class="save-draft-button">
                                         Save Draft
                                     </button>
                                 @endif
                                 <button 
                                     type="submit" 
-                                    class="px-6 py-2 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                                    class="submit-button">
                                     {{ $isEditing ? 'Update Application' : 'Submit Application' }}
                                 </button>
                             </div>
-                            <div id="draftStatus" class="text-center text-sm mb-4" style="min-height: 20px;"></div>
+                            <div class="draft-status" id="draftStatus"></div>
                         </form>
                     </div>
                 </div>
@@ -369,6 +369,7 @@
                 const AUTOSAVE_DELAY = 3000;
                 let autosaveTimer = null;
                 let isSaving = false;
+                let autosaveDisabled = false;
 
                 const draftStatus = document.getElementById('draftStatus');
                 const saveDraftBtn = document.getElementById('saveDraftBtn');
@@ -377,15 +378,12 @@
                 function showDraftStatus(message, type) {
                     if (!draftStatus) return;
                     draftStatus.textContent = message;
-                    draftStatus.className = 'text-center text-sm mb-4';
-                    if (type === 'saving') draftStatus.style.color = '#b45309';
-                    else if (type === 'success') draftStatus.style.color = '#15803d';
-                    else if (type === 'error') draftStatus.style.color = '#dc2626';
-                    else draftStatus.style.color = '#6b7280';
+                    draftStatus.className = 'draft-status ' + (type || '');
 
                     if (type === 'success' || type === 'error') {
                         setTimeout(() => {
                             draftStatus.textContent = '';
+                            draftStatus.className = 'draft-status';
                         }, 4000);
                     }
                 }
@@ -425,7 +423,7 @@
                 }
 
                 async function saveDraft(manual) {
-                    if (isSaving) return;
+                    if (isSaving || autosaveDisabled) return;
                     isSaving = true;
 
                     if (manual && saveDraftBtn) {
@@ -458,6 +456,15 @@
                             },
                             body: JSON.stringify(data)
                         });
+                        if (response.status === 419) {
+                            autosaveDisabled = true;
+                            showDraftStatus('Session expired — please reload the page', 'error');
+                            return;
+                        }
+                        if (!response.ok) {
+                            showDraftStatus('Could not save draft (server error ' + response.status + ')', 'error');
+                            return;
+                        }
                         const result = await response.json();
                         if (result.success) {
                             const now = new Date();
@@ -509,4 +516,4 @@
             @endif
         </script>
     @endauth
-</x-app-layout>
+    </x-app-layout>
