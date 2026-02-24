@@ -140,9 +140,13 @@ class SubmissionController extends Controller
 
             return response()->json(['success' => true, 'saved' => $savedCount]);
         } catch (\Exception $e) {
-            \Log::error('Draft save error: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Server error'], 500);
-        }
+    \Log::error('Draft save error: ' . $e->getMessage());
+    return response()->json([
+        'success' => false,
+        'message' => $e->getMessage(),
+        'trace' => $e->getTraceAsString()
+    ], 500);
+}
     }
 
     public function update(Request $request)

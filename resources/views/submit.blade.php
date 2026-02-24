@@ -369,7 +369,7 @@
                                         @endphp
                                         <div class="judge-section">
                                                 <h2 class="judge-name">
-                                                        {{ ($loop->iteration == 1 ? "Head Judge" : "Guest Judge " . ($loop->iteration - 1)) . ": " . $judge->global_name }}
+                                                        {{ ($loop->iteration == 0 ? "Head Judge" : "Guest Judge " . ($loop->iteration)) . ": " . $judge->global_name }}
                                                 </h2>
                                                 <div class="judge-info">
                                                         <h3>1. Who are some of your favourite artists?</h3>
