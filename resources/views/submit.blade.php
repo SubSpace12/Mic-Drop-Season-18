@@ -484,13 +484,10 @@
                         });
                 @endif
 
-                // --- Draft autosave logic ---
+                // --- Draft save logic (manual only) ---
                 @if(!$isStaffViewing && !$statusError && !$accessDenied && !$deadlinePassed && !$alreadySubmitted)
                 (function () {
-                        const AUTOSAVE_DELAY = 3000; // 3 seconds after last input
-                        let autosaveTimer = null;
                         let isSaving = false;
-                        let autosaveDisabled = false;
 
                         const draftStatus = document.getElementById('draftStatus');
                         const saveDraftBtn = document.getElementById('saveDraftBtn');
@@ -527,26 +524,20 @@
                                 return entries;
                         }
 
-                        async function saveDraft(manual) {
-                                if (isSaving || autosaveDisabled) return;
+                        async function saveDraft() {
+                                if (isSaving) return;
                                 isSaving = true;
-
-                                if (manual && saveDraftBtn) {
-                                        saveDraftBtn.disabled = true;
-                                        saveDraftBtn.textContent = 'Saving...';
-                                }
+                                saveDraftBtn.disabled = true;
+                                saveDraftBtn.textContent = 'Saving...';
                                 showDraftStatus('Saving draft...', 'saving');
 
                                 const entries = collectEntries();
-                                // Don't save if all fields are empty
                                 const hasData = entries.some(e => e.artist || e.title || e.url);
                                 if (!hasData) {
                                         showDraftStatus('Nothing to save', '');
                                         isSaving = false;
-                                        if (manual && saveDraftBtn) {
-                                                saveDraftBtn.disabled = false;
-                                                saveDraftBtn.textContent = 'Save Draft';
-                                        }
+                                        saveDraftBtn.disabled = false;
+                                        saveDraftBtn.textContent = 'Save Draft';
                                         return;
                                 }
 
@@ -565,7 +556,6 @@
                                                 })
                                         });
                                         if (response.status === 419) {
-                                                autosaveDisabled = true;
                                                 showDraftStatus('Session expired — please reload the page', 'error');
                                                 return;
                                         }
@@ -586,27 +576,13 @@
                                         showDraftStatus('Could not save draft — network error', 'error');
                                 } finally {
                                         isSaving = false;
-                                        if (manual && saveDraftBtn) {
-                                                saveDraftBtn.disabled = false;
-                                                saveDraftBtn.textContent = 'Save Draft';
-                                        }
+                                        saveDraftBtn.disabled = false;
+                                        saveDraftBtn.textContent = 'Save Draft';
                                 }
                         }
 
-                        // Autosave on input change (debounced)
-                        form.addEventListener('input', function (e) {
-                                if (e.target.matches('[data-field]')) {
-                                        clearTimeout(autosaveTimer);
-                                        autosaveTimer = setTimeout(() => saveDraft(false), AUTOSAVE_DELAY);
-                                }
-                        });
-
-                        // Manual save button
                         if (saveDraftBtn) {
-                                saveDraftBtn.addEventListener('click', function () {
-                                        clearTimeout(autosaveTimer);
-                                        saveDraft(true);
-                                });
+                                saveDraftBtn.addEventListener('click', saveDraft);
                         }
 
                 })();

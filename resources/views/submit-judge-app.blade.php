@@ -326,7 +326,6 @@
                             this.dataset.wasChecked = 'true';
                         }
                         toggleOtherInput();
-                        scheduleDraftSave();
                     });
                     radio.dataset.wasChecked = radio.checked ? 'true' : 'false';
                 });
@@ -349,7 +348,6 @@
                 document.querySelectorAll('input[name="extra_streaming"]').forEach(function(radio) {
                     radio.addEventListener('change', function() {
                         toggleOtherInput();
-                        scheduleDraftSave();
                     });
                 });
 
@@ -363,17 +361,13 @@
                 });
             });
 
-            // --- Draft autosave logic ---
+            // --- Draft save logic (manual only) ---
             @if(!$isEditing)
             (function() {
-                const AUTOSAVE_DELAY = 3000;
-                let autosaveTimer = null;
                 let isSaving = false;
-                let autosaveDisabled = false;
 
                 const draftStatus = document.getElementById('draftStatus');
                 const saveDraftBtn = document.getElementById('saveDraftBtn');
-                const form = document.getElementById('judgeAppForm');
 
                 function showDraftStatus(message, type) {
                     if (!draftStatus) return;
@@ -422,27 +416,21 @@
                     return data;
                 }
 
-                async function saveDraft(manual) {
-                    if (isSaving || autosaveDisabled) return;
+                async function saveDraft() {
+                    if (isSaving) return;
                     isSaving = true;
-
-                    if (manual && saveDraftBtn) {
-                        saveDraftBtn.disabled = true;
-                        saveDraftBtn.textContent = 'Saving...';
-                    }
+                    saveDraftBtn.disabled = true;
+                    saveDraftBtn.textContent = 'Saving...';
                     showDraftStatus('Saving draft...', 'saving');
 
                     const data = collectFormData();
 
-                    // Check if anything has content
                     const hasData = Object.values(data).some(v => v !== '' && v !== null);
                     if (!hasData) {
                         showDraftStatus('Nothing to save', '');
                         isSaving = false;
-                        if (manual && saveDraftBtn) {
-                            saveDraftBtn.disabled = false;
-                            saveDraftBtn.textContent = 'Save Draft';
-                        }
+                        saveDraftBtn.disabled = false;
+                        saveDraftBtn.textContent = 'Save Draft';
                         return;
                     }
 
@@ -457,7 +445,6 @@
                             body: JSON.stringify(data)
                         });
                         if (response.status === 419) {
-                            autosaveDisabled = true;
                             showDraftStatus('Session expired — please reload the page', 'error');
                             return;
                         }
@@ -478,42 +465,16 @@
                         showDraftStatus('Could not save draft — network error', 'error');
                     } finally {
                         isSaving = false;
-                        if (manual && saveDraftBtn) {
-                            saveDraftBtn.disabled = false;
-                            saveDraftBtn.textContent = 'Save Draft';
-                        }
+                        saveDraftBtn.disabled = false;
+                        saveDraftBtn.textContent = 'Save Draft';
                     }
                 }
 
-                // Expose for radio button handlers
-                window.scheduleDraftSave = function() {
-                    clearTimeout(autosaveTimer);
-                    autosaveTimer = setTimeout(() => saveDraft(false), AUTOSAVE_DELAY);
-                };
-
-                // Autosave on input change (debounced)
-                form.addEventListener('input', function(e) {
-                    if (e.target.classList.contains('draft-field')) {
-                        window.scheduleDraftSave();
-                    }
-                });
-
-                // Also catch change events for radios
-                form.addEventListener('change', function(e) {
-                    if (e.target.classList.contains('draft-field')) {
-                        window.scheduleDraftSave();
-                    }
-                });
-
-                // Manual save button
                 if (saveDraftBtn) {
-                    saveDraftBtn.addEventListener('click', function() {
-                        clearTimeout(autosaveTimer);
-                        saveDraft(true);
-                    });
+                    saveDraftBtn.addEventListener('click', saveDraft);
                 }
             })();
             @endif
         </script>
     @endauth
-    </x-app-layout>
+</x-app-layout>
