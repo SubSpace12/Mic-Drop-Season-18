@@ -435,7 +435,7 @@
                     }
 
                     try {
-                        const response = await fetch('{{ route("apps.draft") }}', {
+                        const response = await fetch('/apps/draft', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
