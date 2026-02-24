@@ -369,7 +369,7 @@
                                         @endphp
                                         <div class="judge-section">
                                                 <h2 class="judge-name">
-                                                        {{ ($loop->iteration == 0 ? "Head Judge" : "Guest Judge " . ($loop->iteration)) . ": " . $judge->global_name }}
+                                                        {{ ($loop->iteration == 1 ? "Head Judge" : "Guest Judge " . ($loop->iteration - 1)) . ": " . $judge->global_name }}
                                                 </h2>
                                                 <div class="judge-info">
                                                         <h3>1. Who are some of your favourite artists?</h3>
@@ -542,7 +542,7 @@
                                 }
 
                                 try {
-                                        const response = await fetch('{{ route("submit.draft") }}', {
+                                        const response = await fetch('/submit/draft', {
                                                 method: 'POST',
                                                 headers: {
                                                         'Content-Type': 'application/json',
@@ -572,28 +572,9 @@
                                                 showDraftStatus('Could not save draft: ' + (data.message || 'Unknown error'), 'error');
                                         }
                                 } catch (err) {
-    console.error('Draft save error:', err);
-    
-    // Extract error information
-    let errorMessage = 'Could not save draft — network error';
-    
-    if (err.name === 'TypeError') {
-        if (err.message.includes('Failed to fetch')) {
-            errorMessage = 'Could not save draft — network connection lost';
-        } else {
-            errorMessage = `Could not save draft — ${err.message}`;
-        }
-    } else if (err.message) {
-        errorMessage = `Could not save draft — ${err.message}`;
-    }
-    
-    // If you want to show the error code (if available)
-    if (err.code) {
-        errorMessage += ` (Error code: ${err.code})`;
-    }
-    
-    showDraftStatus(errorMessage, 'error');
-}       finally {
+                                        console.error('Draft save error:', err);
+                                        showDraftStatus('Could not save draft — network error', 'error');
+                                } finally {
                                         isSaving = false;
                                         saveDraftBtn.disabled = false;
                                         saveDraftBtn.textContent = 'Save Draft';
