@@ -203,9 +203,6 @@
                                     @if($round->is_merge && $round->status != 0)
                                         <span class="round-badge badge-merge">MERGE</span>
                                     @endif
-                                    @if($hasSubmitted)
-                                        <span class="round-badge badge-submitted">SUBMITTED</span>
-                                    @endif
                                 </div>
                             </div>
 
