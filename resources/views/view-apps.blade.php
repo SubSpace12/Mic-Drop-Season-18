@@ -14,7 +14,7 @@ $seasonId = $activeSeason ? $activeSeason->season_id : null;
 
 $user_apps = DB::table('apps')
     ->join('users', 'apps.user_id', '=', 'users.id')
-    ->select('apps.*', 'users.global_name', 'users.perms')
+    ->select('apps.*', DB::raw('COALESCE(users.global_name, users.username) as global_name'), 'users.perms')
     ->where('apps.draft', false)
     ->orderBy('apps.id', 'asc')
     ->get();
@@ -46,7 +46,7 @@ $all_comments = DB::table('judge_upvotes')
         'judge_upvotes.app_id',
         'judge_upvotes.comment',
         'judge_upvotes.score',
-        'users.global_name',
+        DB::raw('COALESCE(users.global_name, users.username) as global_name'),
         'judge_upvotes.staff_id'
     )
     ->orderBy('judge_upvotes.staff_id', 'asc')

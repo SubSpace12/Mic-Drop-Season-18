@@ -49,9 +49,9 @@
                     // Get all eligible judges (users in apps table)
                     $eligibleJudges = DB::table('users')
                         ->join('apps', 'users.id', '=', 'apps.user_id')
-                        ->select('users.id', 'users.global_name')
+                        ->select('users.id', DB::raw('COALESCE(users.global_name, users.username) as global_name'))
                         ->distinct()
-                        ->orderBy('users.global_name')
+                        ->orderBy('global_name')
                         ->get();
 
                     // Check if judges are already assigned for the next round
@@ -62,7 +62,7 @@
                             ->join('users', 'judges.id', '=', 'users.id')
                             ->where('judges.season_id', $seasonId)
                             ->where('judges.round', $nextRound->round_number)
-                            ->select('judges.*', 'users.global_name')
+                            ->select('judges.*', DB::raw('COALESCE(users.global_name, users.username) as global_name'))
                             ->get();
 
                         $judgesAssigned = $existingJudges->count() > 0;
@@ -75,7 +75,7 @@
                             ->join('users', 'judges.id', '=', 'users.id')
                             ->where('judges.season_id', $seasonId)
                             ->where('judges.round', $activeRound->round_number)
-                            ->select('judges.*', 'users.global_name')
+                            ->select('judges.*', DB::raw('COALESCE(users.global_name, users.username) as global_name'))
                             ->get();
                     }
 
@@ -109,7 +109,7 @@
                                     ->join('users', 'contestants.id', '=', 'users.id')
                                     ->where('contestants.season_id', $seasonId)
                                     ->where('contestants.eliminated', false)
-                                    ->select('contestants.*', 'users.global_name')
+                                    ->select('contestants.*', DB::raw('COALESCE(users.global_name, users.username) as global_name'))
                                     ->get();
 
                                 $noSubmission = [];
@@ -190,7 +190,7 @@
                                         ->where('contestants.season_id', $seasonId)
                                         ->where('contestants.eliminated', false)
                                         ->where('contestants.md_group', $group)
-                                        ->select('contestants.*', 'users.global_name')
+                                        ->select('contestants.*', DB::raw('COALESCE(users.global_name, users.username) as global_name'))
                                         ->get();
 
                                     $noSubmission = [];
@@ -354,8 +354,8 @@
                             }
 
                             $activeContestants = $activeContestants
-                                ->select('contestants.*', 'users.global_name')
-                                ->orderBy('users.global_name')
+                                ->select('contestants.*', DB::raw('COALESCE(users.global_name, users.username) as global_name'))
+                                ->orderBy('global_name')
                                 ->get();
                         @endphp
 

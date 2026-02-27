@@ -48,7 +48,7 @@
                         break;
                 }
                 $judges = $seasonId ? DB::table('judges')->join('users', 'users.id', '=', 'judges.id')
-                    ->select('users.global_name', 'users.id')
+                    ->select(DB::raw('COALESCE(users.global_name, users.username) as global_name'), 'users.id')
                     ->where('md_group', $group_raw)->where('round', $round)
                     ->where('judges.season_id', $seasonId)
                     ->orderBy('judge_number')->get() : collect();
@@ -125,7 +125,7 @@
                     $submissions = $seasonId ? DB::table('submissions')
                         ->join('contestants', 'contestants.id', '=', 'submissions.contestant_id')
                         ->join('users', 'users.id', '=', 'contestants.id')
-                        ->select('submissions.*', 'contestants.submission_date', 'users.global_name as contestant_name')
+                        ->select('submissions.*', 'contestants.submission_date', DB::raw('COALESCE(users.global_name, users.username) as contestant_name'))
                         ->where('judge_id', $judge->id)
                         ->where('round', $round)
                         ->where('submissions.md_group', $group_raw)

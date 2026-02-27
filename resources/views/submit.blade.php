@@ -120,11 +120,11 @@
                                 ->join('users', 'users.id', '=', 'submissions.judge_id')
                                 ->join('judges', function ($join) use ($round, $group, $seasonId) {
                                         $join->on('judges.id', '=', 'submissions.judge_id')
-                                                ->where('judges.round', $round)
-                                                ->where('judges.md_group', $group)
-                                                ->where('judges.season_id', $seasonId);
+                                        ->where('judges.round', $round)
+                                        ->where('judges.md_group', $group)
+                                        ->where('judges.season_id', $seasonId);
                                 })
-                                ->select('submissions.artist', 'submissions.title', 'submissions.url', 'users.global_name', 'judges.judge_number')
+                                ->select('submissions.artist', 'submissions.title', 'submissions.url', DB::raw('COALESCE(users.global_name, users.username) as global_name'), 'judges.judge_number')
                                 ->where('submissions.contestant_id', auth()->id())
                                 ->where('submissions.round', $round)
                                 ->where('submissions.md_group', $group)
@@ -149,10 +149,10 @@
 
                 $judges = [];
                 if (!$statusError && !$accessDenied && (!$deadlinePassed || $isStaffViewing) && (!$alreadySubmitted || $isStaffViewing)) {
-                        $judges = DB::table('judges')
+                       $judges = DB::table('judges')
                                 ->join('users', 'users.id', '=', 'judges.id')
                                 ->join('apps', 'apps.user_id', '=', 'users.id')
-                                ->select('judges.id as judge_id', 'users.global_name', 'apps.*')
+                                ->select('judges.id as judge_id', DB::raw('COALESCE(users.global_name, users.username) as global_name'), 'apps.*')
                                 ->where('judges.round', $round)
                                 ->where('judges.md_group', $group)
                                 ->where('judges.season_id', $seasonId)->orderBy('judge_number')
@@ -285,7 +285,7 @@
                                                 @foreach($submittedSongs as $song)
                                                         <div class="submitted-song-item">
                                                                 <div class="submitted-song-judge">
-                                                                        {{ $song->judge_number == 1 ? 'Head Judge' : 'Guest Judge ' . ($song->judge_number - 1) }}: {{ $song->global_name }}
+                                                                        {{ $loop->iteration == 1 ? 'Head Judge' : 'Guest Judge ' . ($loop->iteration - 1) }}: {{ $song->global_name }}
                                                                 </div>
                                                                 <div class="submitted-song-details">
                                                                         <span class="submitted-song-artist">{{ $song->artist }}</span>

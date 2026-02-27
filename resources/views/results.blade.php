@@ -67,6 +67,7 @@
 
     $contestants = $seasonId ? DB::table('contestants')
         ->join('users', 'users.id', '=', 'contestants.id')
+        ->select('contestants.*', DB::raw('COALESCE(users.global_name, users.username) as global_name'))
         ->where('contestants.season_id', $seasonId)
         ->where("contestants.$groupColumn", $effectiveGroup)
         ->get() : collect();
@@ -97,20 +98,20 @@
         $avg = 0.0;
 
         $subs = $seasonId ? DB::table('submissions')
-        ->join('judges', function ($join) use ($round, $effectiveGroup, $seasonId) {
-            $join->on('judges.id', '=', 'submissions.judge_id')
-                 ->where('judges.round', '=', $round)
-                 ->where('judges.md_group', '=', $effectiveGroup)
-                 ->where('judges.season_id', '=', $seasonId);
-        })
-        ->join('users', 'users.id', '=', 'judges.id')
-        ->select('submissions.*', 'judges.judge_number', 'users.global_name', 'users.username')
-        ->where('submissions.contestant_id', $contestant->id)
-        ->where('submissions.round', $round)
-        ->where('submissions.md_group', $effectiveGroup)
-        ->where('submissions.season_id', $seasonId)
-        ->orderBy('judges.judge_number')
-        ->get() : collect();
+            ->join('judges', function ($join) use ($round, $effectiveGroup, $seasonId) {
+                $join->on('judges.id', '=', 'submissions.judge_id')
+                    ->where('judges.round', '=', $round)
+                    ->where('judges.md_group', '=', $effectiveGroup)
+                    ->where('judges.season_id', '=', $seasonId);
+            })
+            ->join('users', 'users.id', '=', 'judges.id')
+            ->select('submissions.*', 'judges.judge_number', DB::raw('COALESCE(users.global_name, users.username) as global_name'), 'users.username')
+            ->where('submissions.contestant_id', $contestant->id)
+            ->where('submissions.round', $round)
+            ->where('submissions.md_group', $effectiveGroup)
+            ->where('submissions.season_id', $seasonId)
+            ->orderBy('judges.judge_number')
+            ->get() : collect();
 
         foreach ($subs as $sub) {
             $song = $sub->artist . ' - ' . $sub->title;
