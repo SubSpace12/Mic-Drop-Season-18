@@ -237,6 +237,13 @@
                                             </tr>
                                         @endforeach
                                     </table>
+                                    @php
+                                        $judgeScores = $judgeSubmissions[$judge->id]->pluck('score')->filter(fn($s) => $s !== null);
+                                        $judgeAvg = $judgeScores->count() > 0 ? round($judgeScores->avg(), 2) : null;
+                                    @endphp
+                                    <div class="judge-average" style="text-align: right; padding: 0.75rem 1rem; margin-top: 0.5rem; font-size: 1.1rem; color: #d4d4d4;">
+                                        Judging Average: <strong>{{ $judgeAvg !== null ? $judgeAvg : 'N/A' }}</strong>
+                                    </div>
                                 @else
                                     <div class="no-submissions">
                                         No submissions found for this judge.
