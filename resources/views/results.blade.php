@@ -391,7 +391,7 @@
                                 <div class="song-title"><a href="{{ $table[3] }}" target="_blank">{{ $table[2] }}</a></div>
                                 <div class="judge-score @if($table[6] == 10) perfect @elseif($table[6] >= 9) high @elseif($table[6] < 4) low @endif">{{ $table[6] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[5] }}</div>
+                            <div class="review-body"><span class="review-text">{{ $table[5] }}</span></div>
                         </div>
 
                         <div class="judge-block">
@@ -400,7 +400,7 @@
                                 <div class="song-title"><a href="{{ $table[8] }}" target="_blank">{{ $table[7] }}</a></div>
                                 <div class="judge-score @if($table[11] == 10) perfect @elseif($table[11] >= 9) high @elseif($table[11] < 4) low @endif">{{ $table[11] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[10] }}</div>
+                            <div class="review-body"><span class="review-text">{{ $table[10] }}</span></div>
                         </div>
 
                         <div class="judge-block">
@@ -409,7 +409,7 @@
                                 <div class="song-title"><a href="{{ $table[13] }}" target="_blank">{{ $table[12] }}</a></div>
                                 <div class="judge-score @if($table[16] == 10) perfect @elseif($table[16] >= 9) high @elseif($table[16] < 4) low @endif">{{ $table[16] }}</div>
                             </div>
-                            <div class="review-body">{{ $table[15] }}</div>
+                            <div class="review-body"><span class="review-text">{{ $table[15] }}</span></div>
                         </div>
                     </div>
                 @endforeach
@@ -417,53 +417,46 @@
         </div>
 
         <script>
-            function autoScaleReviews(slide) {
-                const reviews = slide.querySelectorAll('.review-body');
-                if (!reviews.length) return;
-
-                // Reset font sizes first
-                reviews.forEach(r => r.style.fontSize = '');
-
-                requestAnimationFrame(() => {
-                    reviews.forEach(review => {
-                        let fontSize = parseFloat(getComputedStyle(review).fontSize);
-                        const minFontSize = 8;
-
-                        while (review.scrollHeight > review.clientHeight + 1 && fontSize > minFontSize) {
-                            fontSize -= 0.5;
-                            review.style.fontSize = fontSize + 'px';
-                        }
-                    });
-                });
-            }
-
             function showSlide(index) {
+                // Hide all slides
                 document.querySelectorAll('.result-slide').forEach(slide => {
                     slide.classList.remove('active');
                 });
+                
+                // Remove active from all nav items
                 document.querySelectorAll('.slide-nav li').forEach(item => {
                     item.classList.remove('active');
                 });
-
-                const activeSlide = document.querySelector(`.result-slide[data-slide="${index}"]`);
-                activeSlide.classList.add('active');
+                
+                // Show selected slide
+                document.querySelector(`.result-slide[data-slide="${index}"]`).classList.add('active');
                 document.querySelector(`.slide-nav li[data-slide="${index}"]`).classList.add('active');
 
-                autoScaleReviews(activeSlide);
+                // Re-scale text for the newly visible slide
+                setTimeout(scaleReviewText, 10);
             }
 
-            document.addEventListener('DOMContentLoaded', () => {
-                const firstSlide = document.querySelector('.result-slide.active');
-                if (firstSlide) autoScaleReviews(firstSlide);
-            });
+            // Auto-scale review text to fit fixed-height boxes
+            function scaleReviewText() {
+                document.querySelectorAll('.result-slide.active .review-body').forEach(function(box) {
+                    var textEl = box.querySelector('.review-text');
+                    if (!textEl) return;
 
-            window.addEventListener('resize', () => {
-                const activeSlide = document.querySelector('.result-slide.active');
-                if (activeSlide) {
-                    activeSlide.querySelectorAll('.review-body').forEach(r => r.style.fontSize = '');
-                    autoScaleReviews(activeSlide);
-                }
-            });
+                    // Reset to base size first
+                    textEl.style.fontSize = '16px';
+
+                    // Shrink until it fits or we hit minimum 9px
+                    var fontSize = 16;
+                    while (textEl.scrollHeight > box.clientHeight && fontSize > 9) {
+                        fontSize -= 0.5;
+                        textEl.style.fontSize = fontSize + 'px';
+                    }
+                });
+            }
+
+            // Run on page load
+            document.addEventListener('DOMContentLoaded', scaleReviewText);
+            window.addEventListener('load', scaleReviewText);
         </script>
     @endif
 </x-app-layout>

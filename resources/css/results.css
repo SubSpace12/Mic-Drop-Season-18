@@ -71,7 +71,7 @@
 }
 
 .result-slide.active {
-    display: flex;
+    display: block;
 }
 
 .slide-header {
@@ -82,7 +82,6 @@
     margin-bottom: 30px;
     padding-bottom: 20px;
     border-bottom: 2px solid #3e3e42;
-    flex-shrink: 0;
 }
 
 .rank-box, .score-box {
@@ -124,6 +123,7 @@
     color: #d4d4d4;
     border-color: #c85050;
     box-shadow: 0 4px 15px rgba(200, 80, 80, 0.8);
+    animation: terminal-blink 2s infinite;
 }
 
 .score-box {
@@ -131,6 +131,11 @@
     color: #4ec9b0;
     border-color: #4ec9b0;
     box-shadow: 0 4px 15px rgba(78, 201, 176, 0.4);
+}
+
+@keyframes terminal-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
 }
 
 .contestant-name {
@@ -221,11 +226,19 @@
 
 .review-body {
     padding: 20px;
-    background: rgba(37, 37, 38, 0.75);  /* Added alpha */
-    min-height: 80px;
+    background: rgba(37, 37, 38, 0.75);
+    height: 150px;
     line-height: 1.6;
     color: #d4d4d4;
     text-align: center;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.review-body .review-text {
+    width: 100%;
 }
 
 .no-results {
@@ -704,8 +717,7 @@
 
     .review-body {
         padding: 15px;
-        font-size: 14px;
-        min-height: 60px;
+        height: 120px;
     }
 
     .mobile-nav-controls {
@@ -903,24 +915,3 @@
         display: block;
     }
 }
-
-            .result-slide {
-                height: calc(100vh - 80px);
-                max-height: calc(100vh - 80px);
-                overflow: hidden;
-                box-sizing: border-box;
-                display: flex;
-                flex-direction: column;
-            }
-            .result-slide .judge-block {
-                flex: 1 1 0;
-                min-height: 0;
-                overflow: hidden;
-                display: flex;
-                flex-direction: column;
-            }
-            .result-slide .review-body {
-                flex: 1 1 0;
-                min-height: 0;
-                overflow: hidden;
-            }
