@@ -417,21 +417,53 @@
         </div>
 
         <script>
+            function autoScaleReviews(slide) {
+                const reviews = slide.querySelectorAll('.review-body');
+                if (!reviews.length) return;
+
+                // Reset font sizes first
+                reviews.forEach(r => r.style.fontSize = '');
+
+                requestAnimationFrame(() => {
+                    reviews.forEach(review => {
+                        let fontSize = parseFloat(getComputedStyle(review).fontSize);
+                        const minFontSize = 8;
+
+                        while (review.scrollHeight > review.clientHeight + 1 && fontSize > minFontSize) {
+                            fontSize -= 0.5;
+                            review.style.fontSize = fontSize + 'px';
+                        }
+                    });
+                });
+            }
+
             function showSlide(index) {
-                // Hide all slides
                 document.querySelectorAll('.result-slide').forEach(slide => {
                     slide.classList.remove('active');
                 });
-                
-                // Remove active from all nav items
                 document.querySelectorAll('.slide-nav li').forEach(item => {
                     item.classList.remove('active');
                 });
-                
-                // Show selected slide
-                document.querySelector(`.result-slide[data-slide="${index}"]`).classList.add('active');
+
+                const activeSlide = document.querySelector(`.result-slide[data-slide="${index}"]`);
+                activeSlide.classList.add('active');
                 document.querySelector(`.slide-nav li[data-slide="${index}"]`).classList.add('active');
+
+                autoScaleReviews(activeSlide);
             }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const firstSlide = document.querySelector('.result-slide.active');
+                if (firstSlide) autoScaleReviews(firstSlide);
+            });
+
+            window.addEventListener('resize', () => {
+                const activeSlide = document.querySelector('.result-slide.active');
+                if (activeSlide) {
+                    activeSlide.querySelectorAll('.review-body').forEach(r => r.style.fontSize = '');
+                    autoScaleReviews(activeSlide);
+                }
+            });
         </script>
     @endif
 </x-app-layout>
