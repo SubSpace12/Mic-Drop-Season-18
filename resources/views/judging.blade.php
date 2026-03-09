@@ -207,7 +207,7 @@
                                                     </a>
                                                 </td>
                                                 <td class="score-cell">
-                                                    <input type="number" min="0" max="10" step="0.25"
+                                                    <input type="number" min="0" max="10" 
                                                         value="{{ $submission->score !== null ? $submission->score : '' }}" autocomplete="off"
                                                         class="score-input" data-id="{{ $submission->submission_id }}"
                                                         onblur="validateAndColorScore(this); updateScore(this);"
@@ -342,10 +342,9 @@
                 return;
             }
 
-            let roundedValue = Math.round(value * 4) / 4;
-            input.value = roundedValue;
+            
 
-            let ratio = roundedValue / 10;
+            let ratio = value / 10;
             let red, green, blue;
 
             if (ratio <= 0.5) {
