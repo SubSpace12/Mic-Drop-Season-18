@@ -1,4 +1,4 @@
-<x-app-layout>
+\<x-app-layout>
         @php
                 $group = request()->query('group', 0);
                 $round = request()->query('round', -1);
@@ -270,6 +270,30 @@
                                                         </div>
                                                 @endforeach
                                         </div>
+                                        <button id="copySubmissionsBtn" onclick="copySubmissions()" style="margin-top: 15px; padding: 10px 20px; background: #1e1e1e; color: #569cd6; border: 1px solid #569cd6; border-radius: 4px; cursor: pointer; font-size: 14px; transition: all 0.3s;">
+                                                Copy to Clipboard
+                                        </button>
+                                        <script>
+                                                function copySubmissions() {
+                                                        const lines = [
+                                                                @foreach($submittedSongs as $song)
+                                                                        "{{ $song->global_name }}: {{ $song->url }}",
+                                                                @endforeach
+                                                        ];
+                                                        const text = lines.join('\n');
+                                                        navigator.clipboard.writeText(text).then(() => {
+                                                                const btn = document.getElementById('copySubmissionsBtn');
+                                                                btn.textContent = 'Copied!';
+                                                                btn.style.borderColor = '#4ec9b0';
+                                                                btn.style.color = '#4ec9b0';
+                                                                setTimeout(() => {
+                                                                        btn.textContent = 'Copy to Clipboard';
+                                                                        btn.style.borderColor = '#569cd6';
+                                                                        btn.style.color = '#569cd6';
+                                                                }, 2000);
+                                                        });
+                                                }
+                                        </script>
                                 @endif
                                 <p style="font-size: 14px; color: #858585; margin-top: 20px;">
                                         Need to make changes? Contact an administrator for assistance.
