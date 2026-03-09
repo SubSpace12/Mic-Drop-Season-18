@@ -522,6 +522,21 @@
 }
 
 /* Mobile Navigation Controls */
+.mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 9998;
+}
+
+.mobile-sidebar-overlay.active {
+    display: block;
+}
+
 .mobile-nav-controls {
     display: none;
     position: fixed;
@@ -614,8 +629,10 @@
 /* MOBILE RESPONSIVE STYLES */
 @media (max-width: 768px) {
     .results-container {
-        height: calc(100vh - 64px - 80px); /* Account for mobile nav */
+        height: auto;
+        min-height: calc(100vh - 64px - 80px); /* Account for mobile nav */
         flex-direction: column;
+        overflow: visible;
     }
 
     .sidebar {
@@ -646,7 +663,7 @@
 
     .main-content {
         padding: 20px 15px 100px;
-        overflow-y: auto;
+        overflow-y: visible;
     }
 
     .result-slide {

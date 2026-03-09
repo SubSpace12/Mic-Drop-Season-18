@@ -422,8 +422,28 @@
             </div>
         </div>
 
+        {{-- Mobile sidebar overlay --}}
+        <div class="mobile-sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+
+        {{-- Mobile menu toggle --}}
+        <button class="mobile-menu-toggle" onclick="toggleMobileSidebar()">☰</button>
+
+        {{-- Mobile prev/next navigation --}}
+        <div class="mobile-nav-controls">
+            <div class="mobile-nav-buttons">
+                <button class="mobile-nav-button" id="prevSlideBtn" onclick="changeSlide(-1)">◀ Prev</button>
+                <span class="mobile-slide-counter" id="slideCounter">1 / {{ $totalContestants }}</span>
+                <button class="mobile-nav-button" id="nextSlideBtn" onclick="changeSlide(1)">Next ▶</button>
+            </div>
+        </div>
+
         <script>
+            const totalSlides = {{ $totalContestants }};
+            let currentSlide = 0;
+
             function showSlide(index) {
+                currentSlide = index;
+
                 // Hide all slides
                 document.querySelectorAll('.result-slide').forEach(slide => {
                     slide.classList.remove('active');
@@ -438,8 +458,36 @@
                 document.querySelector(`.result-slide[data-slide="${index}"]`).classList.add('active');
                 document.querySelector(`.slide-nav li[data-slide="${index}"]`).classList.add('active');
 
+                // Update mobile controls
+                updateMobileNav();
+
+                // Close mobile sidebar if open
+                document.querySelector('.sidebar')?.classList.remove('active');
+                document.querySelector('.mobile-sidebar-overlay')?.classList.remove('active');
+
                 // Re-scale text for the newly visible slide
                 setTimeout(scaleReviewText, 10);
+            }
+
+            function changeSlide(direction) {
+                const newIndex = currentSlide + direction;
+                if (newIndex >= 0 && newIndex < totalSlides) {
+                    showSlide(newIndex);
+                }
+            }
+
+            function updateMobileNav() {
+                const counter = document.getElementById('slideCounter');
+                const prevBtn = document.getElementById('prevSlideBtn');
+                const nextBtn = document.getElementById('nextSlideBtn');
+                if (counter) counter.textContent = (currentSlide + 1) + ' / ' + totalSlides;
+                if (prevBtn) prevBtn.disabled = currentSlide === 0;
+                if (nextBtn) nextBtn.disabled = currentSlide === totalSlides - 1;
+            }
+
+            function toggleMobileSidebar() {
+                document.querySelector('.sidebar')?.classList.toggle('active');
+                document.querySelector('.mobile-sidebar-overlay')?.classList.toggle('active');
             }
 
             // Auto-scale review text to fit fixed-height boxes
@@ -461,8 +509,14 @@
             }
 
             // Run on page load
-            document.addEventListener('DOMContentLoaded', scaleReviewText);
-            window.addEventListener('load', scaleReviewText);
+            document.addEventListener('DOMContentLoaded', function() {
+                scaleReviewText();
+                updateMobileNav();
+            });
+            window.addEventListener('load', function() {
+                scaleReviewText();
+                updateMobileNav();
+            });
         </script>
     @endif
 </x-app-layout>
