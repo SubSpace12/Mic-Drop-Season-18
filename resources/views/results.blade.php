@@ -1,4 +1,4 @@
-\<x-app-layout>
+<x-app-layout>
     @vite(['resources/css/results.css'])
 
     @php
@@ -148,6 +148,20 @@
         }
         return $cmp;
     });
+
+    // Compute ranks with ties (e.g. 1st, 2nd, 2nd, 4th)
+    $ranks = [];
+    for ($r = 0; $r < count($subsTable); $r++) {
+        if ($r === 0) {
+            $ranks[$r] = 1;
+        } else {
+            $prevAvg = $subsTable[$r - 1][count($subsTable[$r - 1]) - 3];
+            $prevDev = $subsTable[$r - 1][count($subsTable[$r - 1]) - 2];
+            $curAvg = $subsTable[$r][count($subsTable[$r]) - 3];
+            $curDev = $subsTable[$r][count($subsTable[$r]) - 2];
+            $ranks[$r] = ($curAvg == $prevAvg && $curDev == $prevDev) ? $ranks[$r - 1] : $r + 1;
+        }
+    }
 
     // Determine rank colors
     $totalContestants = count($subsTable);
@@ -351,7 +365,7 @@
                 <ul class="slide-nav">
                     @foreach ($subsTable as $index => $table)
                         <li onclick="showSlide({{ $index }})" data-slide="{{ $index }}" class="{{ $index === 0 ? 'active' : '' }}">
-                            #{{ $index + 1 }}: {{ $table[1] }}
+                            #{{ $ranks[$index] }}: {{ $table[1] }}
                         </li>
                     @endforeach
                 </ul>
@@ -360,7 +374,7 @@
             <div class="main-content">
                 @foreach ($subsTable as $index => $table)
                     @php
-                        $rank = $index + 1;
+                        $rank = $ranks[$index];
                         $isEliminated = $table[count($table) - 1] == $round;
                         $rankClass = getRankClass($rank, $totalContestants, $isEliminated);
                         $slideStyle = getSlideBackground($roundInfo, $rank, $totalContestants, $isEliminated);
