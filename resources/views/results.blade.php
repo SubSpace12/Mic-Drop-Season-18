@@ -76,7 +76,6 @@
     $missedSubmissions = $seasonId ? DB::table('contestants')
         ->where('season_id', $seasonId)
         ->where($groupColumn, $effectiveGroup)
-        ->where('eliminated', false)
         ->whereNull('submission_date')
         ->count() : 0;
 
