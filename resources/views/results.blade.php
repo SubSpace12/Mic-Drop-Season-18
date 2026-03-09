@@ -1,4 +1,4 @@
-<x-app-layout>
+\<x-app-layout>
     @vite(['resources/css/results.css'])
 
     @php
@@ -72,17 +72,6 @@
         ->where("contestants.$groupColumn", $effectiveGroup)
         ->get() : collect();
 
-    // Count contestants with null submission_date and not eliminated
-    $missedSubmissions = $seasonId ? DB::table('contestants')
-        ->where('season_id', $seasonId)
-        ->where($groupColumn, $effectiveGroup)
-        ->where('round_eliminated', $round)
-        ->whereNull('submission_date')
-        ->count() : 0;
-
-    $eliminateNumber = $roundInfo ? $roundInfo->eliminate_number : 0;
-    $eliminationThreshold = max(1, $eliminateNumber - $missedSubmissions);
-
     $subsTable = [];
     $j = 0;
 
@@ -142,6 +131,8 @@
         $scores[$i] = round($avg, 2);
         $i++;
         $scores[$i] = round($stddev, 3);
+        $i++;
+        $scores[$i] = $contestant->round_eliminated;
         
         // Only add to subsTable if there are submissions
         if ($subCount > 0) {
@@ -151,25 +142,25 @@
     }
 
     usort($subsTable, function($a, $b) {
-        $cmp = $b[count($b)-2] <=> $a[count($a)-2];
+        $cmp = $b[count($b)-3] <=> $a[count($a)-3];
         if ($cmp === 0) {
-            $cmp = $a[count($a)-1] <=> $b[count($b)-1];
+            $cmp = $a[count($a)-2] <=> $b[count($b)-2];
         }
         return $cmp;
     });
 
     // Determine rank colors
     $totalContestants = count($subsTable);
-    function getRankClass($rank, $total, $elimThreshold) {
+    function getRankClass($rank, $total, $isEliminated) {
         if ($rank == 1) return 'gold';
         if ($rank == 2 && $total >= 2) return 'silver';
         if ($rank == 3 && $total >= 3) return 'bronze';
-        if ($rank > $total - $elimThreshold) return 'eliminated';
+        if ($isEliminated) return 'eliminated';
         return '';
     }
 
     // Get slide backgrounds from database
-    function getSlideBackground($roundInfo, $rank, $total, $elimThreshold) {
+    function getSlideBackground($roundInfo, $rank, $total, $isEliminated) {
         if (!$roundInfo) return '';
         
         // Helper function to generate proper storage URL
@@ -195,7 +186,7 @@
         }
         
         // Check if eliminated (lower priority than podium)
-        if ($rank > $total - $elimThreshold && !empty($roundInfo->slidebg_elim)) {
+        if ($isEliminated && !empty($roundInfo->slidebg_elim)) {
             $url = $getUrl($roundInfo->slidebg_elim);
             return "background: url('{$url}') center/100% 100% no-repeat;";
         }
@@ -370,8 +361,9 @@
                 @foreach ($subsTable as $index => $table)
                     @php
                         $rank = $index + 1;
-                        $rankClass = getRankClass($rank, $totalContestants, $eliminationThreshold);
-                        $slideStyle = getSlideBackground($roundInfo, $rank, $totalContestants, $eliminationThreshold);
+                        $isEliminated = $table[count($table) - 1] == $round;
+                        $rankClass = getRankClass($rank, $totalContestants, $isEliminated);
+                        $slideStyle = getSlideBackground($roundInfo, $rank, $totalContestants, $isEliminated);
                     @endphp
                     <div class="result-slide {{ $index === 0 ? 'active' : '' }}" data-slide="{{ $index }}" style="{{ $slideStyle }}">
                         <div class="slide-header">
@@ -382,7 +374,7 @@
                                 @endif
                                 <span>{{ $table[1] }}</span>
                             </div>
-                            <div class="score-box">{{ $table[count($table) - 2] }}</div>
+                            <div class="score-box">{{ $table[count($table) - 3] }}</div>
                         </div>
 
                         <div class="judge-block">
