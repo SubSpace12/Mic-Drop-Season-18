@@ -96,11 +96,11 @@
                                 }
                         }
                 }
-                // Only check for existing submissions if round is active and deadline hasn't passed
-                // Now we only count non-draft submissions as "already submitted"
+                // Check for existing submissions (even after deadline, so we can show them)
+                // Only non-draft submissions count as "already submitted"
                 $existing_submissions = false;
                 $alreadySubmitted = false;
-                if (!$statusError && !$accessDenied && !$isStaffViewing && !$deadlinePassed) {
+                if (!$statusError && !$accessDenied && !$isStaffViewing) {
                         $existing_submissions = DB::table('submissions')
                                 ->where('contestant_id', auth()->id())
                                 ->where('round', $round)
@@ -233,34 +233,6 @@
                                 @endif
                                 <a href="/dashboard" class="back-button">Back to Dashboard</a>
                         </div>
-                @elseif(!$isStaffViewing && $deadlinePassed)
-                        {{-- Deadline Passed Screen --}}
-                        <div class="access-denied deadline-passed">
-                                <div class="access-denied-icon">DEADLINE PASSED</div>
-                                <h1>Deadline Has Passed</h1>
-                                <p>The submission deadline for this round has expired.</p>
-                                <div class="round-info">
-                                        <h3>{{ $round_info->title }}</h3>
-                                        <p><strong>Round:</strong> {{ $round }}</p>
-                                        <p><strong>Group:</strong> {{ $group == 0 ? 'Merge' : 'Group ' . $group }}</p>
-                                        <p><strong>Deadline was:</strong>
-                                                <span class="deadline-display" data-deadline="{{ $baseDeadline->format('c') }}"
-                                                        style="color: #f48771; font-weight: 600;">
-                                                        {{ $effectiveDeadline->format('M j, Y g:i A') }} (Server Time)
-                                                </span>
-                                        </p>
-                                        @if($contestant && $contestant->extension_hours > 0)
-                                                <p style="font-size: 14px; color: #a0a0a0; margin-top: 10px;">
-                                                        <em>This included your {{ $contestant->extension_hours }}-hour extension</em>
-                                                </p>
-                                        @endif
-                                </div>
-                                <p style="font-size: 16px; color: #a0a0a0;">
-                                        Unfortunately, you can no longer submit songs for this round.
-                                        If you believe this is an error, please contact an administrator.
-                                </p>
-                                <a href="/dashboard" class="back-button">Back to Dashboard</a>
-                        </div>
                 @elseif(!$isStaffViewing && $alreadySubmitted && session('success'))
                         {{-- Just Submitted - Simple Thank You --}}
                         <div class="thank-you-screen">
@@ -301,6 +273,34 @@
                                 @endif
                                 <p style="font-size: 14px; color: #858585; margin-top: 20px;">
                                         Need to make changes? Contact an administrator for assistance.
+                                </p>
+                                <a href="/dashboard" class="back-button">Back to Dashboard</a>
+                        </div>
+                @elseif(!$isStaffViewing && $deadlinePassed)
+                        {{-- Deadline Passed Screen --}}
+                        <div class="access-denied deadline-passed">
+                                <div class="access-denied-icon">DEADLINE PASSED</div>
+                                <h1>Deadline Has Passed</h1>
+                                <p>The submission deadline for this round has expired.</p>
+                                <div class="round-info">
+                                        <h3>{{ $round_info->title }}</h3>
+                                        <p><strong>Round:</strong> {{ $round }}</p>
+                                        <p><strong>Group:</strong> {{ $group == 0 ? 'Merge' : 'Group ' . $group }}</p>
+                                        <p><strong>Deadline was:</strong>
+                                                <span class="deadline-display" data-deadline="{{ $baseDeadline->format('c') }}"
+                                                        style="color: #f48771; font-weight: 600;">
+                                                        {{ $effectiveDeadline->format('M j, Y g:i A') }} (Server Time)
+                                                </span>
+                                        </p>
+                                        @if($contestant && $contestant->extension_hours > 0)
+                                                <p style="font-size: 14px; color: #a0a0a0; margin-top: 10px;">
+                                                        <em>This included your {{ $contestant->extension_hours }}-hour extension</em>
+                                                </p>
+                                        @endif
+                                </div>
+                                <p style="font-size: 16px; color: #a0a0a0;">
+                                        Unfortunately, you can no longer submit songs for this round.
+                                        If you believe this is an error, please contact an administrator.
                                 </p>
                                 <a href="/dashboard" class="back-button">Back to Dashboard</a>
                         </div>
