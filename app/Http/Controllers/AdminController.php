@@ -75,7 +75,7 @@ class AdminController extends Controller
                 ->whereIn('id', $contestantIds)
                 ->where('season_id', $seasonId)
                 ->where('eliminated', false)
-                ->update(['eliminated' => true]);
+                ->update(['eliminated' => true, 'round_eliminated' => $roundNumber]);
             
             // Reset permissions for eliminated contestants to 0 (spectator)
             DB::table('users')
