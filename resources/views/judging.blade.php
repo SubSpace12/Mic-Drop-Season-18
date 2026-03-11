@@ -209,12 +209,15 @@
                                                 <td class="score-cell">
                                                     <input type="number" min="0" max="10" 
                                                         value="{{ $submission->score !== null ? $submission->score : '' }}" autocomplete="off"
+                                                        id="score-{{ $submission->submission_id }}"
                                                         class="score-input" data-id="{{ $submission->submission_id }}"
                                                         onblur="validateAndColorScore(this); updateScore(this);"
                                                         oninput="validateAndColorScore(this); updateScore(this);">
                                                 </td>
                                                 <td>
                                                     <textarea class="review-textarea" data-id="{{ $submission->submission_id }}"
+                                                        id="review-{{ $submission->submission_id }}"
+                                                        autocomplete="off"
                                                         oninput="autoExpand(this); updateReview(this);"
                                                         placeholder="Write your review here...">{{ $submission->review }}</textarea>
                                                 </td>
