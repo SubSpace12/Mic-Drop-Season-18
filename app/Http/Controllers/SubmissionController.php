@@ -151,6 +151,10 @@ class SubmissionController extends Controller
 
     public function update(Request $request)
     {
+        if (!auth()->check()) {
+            return response()->json(['success' => false, 'message' => 'Not authenticated'], 401);
+        }
+
         $data = $request->only(['submission_id', 'score', 'review', 'is_valid']);
         $updateData = [];
 

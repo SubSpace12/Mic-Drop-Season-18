@@ -302,8 +302,12 @@
     <script>
         let currentEditingSubmissionId = null;
         let currentMarkedForResub = false;
+        const reviewTimers = {};
+        const scoreTimers = {};
 
         function autoExpand(textarea) {
+            // Skip textareas in hidden tabs — scrollHeight is 0 when display:none
+            if (textarea.offsetParent === null) return;
             textarea.style.height = 'auto';
             textarea.style.height = (textarea.scrollHeight) + 'px';
         }
@@ -318,7 +322,9 @@
             document.getElementById('tab-' + judgeId).classList.add('active');
             tabButtons[tabIndex].classList.add('active');
 
-            document.querySelectorAll('textarea').forEach(function (textarea) {
+            // Only autoExpand textareas in the now-visible tab
+            const activeTab = document.getElementById('tab-' + judgeId);
+            activeTab.querySelectorAll('textarea').forEach(function (textarea) {
                 autoExpand(textarea);
             });
         }
@@ -409,28 +415,36 @@
                 score = null;
             }
 
-            fetch('/update-submission', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ submission_id: id, score: score })
-            });
+            // Debounce: wait 500ms after last keystroke before sending
+            clearTimeout(scoreTimers[id]);
+            scoreTimers[id] = setTimeout(() => {
+                fetch('/update-submission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ submission_id: id, score: score })
+                });
+            }, 500);
         }
 
         function updateReview(el) {
             let id = el.dataset.id;
             let review = el.value;
 
-            fetch('/update-submission', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                },
-                body: JSON.stringify({ submission_id: id, review: review })
-            });
+            // Debounce: wait 750ms after last keystroke before sending
+            clearTimeout(reviewTimers[id]);
+            reviewTimers[id] = setTimeout(() => {
+                fetch('/update-submission', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ submission_id: id, review: review })
+                });
+            }, 750);
         }
 
         function updateValidStatus(checkbox) {
@@ -561,9 +575,13 @@
         });
 
         window.addEventListener('load', function () {
-            document.querySelectorAll('textarea').forEach(function (textarea) {
-                autoExpand(textarea);
-            });
+            // Only expand textareas in the currently visible tab
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab) {
+                activeTab.querySelectorAll('textarea').forEach(function (textarea) {
+                    autoExpand(textarea);
+                });
+            }
         });
 
         function loadSummary() {
