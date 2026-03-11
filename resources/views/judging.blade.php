@@ -307,6 +307,7 @@
         let currentMarkedForResub = false;
         const reviewTimers = {};
         const scoreTimers = {};
+        const userTouched = new Set();
 
         function autoExpand(textarea) {
             // Skip textareas in hidden tabs — scrollHeight is 0 when display:none
@@ -411,6 +412,11 @@
 
         function updateScore(el) {
             let id = el.dataset.id;
+
+            // Only save if the user has actually focused this input.
+            // Browser form restoration fires input events without focus.
+            if (!userTouched.has(id)) return;
+
             let score = el.value;
 
             // Convert empty string to null for database
@@ -434,6 +440,11 @@
 
         function updateReview(el) {
             let id = el.dataset.id;
+
+            // Only save if the user has actually focused this textarea.
+            // Browser form restoration fires input events without focus.
+            if (!userTouched.has(id)) return;
+
             let review = el.value;
 
             // Debounce: wait 750ms after last keystroke before sending
@@ -571,9 +582,17 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.score-input').forEach(function (input) {
                 validateAndColorScore(input);
+                input.addEventListener('focus', function () {
+                    userTouched.add(this.dataset.id);
+                });
             });
             document.querySelectorAll('.score-input-sum').forEach(function (input) {
                 validateAndColorScoreSummary(input);
+            });
+            document.querySelectorAll('.review-textarea').forEach(function (textarea) {
+                textarea.addEventListener('focus', function () {
+                    userTouched.add(this.dataset.id);
+                });
             });
         });
 
