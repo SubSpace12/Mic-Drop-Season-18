@@ -526,7 +526,9 @@
 }
 
 .locked-badge {
-    display: inline-block;
+    display: block;
+    width: fit-content;
+    margin: 0 auto 0.5rem;
     background: #3e2d1e;
     color: #d7ba7d;
     padding: 0.5rem 1.5rem;
@@ -537,7 +539,6 @@
     pointer-events: none;
     white-space: nowrap;
     border: 2px solid #d7ba7d;
-    margin-bottom: 0.5rem;
 }
 
 .contestant-name-display {
