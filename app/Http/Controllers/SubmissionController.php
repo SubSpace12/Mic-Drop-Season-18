@@ -155,27 +155,28 @@ class SubmissionController extends Controller
             return response()->json(['success' => false, 'message' => 'Not authenticated'], 401);
         }
 
-        $data = $request->only(['submission_id', 'score', 'review', 'is_valid']);
         $updateData = [];
 
-        // Handle score - explicitly check if the key exists and allow null
-        if (isset($data['score'])) {
-            $updateData['score'] = $data['score'] !== '' ? $data['score'] : null;
+        // Handle score - has() checks the key was actually sent; null/empty → NULL in DB
+        if ($request->has('score')) {
+            $score = $request->input('score');
+            $updateData['score'] = ($score !== '' && $score !== null) ? $score : null;
         }
 
-        // Handle review - explicitly check if the key exists and allow null
-        if (isset($data['review'])) {
-            $updateData['review'] = $data['review'] !== '' ? $data['review'] : null;
+        // Handle review - has() checks the key was actually sent; null/empty → NULL in DB
+        if ($request->has('review')) {
+            $review = $request->input('review');
+            $updateData['review'] = ($review !== '' && $review !== null) ? $review : null;
         }
 
         // Handle is_valid - convert to boolean
-        if (isset($data['is_valid'])) {
-            $updateData['is_valid'] = (bool) $data['is_valid'];
+        if ($request->has('is_valid')) {
+            $updateData['is_valid'] = (bool) $request->input('is_valid');
         }
 
         if (!empty($updateData)) {
             DB::table('submissions')
-                ->where('submission_id', $data['submission_id'])
+                ->where('submission_id', $request->input('submission_id'))
                 ->update($updateData);
         }
 
