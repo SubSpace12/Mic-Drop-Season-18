@@ -75,6 +75,23 @@
     $subsTable = [];
     $j = 0;
 
+    // Determine if we're using the finalized round_eliminated column or the live threshold
+    $roundCompleted = $roundInfo && $roundInfo->status == 2;
+
+    // For active rounds, compute the elimination threshold from bottom averages
+    $eliminationThreshold = 0;
+    if (!$roundCompleted) {
+        $missedSubmissions = $seasonId ? DB::table('contestants')
+            ->where('season_id', $seasonId)
+            ->where($groupColumn, $effectiveGroup)
+            ->where('eliminated', false)
+            ->whereNull('submission_date')
+            ->count() : 0;
+
+        $eliminateNumber = $roundInfo ? $roundInfo->eliminate_number : 0;
+        $eliminationThreshold = max(1, $eliminateNumber - $missedSubmissions);
+    }
+
     foreach ($contestants as $contestant) {
         $i = 2;  // Start at 2 to leave room for avatar URL and name
         $scores = [];
@@ -375,7 +392,11 @@
                 @foreach ($subsTable as $index => $table)
                     @php
                         $rank = $ranks[$index];
-                        $isEliminated = $table[count($table) - 1] == $round;
+                        if ($roundCompleted) {
+                            $isEliminated = $table[count($table) - 1] == $round;
+                        } else {
+                            $isEliminated = ($index + 1) > $totalContestants - $eliminationThreshold;
+                        }
                         $rankClass = getRankClass($rank, $totalContestants, $isEliminated);
                         $slideStyle = getSlideBackground($roundInfo, $rank, $totalContestants, $isEliminated);
                     @endphp
