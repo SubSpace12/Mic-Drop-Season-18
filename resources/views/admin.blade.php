@@ -153,24 +153,48 @@
                                             }
                                             $avg /= $count;
 
+                                            // Calculate standard deviation
+                                            $stddev = 0;
+                                            if ($count > 1) {
+                                                $sumSquaredDiffs = 0;
+                                                foreach ($subs as $sub) {
+                                                    $sumSquaredDiffs += pow($sub->score - $avg, 2);
+                                                }
+                                                $stddev = sqrt($sumSquaredDiffs / ($count - 1));
+                                            }
+
                                             $withScores[] = [
                                                 'contestant' => $contestant,
                                                 'avg' => $avg,
+                                                'stddev' => $stddev,
                                                 'reason' => 'low_score'
                                             ];
                                         }
                                     }
                                 }
 
-                                // Sort by average (lowest first)
+                                // Sort by average (lowest first), then by stddev (highest first) as tiebreaker
                                 usort($withScores, function ($a, $b) {
-                                    return $a['avg'] <=> $b['avg'];
+                                    $cmp = $a['avg'] <=> $b['avg'];
+                                    if ($cmp !== 0) return $cmp;
+                                    return $b['stddev'] <=> $a['stddev']; // higher stddev = eliminated first
                                 });
 
                                 // Determine how many to show from withScores
                                 // Dropped out + no submission count
                                 $autoEliminateCount = count($droppedOut) + count($noSubmission);
                                 $remainingEliminations = $activeRound->eliminate_number - $autoEliminateCount;
+
+                                // Check for ties at the elimination boundary
+                                $mergeBoundaryTie = false;
+                                if ($remainingEliminations > 0 && $remainingEliminations < count($withScores)) {
+                                    $lastEliminated = $withScores[$remainingEliminations - 1];
+                                    $firstSafe = $withScores[$remainingEliminations];
+                                    if (abs($lastEliminated['avg'] - $firstSafe['avg']) < 0.001
+                                        && abs($lastEliminated['stddev'] - $firstSafe['stddev']) < 0.001) {
+                                        $mergeBoundaryTie = true;
+                                    }
+                                }
 
                                 if ($remainingEliminations > 0) {
                                     $toEliminate = array_merge($droppedOut, $noSubmission, array_slice($withScores, 0, $remainingEliminations));
@@ -179,6 +203,7 @@
                                 }
 
                                 $eliminationData['merge'] = $toEliminate;
+                                $eliminationData['merge_boundary_tie'] = $mergeBoundaryTie ?? false;
 
                             } else {
                                 // Group round - three lists
@@ -236,24 +261,48 @@
                                                 }
                                                 $avg /= $count;
 
+                                                // Calculate standard deviation
+                                                $stddev = 0;
+                                                if ($count > 1) {
+                                                    $sumSquaredDiffs = 0;
+                                                    foreach ($subs as $sub) {
+                                                        $sumSquaredDiffs += pow($sub->score - $avg, 2);
+                                                    }
+                                                    $stddev = sqrt($sumSquaredDiffs / ($count - 1));
+                                                }
+
                                                 $withScores[] = [
                                                     'contestant' => $contestant,
                                                     'avg' => $avg,
+                                                    'stddev' => $stddev,
                                                     'reason' => 'low_score'
                                                 ];
                                             }
                                         }
                                     }
 
-                                    // Sort by average (lowest first)
+                                    // Sort by average (lowest first), then by stddev (highest first) as tiebreaker
                                     usort($withScores, function ($a, $b) {
-                                        return $a['avg'] <=> $b['avg'];
+                                        $cmp = $a['avg'] <=> $b['avg'];
+                                        if ($cmp !== 0) return $cmp;
+                                        return $b['stddev'] <=> $a['stddev']; // higher stddev = eliminated first
                                     });
 
                                     // Determine how many to show from withScores
                                     // Dropped out + no submission count
                                     $autoEliminateCount = count($droppedOut) + count($noSubmission);
                                     $remainingEliminations = $activeRound->eliminate_number - $autoEliminateCount;
+
+                                    // Check for ties at the elimination boundary
+                                    $groupBoundaryTie = false;
+                                    if ($remainingEliminations > 0 && $remainingEliminations < count($withScores)) {
+                                        $lastEliminated = $withScores[$remainingEliminations - 1];
+                                        $firstSafe = $withScores[$remainingEliminations];
+                                        if (abs($lastEliminated['avg'] - $firstSafe['avg']) < 0.001
+                                            && abs($lastEliminated['stddev'] - $firstSafe['stddev']) < 0.001) {
+                                            $groupBoundaryTie = true;
+                                        }
+                                    }
 
                                     if ($remainingEliminations > 0) {
                                         $toEliminate = array_merge($droppedOut, $noSubmission, array_slice($withScores, 0, $remainingEliminations));
@@ -262,6 +311,7 @@
                                     }
 
                                     $eliminationData[$group] = $toEliminate;
+                                    $eliminationData["group_{$group}_boundary_tie"] = $groupBoundaryTie;
                                 }
                             }
                         }
@@ -448,6 +498,11 @@
 
                                 @if($activeRound->is_merge)
                                     {{-- Merge Round Eliminations --}}
+                                    @if(!empty($eliminationData['merge_boundary_tie']))
+                                        <div class="elimination-warning" style="background: #fff3cd; border-color: #ffc107; color: #856404;">
+                                            <strong>⚠️ Tie at elimination boundary!</strong> Two or more contestants share the same average score AND standard deviation at the cutoff. The current selection may be arbitrary — review carefully before confirming.
+                                        </div>
+                                    @endif
                                     @if(count($eliminationData['merge']) > 0)
                                         <div class="elimination-group">
                                             <div class="elimination-group-title">Contestants to be Eliminated on Round Completion</div>
@@ -464,6 +519,10 @@
                                                                 <span class="contestant-detail-item">
                                                                     <strong>Avg Score:</strong>
                                                                     <span class="score-badge">{{ number_format($item['avg'], 2) }}</span>
+                                                                </span>
+                                                                <span class="contestant-detail-item">
+                                                                    <strong>Std Dev:</strong>
+                                                                    <span class="score-badge" style="background: #e2e3e5; color: #383d41;">{{ number_format($item['stddev'], 2) }}</span>
                                                                 </span>
                                                             @endif
                                                             <span class="contestant-detail-item">
@@ -486,6 +545,11 @@
                                     {{-- Group Round Eliminations --}}
                                     <div class="elimination-groups">
                                         @for($group = 1; $group <= 3; $group++)
+                                            @if(!empty($eliminationData["group_{$group}_boundary_tie"]))
+                                                <div class="elimination-warning" style="background: #fff3cd; border-color: #ffc107; color: #856404;">
+                                                    <strong>⚠️ Tie at Group {{ $group }} elimination boundary!</strong> Two or more contestants share the same average score AND standard deviation at the cutoff. Review carefully.
+                                                </div>
+                                            @endif
                                             @if(count($eliminationData[$group]) > 0)
                                                 <div class="elimination-group">
                                                     <div class="elimination-group-title">Group {{ $group }} - Contestants to be Eliminated</div>
@@ -502,6 +566,10 @@
                                                                         <span class="contestant-detail-item">
                                                                             <strong>Avg:</strong>
                                                                             <span class="score-badge">{{ number_format($item['avg'], 2) }}</span>
+                                                                        </span>
+                                                                        <span class="contestant-detail-item">
+                                                                            <strong>SD:</strong>
+                                                                            <span class="score-badge" style="background: #e2e3e5; color: #383d41;">{{ number_format($item['stddev'], 2) }}</span>
                                                                         </span>
                                                                     @endif
                                                                     <span class="contestant-detail-item">
