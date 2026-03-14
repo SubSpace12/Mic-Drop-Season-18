@@ -100,6 +100,7 @@
                 'name' => $contestant->global_name ?? $contestant->username,
                 'eliminated' => $contestant->eliminated,
                 'round_eliminated' => $elimRound,
+                'md_group' => $contestant->md_group,
                 'round_averages' => $roundAverages,
                 'season_avg' => round($seasonAvg, 2),
                 'season_median' => round($seasonMedian, 3),
@@ -138,23 +139,29 @@
         // Merge: alive first, then eliminated
         $allStats = array_merge($aliveStats, $eliminatedStats);
 
-        // Build per-round rankings: for each round, rank contestants by their average in that round
+        // Build per-round rankings PER GROUP: rank contestants within their group
         $roundRankings = []; // roundNumber => [ contestantId => rank ]
         $roundEliminated = []; // roundNumber => [ contestantId => true ] contestants eliminated IN that round
         foreach ($roundNumbers as $rn) {
-            $scoresInRound = [];
+            $round = $finishedRounds->firstWhere('round_number', $rn);
+            if (!$round) continue;
+
+            // Group scores by the contestant's group for this round
+            $groupScores = []; // group => [ ['id' => ..., 'avg' => ...], ... ]
             foreach ($allStats as $entry) {
-                if (isset($entry['round_averages'][$rn])) {
-                    $scoresInRound[] = ['id' => $entry['id'], 'avg' => $entry['round_averages'][$rn]];
-                }
+                if (!isset($entry['round_averages'][$rn])) continue;
+                $group = $round->is_merge ? 0 : $entry['md_group'];
+                $groupScores[$group][] = ['id' => $entry['id'], 'avg' => $entry['round_averages'][$rn]];
             }
-            // Sort descending by average
-            usort($scoresInRound, function($a, $b) {
-                return $b['avg'] <=> $a['avg'];
-            });
+
             $rankings = [];
-            foreach ($scoresInRound as $i => $s) {
-                $rankings[$s['id']] = $i + 1; // 1-indexed rank
+            foreach ($groupScores as $group => $scores) {
+                usort($scores, function($a, $b) {
+                    return $b['avg'] <=> $a['avg'];
+                });
+                foreach ($scores as $i => $s) {
+                    $rankings[$s['id']] = $i + 1;
+                }
             }
             $roundRankings[$rn] = $rankings;
 
@@ -357,13 +364,6 @@
             font-weight: 500;
             font-size: 12px;
             min-width: 52px;
-            transition: transform 0.1s ease;
-        }
-
-        .score-cell:hover {
-            transform: scale(1.05);
-            outline: 1px solid #4ec9b0;
-            outline-offset: -1px;
         }
 
         .score-cell.empty {
