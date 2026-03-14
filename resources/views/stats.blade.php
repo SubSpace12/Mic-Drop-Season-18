@@ -19,17 +19,12 @@
 
         $roundNumbers = $finishedRounds->pluck('round_number')->toArray();
 
-        // Check if round_eliminated column exists
-        $hasRoundEliminated = \Schema::hasColumn('contestants', 'round_eliminated');
-
         // Get all contestants for this season
-        $contestantQuery = DB::table('contestants')
+        $allContestants = $seasonId ? DB::table('contestants')
             ->join('users', 'users.id', '=', 'contestants.id')
-            ->where('contestants.season_id', $seasonId);
-
-        $contestantQuery->select('contestants.*', 'users.global_name', 'users.username');
-
-        $allContestants = $seasonId ? $contestantQuery->get() : collect();
+            ->where('contestants.season_id', $seasonId)
+            ->select('contestants.*', 'users.global_name', 'users.username')
+            ->get() : collect();
 
         // Build stats for each contestant
         $aliveStats = [];
@@ -38,21 +33,7 @@
         foreach ($allContestants as $contestant) {
             $roundAverages = [];
 
-            // Get the elimination round
-            $elimRound = null;
-            if ($contestant->eliminated) {
-                if ($hasRoundEliminated && isset($contestant->round_eliminated) && $contestant->round_eliminated) {
-                    $elimRound = $contestant->round_eliminated;
-                } else {
-                    // Fallback: derive from the last finished round where they have submissions
-                    $lastRound = DB::table('submissions')
-                        ->where('contestant_id', $contestant->id)
-                        ->where('season_id', $seasonId)
-                        ->whereIn('round', $roundNumbers)
-                        ->max('round');
-                    $elimRound = $lastRound;
-                }
-            }
+            $elimRound = $contestant->eliminated ? ($contestant->round_eliminated ?? null) : null;
 
             // Determine which rounds this contestant participated in
             $participatedRounds = $roundNumbers;
@@ -157,7 +138,36 @@
         // Merge: alive first, then eliminated
         $allStats = array_merge($aliveStats, $eliminatedStats);
 
-        // Helper: heatmap color for a score
+        // Build per-round rankings: for each round, rank contestants by their average in that round
+        $roundRankings = []; // roundNumber => [ contestantId => rank ]
+        $roundEliminated = []; // roundNumber => [ contestantId => true ] contestants eliminated IN that round
+        foreach ($roundNumbers as $rn) {
+            $scoresInRound = [];
+            foreach ($allStats as $entry) {
+                if (isset($entry['round_averages'][$rn])) {
+                    $scoresInRound[] = ['id' => $entry['id'], 'avg' => $entry['round_averages'][$rn]];
+                }
+            }
+            // Sort descending by average
+            usort($scoresInRound, function($a, $b) {
+                return $b['avg'] <=> $a['avg'];
+            });
+            $rankings = [];
+            foreach ($scoresInRound as $i => $s) {
+                $rankings[$s['id']] = $i + 1; // 1-indexed rank
+            }
+            $roundRankings[$rn] = $rankings;
+
+            // Track who was eliminated in this round
+            $roundEliminated[$rn] = [];
+            foreach ($allStats as $entry) {
+                if ($entry['eliminated'] && $entry['round_eliminated'] == $rn) {
+                    $roundEliminated[$rn][$entry['id']] = true;
+                }
+            }
+        }
+
+        // Helper: heatmap color for a score (used for avg, median summary columns)
         if (!function_exists('getHeatColor')) {
             function getHeatColor($score) {
                 if ($score === null) return 'transparent';
@@ -179,6 +189,31 @@
             function getHeatTextColor($score) {
                 if ($score === null) return '#888';
                 if ($score >= 7.5) return '#111';
+                return '#fff';
+            }
+        }
+
+        // Helper: std dev color (lower = better = green, higher = worse = red)
+        if (!function_exists('getStdDevColor')) {
+            function getStdDevColor($stddev) {
+                if ($stddev === null) return 'transparent';
+                if ($stddev <= 0.3) return '#2d8a4e';
+                if ($stddev <= 0.5) return '#4caf50';
+                if ($stddev <= 0.7) return '#8bc34a';
+                if ($stddev <= 0.9) return '#cddc39';
+                if ($stddev <= 1.1) return '#ffeb3b';
+                if ($stddev <= 1.3) return '#ffc107';
+                if ($stddev <= 1.6) return '#ff9800';
+                if ($stddev <= 2.0) return '#ff5722';
+                if ($stddev <= 2.5) return '#f44336';
+                return '#b71c1c';
+            }
+        }
+
+        if (!function_exists('getStdDevTextColor')) {
+            function getStdDevTextColor($stddev) {
+                if ($stddev === null) return '#888';
+                if ($stddev <= 0.9) return '#111';
                 return '#fff';
             }
         }
@@ -347,19 +382,6 @@
         .stat-col {
             font-weight: 600;
             min-width: 64px;
-        }
-
-        .stat-col.avg {
-            color: #4ec9b0;
-            font-size: 13px;
-        }
-
-        .stat-col.median {
-            color: #ce9178;
-        }
-
-        .stat-col.stddev {
-            color: #dcdcaa;
         }
 
         /* Row types */
@@ -586,22 +608,58 @@
                                             && $entry['round_eliminated']
                                             && $rn > $entry['round_eliminated'];
                                         $score = $hasScore ? $entry['round_averages'][$rn] : null;
+
+                                        // Determine cell color for this round
+                                        $cellBg = 'transparent';
+                                        $cellColor = '#d4d4d4';
+
+                                        if ($hasScore && !$isAfterElim) {
+                                            $contestantRank = $roundRankings[$rn][$entry['id']] ?? null;
+                                            $wasEliminatedHere = isset($roundEliminated[$rn][$entry['id']]);
+
+                                            if ($wasEliminatedHere) {
+                                                // Eliminated in this round -> red
+                                                $cellBg = '#c62828';
+                                                $cellColor = '#fff';
+                                            } elseif ($contestantRank === 1) {
+                                                $cellBg = '#b8860b';
+                                                $cellColor = '#fff';
+                                            } elseif ($contestantRank === 2) {
+                                                $cellBg = '#808080';
+                                                $cellColor = '#fff';
+                                            } elseif ($contestantRank === 3) {
+                                                $cellBg = '#8B5E3C';
+                                                $cellColor = '#fff';
+                                            } elseif ($score >= 9.0) {
+                                                $cellBg = '#2e7d32';
+                                                $cellColor = '#fff';
+                                            }
+                                        }
                                     @endphp
 
                                     @if($isAfterElim)
                                         <td class="score-cell empty"></td>
                                     @elseif($hasScore)
                                         <td class="score-cell"
-                                            style="background: {{ getHeatColor($score) }}; color: {{ getHeatTextColor($score) }};">
+                                            style="background: {{ $cellBg }}; color: {{ $cellColor }};">
                                             {{ number_format($score, 2) }}
                                         </td>
                                     @else
                                         <td class="score-cell no-data">--</td>
                                     @endif
                                 @endforeach
-                                <td class="stat-col avg">{{ number_format($entry['season_avg'], 2) }}</td>
-                                <td class="stat-col median">{{ number_format($entry['season_median'], 2) }}</td>
-                                <td class="stat-col stddev">{{ number_format($entry['season_stddev'], 3) }}</td>
+                                <td class="stat-col avg"
+                                    style="background: {{ getHeatColor($entry['season_avg']) }}; color: {{ getHeatTextColor($entry['season_avg']) }};">
+                                    {{ number_format($entry['season_avg'], 2) }}
+                                </td>
+                                <td class="stat-col median"
+                                    style="background: {{ getHeatColor($entry['season_median']) }}; color: {{ getHeatTextColor($entry['season_median']) }};">
+                                    {{ number_format($entry['season_median'], 2) }}
+                                </td>
+                                <td class="stat-col stddev"
+                                    style="background: {{ getStdDevColor($entry['season_stddev']) }}; color: {{ getStdDevTextColor($entry['season_stddev']) }};">
+                                    {{ number_format($entry['season_stddev'], 3) }}
+                                </td>
                             </tr>
                             @php $rank++; @endphp
                         @endforeach
@@ -610,43 +668,35 @@
             </div>
 
             <div class="stats-legend">
-                <span style="color: #569cd6;">// HEATMAP</span>
+                <span style="color: #569cd6;">// ROUNDS</span>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #2d8a4e;"></div> 9.0+
+                    <div class="legend-swatch" style="background: #b8860b;"></div> 1st
                 </div>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #4caf50;"></div> 8.5+
+                    <div class="legend-swatch" style="background: #808080;"></div> 2nd
                 </div>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #8bc34a;"></div> 8.0+
+                    <div class="legend-swatch" style="background: #8B5E3C;"></div> 3rd
                 </div>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #cddc39;"></div> 7.5+
+                    <div class="legend-swatch" style="background: #2e7d32;"></div> 9.0+
                 </div>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #ffeb3b;"></div> 7.0+
+                    <div class="legend-swatch" style="background: #c62828;"></div> eliminated
+                </div>
+                <span style="margin-left: 12px; color: #569cd6;">// SUMMARY</span>
+                <div class="legend-item">
+                    <div class="legend-swatch" style="background: #2d8a4e;"></div> best
                 </div>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #ffc107;"></div> 6.5+
+                    <div class="legend-swatch" style="background: #ffeb3b;"></div> mid
                 </div>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #ff9800;"></div> 6.0+
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #ff5722;"></div> 5.5+
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #f44336;"></div> 5.0+
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #b71c1c;"></div> &lt;5.0
+                    <div class="legend-swatch" style="background: #b71c1c;"></div> worst
                 </div>
                 <span style="margin-left: 12px; color: #569cd6;">|</span>
                 <div class="legend-item">
-                    <div class="legend-swatch" style="background: #1a1a1a;"></div> eliminated
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #2a2a2a; color: #555; font-size: 8px; display: flex; align-items: center; justify-content: center;">--</div> no data
+                    <div class="legend-swatch" style="background: #1a1a1a;"></div> post-elim
                 </div>
             </div>
         @endif
