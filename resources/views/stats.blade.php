@@ -32,6 +32,7 @@
 
         foreach ($allContestants as $contestant) {
             $roundAverages = [];
+            $roundStdDevs = [];
 
             $elimRound = $contestant->eliminated ? ($contestant->round_eliminated ?? null) : null;
 
@@ -70,6 +71,13 @@
                 if ($subs->count() > 0) {
                     $avg = $subs->avg();
                     $roundAverages[$rn] = round($avg, 2);
+
+                    // Compute per-round std dev for tiebreaking
+                    $variance = 0;
+                    foreach ($subs as $s) {
+                        $variance += pow($s - $avg, 2);
+                    }
+                    $roundStdDevs[$rn] = round(sqrt($variance / $subs->count()), 3);
                 }
             }
 
@@ -102,6 +110,7 @@
                 'round_eliminated' => $elimRound,
                 'md_group' => $contestant->md_group,
                 'round_averages' => $roundAverages,
+                'round_stddevs' => $roundStdDevs,
                 'season_avg' => round($seasonAvg, 2),
                 'season_median' => round($seasonMedian, 3),
                 'season_stddev' => round($seasonStdDev, 3),
@@ -147,20 +156,39 @@
             if (!$round) continue;
 
             // Group scores by the contestant's group for this round
-            $groupScores = []; // group => [ ['id' => ..., 'avg' => ...], ... ]
+            $groupScores = []; // group => [ ['id' => ..., 'avg' => ..., 'stddev' => ...], ... ]
             foreach ($allStats as $entry) {
                 if (!isset($entry['round_averages'][$rn])) continue;
                 $group = $round->is_merge ? 0 : $entry['md_group'];
-                $groupScores[$group][] = ['id' => $entry['id'], 'avg' => $entry['round_averages'][$rn]];
+                $groupScores[$group][] = [
+                    'id' => $entry['id'],
+                    'avg' => $entry['round_averages'][$rn],
+                    'stddev' => $entry['round_stddevs'][$rn] ?? 0,
+                ];
             }
 
             $rankings = [];
             foreach ($groupScores as $group => $scores) {
+                // Sort by avg descending, then std dev ascending as tiebreaker
                 usort($scores, function($a, $b) {
-                    return $b['avg'] <=> $a['avg'];
+                    $cmp = $b['avg'] <=> $a['avg'];
+                    if ($cmp === 0) {
+                        return $a['stddev'] <=> $b['stddev'];
+                    }
+                    return $cmp;
                 });
+                // Assign ranks, sharing rank for identical avg+stddev
+                $currentRank = 1;
                 foreach ($scores as $i => $s) {
-                    $rankings[$s['id']] = $i + 1;
+                    if ($i > 0
+                        && $s['avg'] == $scores[$i - 1]['avg']
+                        && $s['stddev'] == $scores[$i - 1]['stddev']) {
+                        // True tie — same rank as previous
+                        $rankings[$s['id']] = $rankings[$scores[$i - 1]['id']];
+                    } else {
+                        $rankings[$s['id']] = $currentRank;
+                    }
+                    $currentRank++;
                 }
             }
             $roundRankings[$rn] = $rankings;
