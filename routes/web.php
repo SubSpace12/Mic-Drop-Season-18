@@ -130,6 +130,11 @@ Route::get('/test-simple', function () {
     return view('test-simple');
 });
 
+
+Route::get('/stats', function () {
+    return view('stats');
+});
+
 Route::get('/test-with-layout', function () {
     return view('test-with-layout');
 });
