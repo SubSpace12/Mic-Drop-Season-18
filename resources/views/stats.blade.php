@@ -695,38 +695,7 @@
                 </table>
             </div>
 
-            <div class="stats-legend">
-                <span style="color: #569cd6;">// ROUNDS</span>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #b8860b;"></div> 1st
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #808080;"></div> 2nd
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #8B5E3C;"></div> 3rd
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #2e7d32;"></div> 9.0+
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #c62828;"></div> eliminated
-                </div>
-                <span style="margin-left: 12px; color: #569cd6;">// SUMMARY</span>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #2d8a4e;"></div> best
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #ffeb3b;"></div> mid
-                </div>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #b71c1c;"></div> worst
-                </div>
-                <span style="margin-left: 12px; color: #569cd6;">|</span>
-                <div class="legend-item">
-                    <div class="legend-swatch" style="background: #1a1a1a;"></div> post-elim
-                </div>
-            </div>
+           
         @endif
     </div>
 </x-app-layout>
