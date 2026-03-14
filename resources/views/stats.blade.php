@@ -417,17 +417,13 @@
             /* default */
         }
 
-        .row-alive:hover td {
-            background-color: rgba(78, 201, 176, 0.06) !important;
-        }
+       
 
         .row-eliminated {
             opacity: 0.7;
         }
 
-        .row-eliminated:hover {
-            opacity: 1;
-        }
+        
 
         .row-eliminated td:nth-child(1),
         .row-eliminated td:nth-child(2) {
