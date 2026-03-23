@@ -114,7 +114,7 @@ return [
     'guilds' => env('LARASCORD_SKIP_GUILDS', false)
     ? []
     : [
-        'YOUR_DISCORD_SERVER_ID',
+        '900065598485192705',
     ],
 
     /*
