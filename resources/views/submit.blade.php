@@ -174,7 +174,9 @@
                                         <p>This round has ended and is no longer accepting submissions.</p>
                                 @endif
                                 <div class="round-info">
+                                        @if($statusError != 'not_started')
                                         <h3>{{ $round_info->title }}</h3>
+                                        @endif
                                         <p><strong>Round:</strong> {{ $round }}</p>
                                         <p><strong>Group:</strong> {{ $group == 0 ? 'Merge' : 'Group ' . $group }}</p>
                                         <p><strong>Status:</strong>
