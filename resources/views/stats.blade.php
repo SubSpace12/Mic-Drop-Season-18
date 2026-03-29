@@ -5,6 +5,8 @@
         </h2>
     </x-slot>
 
+    @vite(['resources/css/stats.css'])
+
     @php
         // Get active season
         $season = DB::table('season')->where('active', true)->first();
@@ -48,10 +50,6 @@
                 $round = $finishedRounds->firstWhere('round_number', $rn);
                 if (!$round) continue;
 
-                // Determine group for this round
-                // For merge rounds (is_merge = true), group = 0
-                // For group rounds, use the contestant's md_group
-                // If group_legacy exists and round context differs, use group_legacy
                 $group = $round->is_merge ? 0 : $contestant->md_group;
 
                 $subs = DB::table('submissions')
@@ -72,7 +70,6 @@
                     $avg = $subs->avg();
                     $roundAverages[$rn] = round($avg, 2);
 
-                    // Compute per-round std dev for tiebreaking
                     $variance = 0;
                     foreach ($subs as $s) {
                         $variance += pow($s - $avg, 2);
@@ -117,7 +114,6 @@
             ];
 
             if ($contestant->eliminated) {
-                // For eliminated contestants, the sort key is their average from the elimination round
                 $entry['elim_round_avg'] = ($elimRound && isset($roundAverages[$elimRound]))
                     ? $roundAverages[$elimRound] : 0;
                 $eliminatedStats[] = $entry;
@@ -130,7 +126,6 @@
         usort($aliveStats, function($a, $b) {
             $cmp = $b['season_avg'] <=> $a['season_avg'];
             if ($cmp === 0) {
-                // Tiebreaker: lower std dev wins
                 return $a['season_stddev'] <=> $b['season_stddev'];
             }
             return $cmp;
@@ -148,15 +143,14 @@
         // Merge: alive first, then eliminated
         $allStats = array_merge($aliveStats, $eliminatedStats);
 
-        // Build per-round rankings PER GROUP: rank contestants within their group
-        $roundRankings = []; // roundNumber => [ contestantId => rank ]
-        $roundEliminated = []; // roundNumber => [ contestantId => true ] contestants eliminated IN that round
+        // Build per-round rankings PER GROUP
+        $roundRankings = [];
+        $roundEliminated = [];
         foreach ($roundNumbers as $rn) {
             $round = $finishedRounds->firstWhere('round_number', $rn);
             if (!$round) continue;
 
-            // Group scores by the contestant's group for this round
-            $groupScores = []; // group => [ ['id' => ..., 'avg' => ..., 'stddev' => ...], ... ]
+            $groupScores = [];
             foreach ($allStats as $entry) {
                 if (!isset($entry['round_averages'][$rn])) continue;
                 $group = $round->is_merge ? 0 : $entry['md_group'];
@@ -169,7 +163,6 @@
 
             $rankings = [];
             foreach ($groupScores as $group => $scores) {
-                // Sort by avg descending, then std dev ascending as tiebreaker
                 usort($scores, function($a, $b) {
                     $cmp = $b['avg'] <=> $a['avg'];
                     if ($cmp === 0) {
@@ -177,13 +170,11 @@
                     }
                     return $cmp;
                 });
-                // Assign ranks, sharing rank for identical avg+stddev
                 $currentRank = 1;
                 foreach ($scores as $i => $s) {
                     if ($i > 0
                         && $s['avg'] == $scores[$i - 1]['avg']
                         && $s['stddev'] == $scores[$i - 1]['stddev']) {
-                        // True tie — same rank as previous
                         $rankings[$s['id']] = $rankings[$scores[$i - 1]['id']];
                     } else {
                         $rankings[$s['id']] = $currentRank;
@@ -193,7 +184,6 @@
             }
             $roundRankings[$rn] = $rankings;
 
-            // Track who was eliminated in this round
             $roundEliminated[$rn] = [];
             foreach ($allStats as $entry) {
                 if ($entry['eliminated'] && $entry['round_eliminated'] == $rn) {
@@ -202,7 +192,7 @@
             }
         }
 
-        // Helper: heatmap color for a score (used for avg, median summary columns)
+        // Heatmap helpers (these produce inline style colors for data cells — theme-independent)
         if (!function_exists('getHeatColor')) {
             function getHeatColor($score) {
                 if ($score === null) return 'transparent';
@@ -228,7 +218,6 @@
             }
         }
 
-        // Helper: std dev color (lower = better = green, higher = worse = red)
         if (!function_exists('getStdDevColor')) {
             function getStdDevColor($stddev) {
                 if ($stddev === null) return 'transparent';
@@ -256,322 +245,25 @@
         $totalFinished = count($roundNumbers);
     @endphp
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Source+Code+Pro:wght@300;400;500;600&display=swap');
-
-        .stats-page {
-            font-family: 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Monaco', monospace;
-            background: #1e1e1e;
-            color: #d4d4d4;
-            min-height: 100vh;
-            padding: 24px;
-        }
-
-        .stats-header {
-            margin-bottom: 24px;
-            display: flex;
-            align-items: baseline;
-            gap: 16px;
-            flex-wrap: wrap;
-        }
-
-        .stats-header h1 {
-            font-size: 22px;
-            font-weight: 700;
-            color: #4ec9b0;
-            letter-spacing: 1px;
-        }
-
-        .stats-header .subtitle {
-            font-size: 13px;
-            color: #888;
-            font-weight: 400;
-        }
-
-        .stats-header .subtitle span {
-            color: #569cd6;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            border: 1px solid #333;
-            border-radius: 6px;
-            background: #252526;
-            scrollbar-width: thin;
-            scrollbar-color: #4ec9b0 #1e1e1e;
-        }
-
-        .table-wrapper::-webkit-scrollbar {
-            height: 8px;
-        }
-
-        .table-wrapper::-webkit-scrollbar-track {
-            background: #1e1e1e;
-        }
-
-        .table-wrapper::-webkit-scrollbar-thumb {
-            background: #4ec9b0;
-            border-radius: 4px;
-        }
-
-        .stats-table {
-            border-collapse: collapse;
-            width: 100%;
-            min-width: max-content;
-            font-size: 12.5px;
-        }
-
-        .stats-table th,
-        .stats-table td {
-            padding: 6px 10px;
-            text-align: center;
-            white-space: nowrap;
-            border-bottom: 1px solid #333;
-            border-right: 1px solid #2d2d30;
-        }
-
-        .stats-table th {
-            background: #2d2d30;
-            color: #569cd6;
-            font-weight: 600;
-            font-size: 11.5px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: sticky;
-            top: 0;
-            z-index: 10;
-            border-bottom: 2px solid #4ec9b0;
-        }
-
-        /* Sticky columns: #, Contestant */
-        .stats-table th:nth-child(1),
-        .stats-table td:nth-child(1) {
-            position: sticky;
-            left: 0;
-            z-index: 5;
-            background: #2d2d30;
-            min-width: 36px;
-            border-right: 1px solid #444;
-        }
-
-        .stats-table td:nth-child(1) {
-            background: #252526;
-            font-weight: 600;
-        }
-
-        .stats-table th:nth-child(2),
-        .stats-table td:nth-child(2) {
-            position: sticky;
-            left: 36px;
-            z-index: 5;
-            background: #2d2d30;
-            text-align: left;
-            min-width: 140px;
-            max-width: 180px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            border-right: 2px solid #4ec9b0;
-        }
-
-        .stats-table td:nth-child(2) {
-            background: #252526;
-            color: #e0e0e0;
-            font-weight: 500;
-        }
-
-        .stats-table th:nth-child(1) {
-            z-index: 15;
-        }
-
-        .stats-table th:nth-child(2) {
-            z-index: 15;
-        }
-
-        /* Round score cells */
-        .score-cell {
-            font-weight: 500;
-            font-size: 12px;
-            min-width: 52px;
-        }
-
-        .score-cell.empty {
-            background: #1a1a1a !important;
-            color: #444 !important;
-        }
-
-        .score-cell.no-data {
-            background: #2a2a2a !important;
-            color: #555 !important;
-            font-style: italic;
-            font-size: 10px;
-        }
-
-        /* Summary stat columns */
-        .stat-col {
-            font-weight: 600;
-            min-width: 64px;
-        }
-
-        /* Row types */
-        .row-alive {
-            /* default */
-        }
-
-       
-
-        .row-eliminated {
-            opacity: 0.7;
-        }
-
-        
-
-        .row-eliminated td:nth-child(1),
-        .row-eliminated td:nth-child(2) {
-            background: #1e1e1e !important;
-        }
-
-        .row-eliminated td:nth-child(2) {
-            color: #888;
-        }
-
-        /* Rank coloring */
-        .rank-gold {
-            color: #ffd700 !important;
-            text-shadow: 0 0 6px rgba(255, 215, 0, 0.3);
-        }
-
-        .rank-silver {
-            color: #c0c0c0 !important;
-            text-shadow: 0 0 6px rgba(192, 192, 192, 0.3);
-        }
-
-        .rank-bronze {
-            color: #cd7f32 !important;
-            text-shadow: 0 0 6px rgba(205, 127, 50, 0.3);
-        }
-
-        .rank-eliminated {
-            color: #f44336 !important;
-        }
-
-        /* Divider between alive and eliminated */
-        .divider-row td {
-            background: #1e1e1e !important;
-            border-bottom: 2px solid #f44336;
-            padding: 2px 10px;
-            height: 8px;
-        }
-
-        .divider-row td:nth-child(1),
-        .divider-row td:nth-child(2) {
-            background: #1e1e1e !important;
-        }
-
-        .divider-label {
-            color: #f44336;
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-align: left !important;
-        }
-
-        /* Eliminated round indicator */
-        .elim-badge {
-            display: inline-block;
-            background: #5c2020;
-            color: #f48771;
-            font-size: 9px;
-            padding: 1px 5px;
-            border-radius: 3px;
-            margin-left: 6px;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-            vertical-align: middle;
-        }
-
-        /* No data state */
-        .no-data-message {
-            text-align: center;
-            padding: 60px 20px;
-            color: #888;
-            font-size: 14px;
-        }
-
-        .no-data-message .icon {
-            font-size: 36px;
-            margin-bottom: 12px;
-            color: #4ec9b0;
-        }
-
-        /* Legend */
-        .stats-legend {
-            display: flex;
-            gap: 16px;
-            margin-top: 16px;
-            flex-wrap: wrap;
-            font-size: 11px;
-            color: #888;
-            align-items: center;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .legend-swatch {
-            width: 14px;
-            height: 14px;
-            border-radius: 2px;
-            border: 1px solid #444;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .stats-page {
-                padding: 12px 8px;
-            }
-
-            .stats-header h1 {
-                font-size: 18px;
-            }
-
-            .stats-table {
-                font-size: 11px;
-            }
-
-            .stats-table th,
-            .stats-table td {
-                padding: 4px 6px;
-            }
-
-            .score-cell {
-                min-width: 42px;
-            }
-        }
-    </style>
-
     <div class="stats-page">
         <div class="stats-header">
-            <h1>> STATS_SHEET</h1>
+            <h1>Stats Sheet</h1>
             <div class="subtitle">
                 {{ $season->name ?? 'No Season' }}
-                //
+                &mdash;
                 <span>{{ $totalFinished }}</span> rounds completed
-                //
+                &mdash;
                 <span>{{ count($aliveStats) }}</span> alive
-                //
+                &mdash;
                 <span>{{ count($eliminatedStats) }}</span> eliminated
             </div>
         </div>
 
         @if(count($allStats) === 0 || $totalFinished === 0)
             <div class="no-data-message">
-                <div class="icon">{ }</div>
+                <div class="icon">._.</div>
                 <p>No completed rounds or contestants found.</p>
-                <p style="font-size: 12px; margin-top: 8px;">Stats will appear once at least one round is finished.</p>
+                <p style="font-size: 12px; margin-top: 8px; color: var(--text-dim);">Stats will appear once at least one round is finished.</p>
             </div>
         @else
             <div class="table-wrapper">
@@ -595,7 +287,7 @@
                                 @php $showedDivider = true; @endphp
                                 <tr class="divider-row">
                                     <td></td>
-                                    <td class="divider-label">// ELIMINATED</td>
+                                    <td class="divider-label">Eliminated</td>
                                     @foreach($roundNumbers as $rn)
                                         <td></td>
                                     @endforeach
@@ -633,16 +325,14 @@
                                             && $rn > $entry['round_eliminated'];
                                         $score = $hasScore ? $entry['round_averages'][$rn] : null;
 
-                                        // Determine cell color for this round
                                         $cellBg = 'transparent';
-                                        $cellColor = '#d4d4d4';
+                                        $cellColor = 'var(--stats-cell-text)';
 
                                         if ($hasScore && !$isAfterElim) {
                                             $contestantRank = $roundRankings[$rn][$entry['id']] ?? null;
                                             $wasEliminatedHere = isset($roundEliminated[$rn][$entry['id']]);
 
                                             if ($wasEliminatedHere) {
-                                                // Eliminated in this round -> red
                                                 $cellBg = '#c62828';
                                                 $cellColor = '#fff';
                                             } elseif ($contestantRank === 1) {
@@ -690,8 +380,6 @@
                     </tbody>
                 </table>
             </div>
-
-           
         @endif
     </div>
 </x-app-layout>

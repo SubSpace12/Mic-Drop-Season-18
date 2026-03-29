@@ -8,7 +8,7 @@
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-C9F0wnxF.css",
+    "file": "assets/app-D0k60UFE.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "names": [
@@ -16,7 +16,7 @@
     ]
   },
   "resources/css/dashboard.css": {
-    "file": "assets/dashboard-DsghasWZ.css",
+    "file": "assets/dashboard-BzYjwndb.css",
     "src": "resources/css/dashboard.css",
     "isEntry": true,
     "names": [
@@ -24,7 +24,7 @@
     ]
   },
   "resources/css/judging.css": {
-    "file": "assets/judging-CEPDuGou.css",
+    "file": "assets/judging-BfBVlTmB.css",
     "src": "resources/css/judging.css",
     "isEntry": true,
     "names": [
@@ -32,7 +32,7 @@
     ]
   },
   "resources/css/results.css": {
-    "file": "assets/results-B1Nl_rNV.css",
+    "file": "assets/results-BAkFteSS.css",
     "src": "resources/css/results.css",
     "isEntry": true,
     "names": [
@@ -40,7 +40,7 @@
     ]
   },
   "resources/css/submit-judge-app.css": {
-    "file": "assets/submit-judge-app-DL7zU-iY.css",
+    "file": "assets/submit-judge-app-oP-d_qAq.css",
     "src": "resources/css/submit-judge-app.css",
     "isEntry": true,
     "names": [
@@ -48,7 +48,7 @@
     ]
   },
   "resources/css/submit.css": {
-    "file": "assets/submit-DfeykMdE.css",
+    "file": "assets/submit-CONc4_Bi.css",
     "src": "resources/css/submit.css",
     "isEntry": true,
     "names": [
@@ -56,7 +56,7 @@
     ]
   },
   "resources/css/view-apps.css": {
-    "file": "assets/view-apps-BW9zpiN7.css",
+    "file": "assets/view-apps-CyMlN_48.css",
     "src": "resources/css/view-apps.css",
     "isEntry": true,
     "names": [

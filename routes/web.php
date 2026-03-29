@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SlideBGController;
 use App\Http\Controllers\JudgeAppController;
 use App\Http\Controllers\SubmissionController;
+use App\Http\Controllers\ThemeController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -151,3 +152,8 @@ Route::get('/error/guild-access', function () {
 Route::post('/apps/draft', [JudgeAppController::class, 'saveDraft'])
     ->name('apps.draft')
     ->middleware('auth');
+
+Route::post('/theme', [ThemeController::class, 'update'])
+    ->middleware('auth')
+    ->name('theme.update');
+ 

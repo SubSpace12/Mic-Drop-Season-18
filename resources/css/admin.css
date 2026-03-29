@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
 
 * {
-    font-family: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+    font-family: var(--font-main);
 }
 
 .admin-container {
@@ -10,40 +10,45 @@
     padding: 2rem;
 }
 
+/* ── Access Messages ─────────────────────────────────────── */
 .access-message {
     text-align: center;
     padding: 3rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--bg-surface);
+    border-radius: var(--radius-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     margin: 2rem auto;
     max-width: 600px;
+    border: 2px solid var(--border);
+    color: var(--text-primary);
 }
 
 .access-message.error {
-    background: #fee;
-    border: 2px solid #fcc;
-    color: #c33;
+    background: var(--results-elim-bg);
+    border-color: var(--results-elim-border);
+    color: var(--results-elim-text);
 }
 
 .access-message.success {
-    background: #efe;
-    border: 2px solid #cfc;
-    color: #3c3;
+    background: var(--completed-bg);
+    border-color: var(--completed-stripe);
+    color: var(--completed-light);
 }
 
+/* ── Round Info Card ─────────────────────────────────────── */
 .round-info-card {
-    background: white;
+    background: var(--bg-surface);
     padding: 2rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: var(--radius-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     margin-bottom: 2rem;
+    border: 2px solid var(--border);
 }
 
 .round-info-card h3 {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #333;
+    color: var(--accent);
     margin-bottom: 1rem;
 }
 
@@ -54,16 +59,17 @@
     margin-top: 1.5rem;
 }
 
+/* ── Info Items ──────────────────────────────────────────── */
 .info-item {
     padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #007bff;
+    background: var(--bg-base);
+    border-radius: var(--radius-btn);
+    border-left: 4px solid var(--accent-2);
 }
 
 .info-item label {
     font-weight: 600;
-    color: #666;
+    color: var(--text-secondary);
     font-size: 0.875rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -71,14 +77,15 @@
 
 .info-item .value {
     font-size: 1.125rem;
-    color: #333;
+    color: var(--text-primary);
     margin-top: 0.25rem;
 }
 
+/* ── Status Badges ───────────────────────────────────────── */
 .status-badge {
     display: inline-block;
     padding: 0.5rem 1rem;
-    border-radius: 20px;
+    border-radius: var(--radius-badge);
     font-weight: 600;
     font-size: 0.875rem;
     text-transform: uppercase;
@@ -86,35 +93,36 @@
 }
 
 .status-badge.pending {
-    background: #fff3cd;
-    color: #856404;
-    border: 2px solid #ffc107;
+    background: var(--merge-bg);
+    color: var(--merge-text);
+    border: 2px solid var(--merge-border);
 }
 
 .status-badge.active {
-    background: #d1ecf1;
-    color: #0c5460;
-    border: 2px solid #17a2b8;
+    background: var(--submitted-bg);
+    color: var(--submitted-light);
+    border: 2px solid var(--submitted);
 }
 
 .status-badge.completed {
-    background: #d4edda;
-    color: #155724;
-    border: 2px solid #28a745;
+    background: var(--completed-bg);
+    color: var(--completed-light);
+    border: 2px solid var(--completed);
 }
 
+/* ── Judges Display ──────────────────────────────────────── */
 .judges-display {
-    background: #e8f5e9;
+    background: var(--completed-bg);
     padding: 1.5rem;
-    border-radius: 8px;
-    border: 2px solid #28a745;
+    border-radius: var(--radius-btn);
+    border: 2px solid var(--completed);
     margin-top: 1.5rem;
 }
 
 .judges-display h4 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #28a745;
+    color: var(--completed);
     margin-bottom: 1rem;
 }
 
@@ -125,15 +133,15 @@
 }
 
 .judge-group {
-    background: white;
+    background: var(--bg-surface);
     padding: 1rem;
-    border-radius: 8px;
-    border: 2px solid #28a745;
+    border-radius: var(--radius-btn);
+    border: 2px solid var(--completed);
 }
 
 .judge-group-title {
     font-weight: 600;
-    color: #28a745;
+    color: var(--completed);
     margin-bottom: 0.75rem;
     font-size: 1rem;
     text-transform: uppercase;
@@ -147,25 +155,28 @@
 
 .judge-list li {
     padding: 0.5rem;
-    background: #f8f9fa;
-    border-radius: 4px;
+    background: var(--bg-base);
+    border-radius: var(--radius-btn);
     margin-bottom: 0.5rem;
     font-weight: 500;
+    color: var(--text-primary);
 }
 
+/* ── Tab Container ───────────────────────────────────────── */
 .tab-container {
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--bg-surface);
+    border-radius: var(--radius-card);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
     overflow: hidden;
     margin-bottom: 2rem;
+    border: 2px solid var(--border);
 }
 
 .tab-buttons {
     display: flex;
     gap: 0;
-    background: #f8f9fa;
-    border-bottom: 2px solid #e0e0e0;
+    background: var(--bg-base);
+    border-bottom: 2px solid var(--border);
     overflow-x: auto;
 }
 
@@ -177,20 +188,21 @@
     cursor: pointer;
     transition: all 0.3s ease;
     font-weight: 600;
-    color: #666;
+    font-family: var(--font-main);
+    color: var(--text-muted);
     white-space: nowrap;
     flex-shrink: 0;
 }
 
 .tab-button:hover {
-    background-color: #e9ecef;
-    color: #333;
+    background-color: var(--bg-elevated);
+    color: var(--text-primary);
 }
 
 .tab-button.active {
-    background-color: white;
-    color: #007bff;
-    border-bottom-color: #007bff;
+    background-color: var(--bg-surface);
+    color: var(--accent);
+    border-bottom-color: var(--accent);
 }
 
 .tab-content {
@@ -202,6 +214,7 @@
     display: block;
 }
 
+/* ── Judge Selection ─────────────────────────────────────── */
 .judge-selection {
     margin-top: 1.5rem;
 }
@@ -214,29 +227,37 @@
     width: 100%;
     padding: 1rem;
     font-size: 1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
+    font-family: var(--font-main);
+    border: 2px solid var(--border);
+    border-radius: var(--radius-btn);
+    background: var(--bg-base);
+    color: var(--text-primary);
     transition: all 0.3s ease;
 }
 
 .search-input:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--active-action-bg);
 }
 
+.search-input::placeholder {
+    color: var(--text-muted);
+}
+
+/* ── Selected Judges ─────────────────────────────────────── */
 .selected-judges {
     margin-bottom: 1.5rem;
     padding: 1rem;
-    background: #e8f5e9;
-    border-radius: 8px;
-    border: 2px solid #28a745;
+    background: var(--completed-bg);
+    border-radius: var(--radius-btn);
+    border: 2px solid var(--completed);
     min-height: 60px;
 }
 
 .selected-judges-title {
     font-weight: 600;
-    color: #28a745;
+    color: var(--completed);
     margin-bottom: 0.75rem;
     font-size: 0.875rem;
     text-transform: uppercase;
@@ -254,32 +275,34 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.5rem 1rem;
-    background: white;
-    border: 2px solid #28a745;
-    border-radius: 20px;
+    background: var(--bg-surface);
+    border: 2px solid var(--completed);
+    border-radius: var(--radius-badge);
     font-weight: 600;
-    color: #28a745;
+    color: var(--completed);
 }
 
 .selected-judge-badge .remove-btn {
     cursor: pointer;
-    color: #dc3545;
+    color: var(--results-low);
     font-weight: bold;
     padding: 0 0.25rem;
     transition: all 0.2s ease;
 }
 
 .selected-judge-badge .remove-btn:hover {
-    color: #c82333;
+    color: var(--results-elim-border);
     transform: scale(1.2);
 }
 
+/* ── Judge Results ───────────────────────────────────────── */
 .judge-results {
     max-height: 400px;
     overflow-y: auto;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-btn);
     padding: 0.5rem;
+    background: var(--bg-base);
 }
 
 .judge-grid {
@@ -290,24 +313,24 @@
 
 .judge-card {
     padding: 1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-btn);
     cursor: pointer;
     transition: all 0.3s ease;
-    background: white;
+    background: var(--bg-surface);
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .judge-card:hover {
-    border-color: #007bff;
-    background: #f8f9fa;
+    border-color: var(--accent-2);
+    background: var(--bg-elevated);
 }
 
 .judge-card.selected {
-    border-color: #28a745;
-    background: #e8f5e9;
+    border-color: var(--completed);
+    background: var(--completed-bg);
     opacity: 0.6;
 }
 
@@ -322,197 +345,232 @@
 .judge-card .judge-name {
     font-weight: 600;
     font-size: 1.125rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
 }
 
 .judge-card .judge-id {
     font-size: 0.875rem;
-    color: #666;
-    font-family: monospace;
+    color: var(--text-muted);
 }
 
 .judge-card .add-btn {
     padding: 0.5rem 1rem;
-    background: #007bff;
-    color: white;
-    border: none;
-    border-radius: 6px;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    border: 2px solid var(--btn-primary-border);
+    border-radius: var(--radius-btn);
     font-weight: 600;
+    font-family: var(--font-main);
     font-size: 0.875rem;
     cursor: pointer;
     transition: all 0.2s ease;
 }
 
 .judge-card .add-btn:hover {
-    background: #0056b3;
+    background: var(--btn-primary-hover);
 }
 
 .judge-card.selected .add-btn {
-    background: #28a745;
+    background: var(--btn-action);
+    border-color: var(--btn-action-border);
     cursor: default;
 }
 
 .no-results {
     text-align: center;
     padding: 2rem;
-    color: #666;
+    color: var(--text-muted);
     font-style: italic;
 }
 
+/* ── Selection Counter ───────────────────────────────────── */
 .selection-counter {
     font-weight: 600;
     margin-bottom: 1rem;
     padding: 0.75rem;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border-left: 4px solid #007bff;
+    background: var(--bg-base);
+    border-radius: var(--radius-btn);
+    border-left: 4px solid var(--accent-2);
+    color: var(--text-primary);
 }
 
 .selection-counter.complete {
-    background: #e8f5e9;
-    border-left-color: #28a745;
-    color: #28a745;
+    background: var(--completed-bg);
+    border-left-color: var(--completed);
+    color: var(--completed);
 }
 
 .selection-counter.error {
-    background: #ffebee;
-    border-left-color: #dc3545;
-    color: #dc3545;
+    background: var(--results-elim-bg);
+    border-left-color: var(--results-elim-border);
+    color: var(--results-low);
 }
 
+/* ── Buttons ─────────────────────────────────────────────── */
 .btn {
     padding: 0.75rem 2rem;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--radius-btn);
     font-weight: 600;
+    font-family: var(--font-main);
     cursor: pointer;
     transition: all 0.3s ease;
     font-size: 1rem;
 }
 
 .btn-primary {
-    background: #007bff;
-    color: white;
+    background: var(--btn-primary);
+    color: var(--btn-primary-text);
+    border: 2px solid var(--btn-primary-border);
 }
 
 .btn-primary:hover:not(:disabled) {
-    background: #0056b3;
+    background: var(--btn-primary-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    box-shadow: 0 4px 8px var(--btn-primary-shadow);
 }
 
 .btn-primary:disabled {
-    background: #ccc;
+    background: var(--border);
+    border-color: var(--border);
+    color: var(--text-muted);
     cursor: not-allowed;
 }
 
 .btn-success {
-    background: #28a745;
-    color: white;
+    background: var(--btn-action);
+    color: var(--btn-action-text);
+    border: 2px solid var(--btn-action-border);
 }
 
 .btn-success:hover:not(:disabled) {
-    background: #218838;
+    background: var(--btn-action-hover);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
+    box-shadow: 0 4px 8px var(--completed-hover-shadow);
 }
 
 .btn-warning {
-    background: #ffc107;
-    color: #333;
+    background: var(--merge-bg);
+    color: var(--merge-text);
+    border: 2px solid var(--merge-border);
 }
 
 .btn-warning:hover {
-    background: #e0a800;
+    background: var(--bg-elevated);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255, 193, 7, 0.3);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn-danger {
-    background: #dc3545;
-    color: white;
+    background: var(--results-elim-bg);
+    color: var(--results-elim-text);
+    border: 2px solid var(--results-elim-border);
 }
 
 .btn-danger:hover {
-    background: #c82333;
+    background: rgba(160, 53, 53, 0.6);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+    box-shadow: 0 4px 8px var(--results-elim-shadow);
 }
 
 .btn-info {
-    background: #17a2b8;
-    color: white;
+    background: var(--submitted-bg);
+    color: var(--submitted-light);
+    border: 2px solid var(--submitted);
 }
 
 .btn-info:hover {
-    background: #138496;
+    background: var(--submitted-action-bg);
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(23, 162, 184, 0.3);
+    box-shadow: 0 4px 8px var(--submitted-hover-shadow);
 }
 
+.btn-edit {
+    background: var(--accent-bg);
+    color: var(--accent-light);
+    border: 2px solid var(--accent);
+}
+
+.btn-edit:hover {
+    background: var(--bg-elevated);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--active-shadow);
+}
+
+.btn-cancel {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border: 2px solid var(--border);
+}
+
+.btn-cancel:hover {
+    background: var(--border);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+
+/* ── Actions Bar ─────────────────────────────────────────── */
 .actions-bar {
     display: flex;
     gap: 1rem;
     justify-content: flex-end;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 2px solid #e0e0e0;
+    border-top: 2px solid var(--border);
     flex-wrap: wrap;
 }
 
+/* ── Misc ────────────────────────────────────────────────── */
 .no-round {
     text-align: center;
     padding: 3rem;
-    background: #f8f9fa;
-    border-radius: 12px;
-    color: #666;
+    background: var(--bg-surface);
+    border-radius: var(--radius-card);
+    color: var(--text-muted);
     font-size: 1.125rem;
+    border: 2px solid var(--border);
 }
 
 .loading {
     text-align: center;
     padding: 2rem;
-    color: #666;
+    color: var(--text-muted);
 }
 
+/* ── Alerts ──────────────────────────────────────────────── */
 .alert {
     padding: 1rem 1.5rem;
-    border-radius: 8px;
+    border-radius: var(--radius-btn);
     margin-bottom: 1.5rem;
     font-weight: 500;
 }
 
 .alert-info {
-    background: #d1ecf1;
-    color: #0c5460;
-    border: 2px solid #17a2b8;
+    background: var(--submitted-bg);
+    color: var(--submitted-light);
+    border: 2px solid var(--submitted);
 }
 
 .alert-warning {
-    background: #fff3cd;
-    color: #856404;
-    border: 2px solid #ffc107;
+    background: var(--merge-bg);
+    color: var(--merge-text);
+    border: 2px solid var(--merge-border);
 }
 
+/* ── Section Divider ─────────────────────────────────────── */
 .section-divider {
     height: 2px;
-    background: linear-gradient(to right, #007bff, transparent);
+    background: linear-gradient(to right, var(--accent), transparent);
     margin: 3rem 0;
 }
 
-.btn-edit {
-    background: #ff9800;
-    color: white;
-}
-
-.btn-edit:hover {
-    background: #f57c00;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255, 152, 0, 0.3);
-}
-
-/* Edit Modal Styles */
+/* ── Edit Modal ──────────────────────────────────────────── */
 .edit-modal {
     display: none;
     position: fixed;
@@ -521,7 +579,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     animation: fadeIn 0.3s;
 }
 
@@ -532,44 +590,35 @@
 }
 
 .edit-modal-content {
-    background: white;
-    border-radius: 12px;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-modal);
     padding: 2rem;
     max-width: 700px;
     width: 90%;
     max-height: 90vh;
     overflow-y: auto;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
     animation: slideUp 0.3s;
+    border: 2px solid var(--border);
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
 @keyframes slideUp {
-    from {
-        transform: translateY(50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+    from { transform: translateY(50px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
 }
 
 .edit-modal-header {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #333;
+    color: var(--accent);
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 3px solid #ff9800;
+    border-bottom: 3px solid var(--accent);
 }
 
 .edit-form-group {
@@ -579,7 +628,7 @@
 .edit-form-group label {
     display: block;
     font-weight: 600;
-    color: #555;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
     font-size: 0.95rem;
 }
@@ -590,16 +639,20 @@
 .edit-form-group textarea {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-btn);
     font-size: 1rem;
+    font-family: var(--font-main);
+    background: var(--bg-surface);
+    color: var(--text-primary);
     transition: border-color 0.3s;
 }
 
 .edit-form-group input:focus,
 .edit-form-group textarea:focus {
     outline: none;
-    border-color: #ff9800;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--active-action-bg);
 }
 
 .edit-form-group textarea {
@@ -613,19 +666,8 @@
     justify-content: flex-end;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 2px solid #e0e0e0;
+    border-top: 2px solid var(--border);
     flex-wrap: wrap;
-}
-
-.btn-cancel {
-    background: #6c757d;
-    color: white;
-}
-
-.btn-cancel:hover {
-    background: #5a6268;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(108, 117, 125, 0.3);
 }
 
 .edit-icon {
@@ -634,19 +676,19 @@
     gap: 0.5rem;
 }
 
-/* Elimination Styles */
+/* ── Elimination Section ─────────────────────────────────── */
 .elimination-section {
-    background: #ffebee;
+    background: var(--results-elim-bg);
     padding: 2rem;
-    border-radius: 12px;
-    border: 3px solid #dc3545;
+    border-radius: var(--radius-card);
+    border: 3px solid var(--results-elim-border);
     margin-top: 2rem;
 }
 
 .elimination-section h4 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #dc3545;
+    color: var(--results-low);
     margin-bottom: 1rem;
     display: flex;
     align-items: center;
@@ -661,19 +703,19 @@
 }
 
 .elimination-group {
-    background: white;
+    background: var(--bg-surface);
     padding: 1.5rem;
-    border-radius: 8px;
-    border: 2px solid #dc3545;
+    border-radius: var(--radius-btn);
+    border: 2px solid var(--results-elim-border);
 }
 
 .elimination-group-title {
     font-weight: 700;
-    color: #dc3545;
+    color: var(--results-low);
     margin-bottom: 1rem;
     font-size: 1.125rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #dc3545;
+    border-bottom: 2px solid var(--results-elim-border);
 }
 
 .contestant-list {
@@ -685,30 +727,35 @@
 .contestant-item {
     padding: 0.75rem;
     margin-bottom: 0.75rem;
-    background: #f8f9fa;
-    border-radius: 6px;
-    border-left: 4px solid #dc3545;
+    background: var(--bg-base);
+    border-radius: var(--radius-btn);
+    border-left: 4px solid var(--results-elim-border);
 }
 
 .contestant-item.no-submission {
-    border-left-color: #ff6b6b;
-    background: #ffe0e0;
+    border-left-color: var(--results-low);
+    background: rgba(244, 135, 113, 0.08);
 }
 
 .contestant-item.low-score {
-    border-left-color: #dc3545;
+    border-left-color: var(--results-elim-border);
+}
+
+.contestant-item.dropped-out {
+    border-left-color: var(--text-muted);
+    background: var(--bg-elevated);
 }
 
 .contestant-name {
     font-weight: 600;
     font-size: 1rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
 }
 
 .contestant-details {
     font-size: 0.875rem;
-    color: #666;
+    color: var(--text-secondary);
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
@@ -724,34 +771,45 @@
 .score-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: #dc3545;
-    color: white;
-    border-radius: 12px;
+    background: var(--results-elim-bg);
+    color: var(--results-low);
+    border-radius: var(--radius-badge);
     font-weight: 600;
     font-size: 0.875rem;
+    border: 1px solid var(--results-elim-border);
 }
 
 .reason-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: #6c757d;
-    color: white;
-    border-radius: 12px;
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    border-radius: var(--radius-badge);
     font-weight: 600;
     font-size: 0.75rem;
     text-transform: uppercase;
+    border: 1px solid var(--border);
 }
 
 .reason-badge.no-sub {
-    background: #ff6b6b;
+    background: rgba(244, 135, 113, 0.15);
+    color: var(--results-low);
+    border-color: var(--results-low);
 }
 
+.reason-badge.dropout {
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    border-color: var(--text-muted);
+}
+
+/* ── Elimination Summary ─────────────────────────────────── */
 .elimination-summary {
-    background: white;
+    background: var(--bg-surface);
     padding: 1.5rem;
-    border-radius: 8px;
+    border-radius: var(--radius-btn);
     margin-bottom: 1.5rem;
-    border: 2px solid #dc3545;
+    border: 2px solid var(--results-elim-border);
 }
 
 .elimination-summary-grid {
@@ -762,15 +820,15 @@
 
 .elimination-summary-item {
     padding: 1rem;
-    background: #f8f9fa;
-    border-radius: 6px;
+    background: var(--bg-base);
+    border-radius: var(--radius-btn);
     text-align: center;
 }
 
 .elimination-summary-item label {
     display: block;
     font-size: 0.875rem;
-    color: #666;
+    color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     margin-bottom: 0.5rem;
@@ -779,15 +837,15 @@
 .elimination-summary-item .value {
     font-size: 1.75rem;
     font-weight: 700;
-    color: #dc3545;
+    color: var(--results-low);
 }
 
 .elimination-warning {
-    background: #fff3cd;
-    border: 2px solid #ffc107;
-    color: #856404;
+    background: var(--merge-bg);
+    border: 2px solid var(--merge-border);
+    color: var(--merge-text);
     padding: 1rem;
-    border-radius: 8px;
+    border-radius: var(--radius-btn);
     margin-bottom: 1.5rem;
     font-weight: 600;
 }
@@ -795,35 +853,36 @@
 .no-eliminations {
     text-align: center;
     padding: 2rem;
-    color: #666;
+    color: var(--text-muted);
     font-style: italic;
-    background: #f8f9fa;
-    border-radius: 8px;
+    background: var(--bg-base);
+    border-radius: var(--radius-btn);
+    border: 2px dashed var(--border);
 }
 
-/* Contestant Management Styles */
+/* ── Contestant Management ───────────────────────────────── */
 .contestant-management-section {
-    background: #fff3e0;
+    background: var(--accent-bg);
     padding: 2rem;
-    border-radius: 12px;
-    border: 3px solid #ff9800;
+    border-radius: var(--radius-card);
+    border: 3px solid var(--accent);
     margin-top: 2rem;
 }
 
 .contestant-management-section h4 {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #ff9800;
+    color: var(--accent);
     margin-bottom: 1rem;
 }
 
 .contestant-results {
     max-height: 500px;
     overflow-y: auto;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-btn);
     padding: 0.5rem;
-    background: white;
+    background: var(--bg-base);
 }
 
 .contestant-grid {
@@ -834,9 +893,9 @@
 
 .contestant-management-card {
     padding: 1rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    background: white;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-btn);
+    background: var(--bg-surface);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -844,8 +903,8 @@
 }
 
 .contestant-management-card:hover {
-    border-color: #ff9800;
-    background: #fff8f0;
+    border-color: var(--accent);
+    background: var(--bg-elevated);
 }
 
 .contestant-management-card.hidden {
@@ -859,14 +918,13 @@
 .contestant-management-name {
     font-weight: 600;
     font-size: 1.125rem;
-    color: #333;
+    color: var(--text-primary);
     margin-bottom: 0.25rem;
 }
 
 .contestant-management-id {
     font-size: 0.875rem;
-    color: #666;
-    font-family: monospace;
+    color: var(--text-muted);
     margin-bottom: 0.5rem;
 }
 
@@ -878,31 +936,34 @@
 .extension-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: #2196f3;
-    color: white;
-    border-radius: 12px;
+    background: var(--submitted-bg);
+    color: var(--submitted-light);
+    border-radius: var(--radius-badge);
     font-weight: 600;
     font-size: 0.75rem;
+    border: 1px solid var(--submitted);
 }
 
 .dropout-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: #9e9e9e;
-    color: white;
-    border-radius: 12px;
+    background: var(--bg-elevated);
+    color: var(--text-muted);
+    border-radius: var(--radius-badge);
     font-weight: 600;
     font-size: 0.75rem;
+    border: 1px solid var(--border);
 }
 
 .submitted-badge {
     display: inline-block;
     padding: 0.25rem 0.75rem;
-    background: #4caf50;
-    color: white;
-    border-radius: 12px;
+    background: var(--completed-bg);
+    color: var(--completed-light);
+    border-radius: var(--radius-badge);
     font-weight: 600;
     font-size: 0.75rem;
+    border: 1px solid var(--completed);
 }
 
 .contestant-management-actions {
@@ -911,21 +972,7 @@
     flex-shrink: 0;
 }
 
-.btn-sm {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-}
-
-.reason-badge.dropout {
-    background: #9e9e9e;
-}
-
-.contestant-item.dropped-out {
-    border-left-color: #9e9e9e;
-    background: #f5f5f5;
-}
-
-/* Extension Modal */
+/* ── Extension Modal ─────────────────────────────────────── */
 .extension-modal {
     display: none;
     position: fixed;
@@ -934,7 +981,7 @@
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.7);
     animation: fadeIn 0.3s;
 }
 
@@ -945,22 +992,23 @@
 }
 
 .extension-modal-content {
-    background: white;
-    border-radius: 12px;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-modal);
     padding: 2rem;
     max-width: 500px;
     width: 90%;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
     animation: slideUp 0.3s;
+    border: 2px solid var(--border);
 }
 
 .extension-modal-header {
     font-size: 1.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--accent);
     margin-bottom: 1.5rem;
     padding-bottom: 1rem;
-    border-bottom: 3px solid #ff9800;
+    border-bottom: 3px solid var(--accent);
 }
 
 .extension-form-group {
@@ -970,21 +1018,26 @@
 .extension-form-group label {
     display: block;
     font-weight: 600;
-    color: #555;
+    color: var(--text-secondary);
     margin-bottom: 0.5rem;
 }
 
 .extension-form-group input[type="number"] {
     width: 100%;
     padding: 0.75rem;
-    border: 2px solid #e0e0e0;
-    border-radius: 6px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-btn);
     font-size: 1rem;
+    font-family: var(--font-main);
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    transition: border-color 0.3s;
 }
 
 .extension-form-group input:focus {
     outline: none;
-    border-color: #ff9800;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--active-action-bg);
 }
 
 .extension-modal-actions {
@@ -993,488 +1046,114 @@
     justify-content: flex-end;
     margin-top: 2rem;
     padding-top: 1.5rem;
-    border-top: 2px solid #e0e0e0;
+    border-top: 2px solid var(--border);
     flex-wrap: wrap;
 }
 
 /* ========== MOBILE RESPONSIVE STYLES ========== */
 
-/* Tablet (768px - 1024px) */
 @media (max-width: 1024px) {
-    .admin-container {
-        padding: 1.5rem;
-    }
-
-    .round-info-card {
-        padding: 1.5rem;
-    }
-
-    .round-info-card .info-grid {
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-
-    .judge-groups {
-        grid-template-columns: 1fr;
-    }
-
-    .elimination-groups {
-        grid-template-columns: 1fr;
-    }
+    .admin-container { padding: 1.5rem; }
+    .round-info-card { padding: 1.5rem; }
+    .round-info-card .info-grid { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .judge-groups { grid-template-columns: 1fr; }
+    .elimination-groups { grid-template-columns: 1fr; }
 }
 
-/* Mobile (max-width: 768px) */
 @media (max-width: 768px) {
-    .admin-container {
-        padding: 1rem;
-    }
-
-    /* Access Messages */
-    .access-message {
-        padding: 2rem 1.5rem;
-        margin: 1rem auto;
-        font-size: 0.95rem;
-    }
-
-    /* Round Info Cards */
-    .round-info-card {
-        padding: 1.25rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .round-info-card h3 {
-        font-size: 1.35rem;
-        line-height: 1.3;
-    }
-
-    .round-info-card .info-grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-
-    .info-item {
-        padding: 0.85rem;
-    }
-
-    .info-item label {
-        font-size: 0.8rem;
-    }
-
-    .info-item .value {
-        font-size: 1rem;
-    }
-
-    /* Status Badges */
-    .status-badge {
-        padding: 0.4rem 0.85rem;
-        font-size: 0.75rem;
-    }
-
-    /* Judge Display */
-    .judges-display {
-        padding: 1.25rem;
-    }
-
-    .judges-display h4 {
-        font-size: 1.125rem;
-    }
-
-    .judge-groups {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-
-    .judge-group {
-        padding: 0.85rem;
-    }
-
-    .judge-group-title {
-        font-size: 0.95rem;
-    }
-
-    .judge-list li {
-        padding: 0.4rem;
-        font-size: 0.9rem;
-    }
-
-    /* Tab Container */
-    .tab-buttons {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-    }
-
-    .tab-button {
-        padding: 0.85rem 1.5rem;
-        font-size: 0.9rem;
-        min-width: 100px;
-    }
-
-    .tab-content {
-        padding: 1.25rem;
-    }
-
-    .tab-content h4 {
-        font-size: 1.25rem;
-    }
-
-    /* Search */
-    .search-input {
-        padding: 0.85rem;
-        font-size: 0.95rem;
-    }
-
-    /* Selected Judges */
-    .selected-judges {
-        padding: 0.85rem;
-        min-height: 50px;
-    }
-
-    .selected-judges-title {
-        font-size: 0.8rem;
-    }
-
-    .selected-judge-badge {
-        padding: 0.4rem 0.85rem;
-        font-size: 0.85rem;
-    }
-
-    /* Judge Results */
-    .judge-results {
-        max-height: 300px;
-        padding: 0.4rem;
-    }
-
-    .judge-card {
-        padding: 0.85rem;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .judge-card .judge-name {
-        font-size: 1rem;
-    }
-
-    .judge-card .judge-id {
-        font-size: 0.8rem;
-    }
-
-    .judge-card .add-btn {
-        width: 100%;
-        padding: 0.65rem 1rem;
-        font-size: 0.9rem;
-    }
-
-    /* Selection Counter */
-    .selection-counter {
-        padding: 0.65rem;
-        font-size: 0.95rem;
-    }
-
-    /* Buttons */
-    .btn {
-        padding: 0.65rem 1.5rem;
-        font-size: 0.95rem;
-        width: 100%;
-    }
-
-    .btn-sm {
-        padding: 0.4rem 0.85rem;
-        font-size: 0.8rem;
-        width: auto;
-    }
-
-    /* Actions Bar */
-    .actions-bar {
-        flex-direction: column;
-        gap: 0.75rem;
-        margin-top: 1.5rem;
-        padding-top: 1.5rem;
-    }
-
-    .actions-bar .btn {
-        width: 100%;
-    }
-
-    /* Alert */
-    .alert {
-        padding: 0.85rem 1.25rem;
-        font-size: 0.9rem;
-    }
-
-    .alert ul {
-        margin-left: 1rem;
-        font-size: 0.875rem;
-    }
-
-    /* Section Divider */
-    .section-divider {
-        margin: 2rem 0;
-    }
-
-    /* Modals */
-    .edit-modal-content,
-    .extension-modal-content {
-        width: 95%;
-        padding: 1.5rem;
-        max-height: 85vh;
-    }
-
-    .edit-modal-header,
-    .extension-modal-header {
-        font-size: 1.35rem;
-        padding-bottom: 0.85rem;
-    }
-
-    .edit-form-group,
-    .extension-form-group {
-        margin-bottom: 1.25rem;
-    }
-
-    .edit-form-group label,
-    .extension-form-group label {
-        font-size: 0.9rem;
-    }
-
-    .edit-form-group input,
-    .edit-form-group textarea,
-    .extension-form-group input {
-        padding: 0.65rem;
-        font-size: 0.95rem;
-    }
-
-    .edit-modal-actions,
-    .extension-modal-actions {
-        flex-direction: column;
-        gap: 0.75rem;
-    }
-
-    .edit-modal-actions .btn,
-    .extension-modal-actions .btn {
-        width: 100%;
-    }
-
-    /* Elimination Section */
-    .elimination-section {
-        padding: 1.25rem;
-    }
-
-    .elimination-section h4 {
-        font-size: 1.25rem;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .elimination-groups {
-        grid-template-columns: 1fr;
-        gap: 1rem;
-    }
-
-    .elimination-group {
-        padding: 1.25rem;
-    }
-
-    .elimination-group-title {
-        font-size: 1rem;
-    }
-
-    .contestant-item {
-        padding: 0.65rem;
-    }
-
-    .contestant-name {
-        font-size: 0.95rem;
-    }
-
-    .contestant-details {
-        flex-direction: column;
-        gap: 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .score-badge,
-    .reason-badge {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.65rem;
-    }
-
-    .elimination-summary {
-        padding: 1.25rem;
-    }
-
-    .elimination-summary-grid {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-
-    .elimination-summary-item .value {
-        font-size: 1.5rem;
-    }
-
-    .elimination-warning {
-        padding: 0.85rem;
-        font-size: 0.9rem;
-    }
-
-    /* Contestant Management */
-    .contestant-management-section {
-        padding: 1.25rem;
-    }
-
-    .contestant-management-section h4 {
-        font-size: 1.25rem;
-    }
-
-    .contestant-results {
-        max-height: 350px;
-        padding: 0.4rem;
-    }
-
-    .contestant-management-card {
-        padding: 0.85rem;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 0.75rem;
-    }
-
-    .contestant-management-name {
-        font-size: 1rem;
-    }
-
-    .contestant-management-id {
-        font-size: 0.8rem;
-    }
-
-    .contestant-management-actions {
-        width: 100%;
-        flex-wrap: wrap;
-    }
-
-    .contestant-management-actions .btn-sm {
-        flex: 1;
-        min-width: calc(50% - 0.25rem);
-    }
-
-    .extension-badge,
-    .dropout-badge,
-    .submitted-badge {
-        font-size: 0.7rem;
-        padding: 0.2rem 0.65rem;
-    }
-
-    /* No Round/Results */
-    .no-round,
-    .no-eliminations {
-        padding: 2rem 1.5rem;
-        font-size: 1rem;
-    }
+    .admin-container { padding: 1rem; }
+    .access-message { padding: 2rem 1.5rem; margin: 1rem auto; font-size: 0.95rem; }
+    .round-info-card { padding: 1.25rem; margin-bottom: 1.5rem; }
+    .round-info-card h3 { font-size: 1.35rem; line-height: 1.3; }
+    .round-info-card .info-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+    .info-item { padding: 0.85rem; }
+    .info-item label { font-size: 0.8rem; }
+    .info-item .value { font-size: 1rem; }
+    .status-badge { padding: 0.4rem 0.85rem; font-size: 0.75rem; }
+    .judges-display { padding: 1.25rem; }
+    .judges-display h4 { font-size: 1.125rem; }
+    .judge-groups { grid-template-columns: 1fr; gap: 0.75rem; }
+    .judge-group { padding: 0.85rem; }
+    .judge-group-title { font-size: 0.95rem; }
+    .judge-list li { padding: 0.4rem; font-size: 0.9rem; }
+    .tab-buttons { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab-button { padding: 0.85rem 1.5rem; font-size: 0.9rem; min-width: 100px; }
+    .tab-content { padding: 1.25rem; }
+    .tab-content h4 { font-size: 1.25rem; }
+    .search-input { padding: 0.85rem; font-size: 0.95rem; }
+    .selected-judges { padding: 0.85rem; min-height: 50px; }
+    .selected-judges-title { font-size: 0.8rem; }
+    .selected-judge-badge { padding: 0.4rem 0.85rem; font-size: 0.85rem; }
+    .judge-results { max-height: 300px; padding: 0.4rem; }
+    .judge-card { padding: 0.85rem; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .judge-card .judge-name { font-size: 1rem; }
+    .judge-card .judge-id { font-size: 0.8rem; }
+    .judge-card .add-btn { width: 100%; padding: 0.65rem 1rem; font-size: 0.9rem; }
+    .selection-counter { padding: 0.65rem; font-size: 0.95rem; }
+    .btn { padding: 0.65rem 1.5rem; font-size: 0.95rem; width: 100%; }
+    .btn-sm { padding: 0.4rem 0.85rem; font-size: 0.8rem; width: auto; }
+    .actions-bar { flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; padding-top: 1.5rem; }
+    .actions-bar .btn { width: 100%; }
+    .alert { padding: 0.85rem 1.25rem; font-size: 0.9rem; }
+    .alert ul { margin-left: 1rem; font-size: 0.875rem; }
+    .section-divider { margin: 2rem 0; }
+    .edit-modal-content, .extension-modal-content { width: 95%; padding: 1.5rem; max-height: 85vh; }
+    .edit-modal-header, .extension-modal-header { font-size: 1.35rem; padding-bottom: 0.85rem; }
+    .edit-form-group, .extension-form-group { margin-bottom: 1.25rem; }
+    .edit-form-group label, .extension-form-group label { font-size: 0.9rem; }
+    .edit-form-group input, .edit-form-group textarea, .extension-form-group input { padding: 0.65rem; font-size: 0.95rem; }
+    .edit-modal-actions, .extension-modal-actions { flex-direction: column; gap: 0.75rem; }
+    .edit-modal-actions .btn, .extension-modal-actions .btn { width: 100%; }
+    .elimination-section { padding: 1.25rem; }
+    .elimination-section h4 { font-size: 1.25rem; flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+    .elimination-groups { grid-template-columns: 1fr; gap: 1rem; }
+    .elimination-group { padding: 1.25rem; }
+    .elimination-group-title { font-size: 1rem; }
+    .contestant-item { padding: 0.65rem; }
+    .contestant-name { font-size: 0.95rem; }
+    .contestant-details { flex-direction: column; gap: 0.5rem; font-size: 0.8rem; }
+    .score-badge, .reason-badge { font-size: 0.7rem; padding: 0.2rem 0.65rem; }
+    .elimination-summary { padding: 1.25rem; }
+    .elimination-summary-grid { grid-template-columns: 1fr; gap: 0.75rem; }
+    .elimination-summary-item .value { font-size: 1.5rem; }
+    .elimination-warning { padding: 0.85rem; font-size: 0.9rem; }
+    .contestant-management-section { padding: 1.25rem; }
+    .contestant-management-section h4 { font-size: 1.25rem; }
+    .contestant-results { max-height: 350px; padding: 0.4rem; }
+    .contestant-management-card { padding: 0.85rem; flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+    .contestant-management-name { font-size: 1rem; }
+    .contestant-management-id { font-size: 0.8rem; }
+    .contestant-management-actions { width: 100%; flex-wrap: wrap; }
+    .contestant-management-actions .btn-sm { flex: 1; min-width: calc(50% - 0.25rem); }
+    .extension-badge, .dropout-badge, .submitted-badge { font-size: 0.7rem; padding: 0.2rem 0.65rem; }
+    .no-round, .no-eliminations { padding: 2rem 1.5rem; font-size: 1rem; }
 }
 
-/* Small Mobile (max-width: 480px) */
 @media (max-width: 480px) {
-    .admin-container {
-        padding: 0.75rem;
-    }
-
-    .access-message {
-        padding: 1.75rem 1.25rem;
-    }
-
-    .round-info-card {
-        padding: 1rem;
-    }
-
-    .round-info-card h3 {
-        font-size: 1.25rem;
-    }
-
-    .status-badge {
-        padding: 0.35rem 0.75rem;
-        font-size: 0.7rem;
-    }
-
-    .tab-button {
-        padding: 0.75rem 1.25rem;
-        font-size: 0.85rem;
-    }
-
-    .tab-content {
-        padding: 1rem;
-    }
-
-    .tab-content h4 {
-        font-size: 1.15rem;
-    }
-
-    .btn {
-        padding: 0.6rem 1.25rem;
-        font-size: 0.9rem;
-    }
-
-    .judge-card,
-    .contestant-management-card {
-        padding: 0.75rem;
-    }
-
-    .elimination-section,
-    .contestant-management-section {
-        padding: 1rem;
-    }
-
-    .elimination-summary-item .value {
-        font-size: 1.35rem;
-    }
+    .admin-container { padding: 0.75rem; }
+    .access-message { padding: 1.75rem 1.25rem; }
+    .round-info-card { padding: 1rem; }
+    .round-info-card h3 { font-size: 1.25rem; }
+    .status-badge { padding: 0.35rem 0.75rem; font-size: 0.7rem; }
+    .tab-button { padding: 0.75rem 1.25rem; font-size: 0.85rem; }
+    .tab-content { padding: 1rem; }
+    .tab-content h4 { font-size: 1.15rem; }
+    .btn { padding: 0.6rem 1.25rem; font-size: 0.9rem; }
+    .judge-card, .contestant-management-card { padding: 0.75rem; }
+    .elimination-section, .contestant-management-section { padding: 1rem; }
+    .elimination-summary-item .value { font-size: 1.35rem; }
 }
 
-/* Touch-friendly improvements */
 @media (hover: none) and (pointer: coarse) {
-    .btn,
-    .judge-card .add-btn,
-    .tab-button {
-        min-height: 44px;
-        touch-action: manipulation;
-    }
-
-    /* Remove hover effects on touch */
-    .btn:hover,
-    .judge-card:hover,
-    .contestant-management-card:hover,
-    .tab-button:hover {
-        transform: none;
-    }
-
-    /* Add active states for touch feedback */
-    .btn:active {
-        transform: scale(0.98);
-        opacity: 0.9;
-    }
-
-    .judge-card:active,
-    .contestant-management-card:active {
-        transform: scale(0.99);
-        opacity: 0.95;
-    }
-
-    .tab-button:active {
-        background-color: #dee2e6;
-    }
-
-    /* Increase touch targets for badges with remove buttons */
-    .selected-judge-badge .remove-btn {
-        padding: 0.25rem 0.5rem;
-        margin: -0.25rem;
-    }
+    .btn, .judge-card .add-btn, .tab-button { min-height: 44px; touch-action: manipulation; }
+    .btn:hover, .judge-card:hover, .contestant-management-card:hover, .tab-button:hover { transform: none; }
+    .btn:active { transform: scale(0.98); opacity: 0.9; }
+    .judge-card:active, .contestant-management-card:active { transform: scale(0.99); opacity: 0.95; }
+    .tab-button:active { background-color: var(--bg-elevated); }
+    .selected-judge-badge .remove-btn { padding: 0.25rem 0.5rem; margin: -0.25rem; }
 }
 
-/* Landscape mode adjustments for mobile */
 @media (max-width: 896px) and (orientation: landscape) {
-    .judge-results,
-    .contestant-results {
-        max-height: 250px;
-    }
-
-    .edit-modal-content,
-    .extension-modal-content {
-        max-height: 80vh;
-    }
+    .judge-results, .contestant-results { max-height: 250px; }
+    .edit-modal-content, .extension-modal-content { max-height: 80vh; }
 }

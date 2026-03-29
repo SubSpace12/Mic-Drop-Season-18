@@ -1,12 +1,11 @@
-<nav x-data="{ open: false }">
+<nav x-data="{ open: false, themeOpen: false }">
     <!-- Primary Navigation Menu -->
     @auth
     @php
-        // Check if user has submitted a judge application
         $hasJudgeApp = DB::table('apps')->where('user_id', auth()->id())->exists();
-        
-        // Check if user is staff
         $isStaff = (auth()->user()->perms ?? 0) >= 6;
+        $currentTheme = auth()->user()->theme ?? 'emoticon';
+        $themes = \App\Http\Controllers\ThemeController::THEMES;
     @endphp
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -20,8 +19,33 @@
                 </div>
             </div>
 
-            <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
+                <!-- Theme Switcher -->
+                <div class="theme-switcher" x-data="{ themeOpen: false }" @click.away="themeOpen = false">
+                    <button @click="themeOpen = !themeOpen" class="theme-switcher-btn">
+                        <span>{{ $themes[$currentTheme]['label'] }}</span>
+                        <svg class="fill-current h-3 w-3" style="color: var(--text-muted);" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+
+                    <div class="theme-dropdown" x-show="themeOpen" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" style="display: none;">
+                        @foreach($themes as $themeKey => $themeMeta)
+                            <form method="POST" action="{{ route('theme.update') }}">
+                                @csrf
+                                <input type="hidden" name="theme" value="{{ $themeKey }}">
+                                <button type="submit" class="theme-option {{ $currentTheme === $themeKey ? 'active' : '' }}">
+                                    <span>{{ $themeMeta['label'] }}</span>
+                                    @if($currentTheme === $themeKey)
+                                        <span class="check">&#10003;</span>
+                                    @endif
+                                </button>
+                            </form>
+                        @endforeach
+                    </div>
+                </div>
+
+                <!-- Settings Dropdown -->
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="user-profile-button">
@@ -34,7 +58,7 @@
                             </div>
 
                             <div class="ml-1">
-                                <svg class="fill-current h-4 w-4" style="color: #4ec9b0;" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <svg class="fill-current h-4 w-4" style="color: var(--accent);" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
                             </div>
@@ -49,7 +73,6 @@
                             </x-dropdown-link>
 
                             @if($isStaff)
-                                <!-- Divider -->
                                 <div class="dropdown-divider"></div>
                                 
                                 <x-dropdown-link :href="url('/view-apps')" class="dropdown-link">
@@ -60,14 +83,11 @@
                                     {{ __('Admin Panel') }}
                                 </x-dropdown-link>
                                 
-                                <!-- Divider -->
                                 <div class="dropdown-divider"></div>
                             @endif
 
-                            <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
-
                                 <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault(); this.closest('form').submit();"
                                     class="dropdown-link">
@@ -107,8 +127,6 @@
             </div>
 
             <div class="mt-3 space-y-1">
-                
-
                 <x-responsive-nav-link :href="url('/submit-judge-app')" class="responsive-nav-link">
                     {{ $hasJudgeApp ? __('Edit Judging Application') : __('Submit Judging Application') }}
                 </x-responsive-nav-link>
@@ -123,10 +141,28 @@
                     </x-responsive-nav-link>
                 @endif
 
+                <!-- Theme Switcher (Mobile) -->
+                <div style="padding: 0.5rem 1rem; border-top: 1px var(--border-deco) var(--border); margin-top: 0.5rem; padding-top: 0.75rem;">
+                    <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 0.5rem;">
+                        Theme
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        @foreach($themes as $themeKey => $themeMeta)
+                            <form method="POST" action="{{ route('theme.update') }}">
+                                @csrf
+                                <input type="hidden" name="theme" value="{{ $themeKey }}">
+                                <button type="submit" class="theme-switcher-btn" style="{{ $currentTheme === $themeKey ? 'border-color: var(--accent); color: var(--accent);' : '' }}">
+                                    <span>{{ $themeMeta['icon'] }}</span>
+                                    <span>{{ $themeMeta['label'] }}</span>
+                                </button>
+                            </form>
+                        @endforeach
+                    </div>
+                </div>
+
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-
                     <x-responsive-nav-link :href="route('logout')"
                         onclick="event.preventDefault(); this.closest('form').submit();"
                         class="responsive-nav-link">

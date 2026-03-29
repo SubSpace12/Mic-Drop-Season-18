@@ -1,0 +1,381 @@
+/* ==========================================================
+   THEME DEFINITIONS
+   ----------------------------------------------------------
+   Add a new theme by copying any block below and changing
+   the variable values. The body class (e.g. .theme-emoticon)
+   is set server-side from the user's `theme` column, or
+   from localStorage for guests.
+   ========================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap');
+
+/* ==========================================================
+   THEME: EMOTICON  :3
+   ========================================================== */
+.theme-emoticon {
+    /* --- Font --- */
+    --font-main: 'Lexend', sans-serif;
+
+    /* --- Core Palette --- */
+    --bg-base: #1a1525;
+    --bg-surface: #231d33;
+    --bg-elevated: #271f3a;
+    --border: #352d4a;
+    --border-muted: #2a2440;
+
+    /* --- Text --- */
+    --text-primary: #e8dff0;
+    --text-secondary: #a89bc2;
+    --text-muted: #6b5f7e;
+    --text-dim: #5a5070;
+
+    /* --- Accents --- */
+    --accent: #c084fc;
+    --accent-light: #d8b4fe;
+    --accent-bg: #2d1f4e;
+    --accent-2: #f472b6;
+    --accent-warm: #fbbf24;
+    --accent-warm-light: #fde68a;
+
+    /* --- Shapes --- */
+    --radius-card: 18px;
+    --radius-badge: 20px;
+    --radius-btn: 14px;
+    --radius-modal: 20px;
+    --radius-login: 20px;
+    --border-deco: dashed;
+
+    /* --- Active Status --- */
+    --active: #c084fc;
+    --active-light: #d8b4fe;
+    --active-bg: #271f3a;
+    --active-stripe: #c084fc;
+    --active-shadow: rgba(192, 132, 252, 0.25);
+    --active-shadow-strong: rgba(192, 132, 252, 0.45);
+    --active-hover-shadow: rgba(192, 132, 252, 0.4);
+    --active-action-bg: rgba(192, 132, 252, 0.08);
+
+    /* --- Completed Status --- */
+    --completed: #34d399;
+    --completed-light: #6ee7b7;
+    --completed-bg: #1a2a25;
+    --completed-stripe: #34d399;
+    --completed-badge-bg: #0f2922;
+    --completed-hover-shadow: rgba(52, 211, 153, 0.3);
+    --completed-action-bg: rgba(52, 211, 153, 0.08);
+
+    /* --- Submitted Status --- */
+    --submitted: #60a5fa;
+    --submitted-light: #93c5fd;
+    --submitted-bg: #1a2035;
+    --submitted-stripe: #60a5fa;
+    --submitted-badge-bg: #172554;
+    --submitted-hover-shadow: rgba(96, 165, 250, 0.35);
+    --submitted-action-bg: rgba(96, 165, 250, 0.08);
+
+    /* --- Pending Status --- */
+    --pending-bg: #1a1525;
+    --pending-border: #2a2440;
+    --pending-stripe: #352d4a;
+    --pending-badge-bg: #2a2440;
+    --pending-badge-text: #6b5f7e;
+    --pending-badge-border: #4a4358;
+    --pending-action-bg: #1a1525;
+
+    /* --- Merge Badge --- */
+    --merge-bg: #2a2210;
+    --merge-text: #fbbf24;
+    --merge-border: #fbbf24;
+
+    /* --- Primary Button (purple) --- */
+    --btn-primary: #7c3aed;
+    --btn-primary-hover: #8b5cf6;
+    --btn-primary-border: #a855f7;
+    --btn-primary-text: #f0e6ff;
+    --btn-primary-shadow: rgba(124, 58, 237, 0.3);
+    --btn-primary-shadow-strong: rgba(124, 58, 237, 0.5);
+
+    /* --- Action Button (green) --- */
+    --btn-action: #0d6b50;
+    --btn-action-hover: #059669;
+    --btn-action-border: #34d399;
+    --btn-action-text: #d1fae5;
+
+    /* --- Info Items --- */
+    --info-icon: #f472b6;
+    --info-label: #60a5fa;
+    --info-value: #fbbf24;
+
+    /* --- Header Bar --- */
+    --header-bg: #7c3aed;
+    --header-border: #a855f7;
+    --header-text: #f0e6ff;
+
+    /* --- Decorative Symbols --- */
+    --deco-a: ':3';
+    --deco-b: '^_^';
+    --deco-c: ':D';
+    --deco-d: '._.';
+    --deco-e: ':)';
+    --deco-f: ':O';
+    --deco-g: '~';
+    --deco-h: '~(^_^)~';
+    --deco-no-rounds: '._. no rounds yet';
+
+    /* --- Results Page --- */
+    --results-bg: #1a1525;
+    --results-surface: rgba(35, 29, 51, 0.85);
+    --results-elevated: rgba(39, 31, 58, 0.75);
+    --results-sidebar: #231d33;
+    --results-sidebar-active: #7c3aed;
+    --results-sidebar-active-accent: #c084fc;
+    --results-contestant-bg: rgba(26, 21, 37, 0.85);
+    --results-judge-name: #c084fc;
+    --results-score-bg: rgba(13, 107, 80, 0.85);
+    --results-score-text: #34d399;
+    --results-score-border: #34d399;
+    --results-gold-bg: rgba(212, 165, 116, 0.9);
+    --results-gold-text: #1a1525;
+    --results-gold-border: #d4a574;
+    --results-gold-shadow: rgba(212, 165, 116, 0.5);
+    --results-silver-bg: rgba(133, 133, 133, 0.9);
+    --results-silver-text: #1a1525;
+    --results-silver-border: #858585;
+    --results-silver-shadow: rgba(133, 133, 133, 0.5);
+    --results-bronze-bg: rgba(139, 90, 60, 0.9);
+    --results-bronze-text: #e8dff0;
+    --results-bronze-border: #8b5a3c;
+    --results-bronze-shadow: rgba(139, 90, 60, 0.5);
+    --results-elim-bg: rgba(122, 40, 40, 0.9);
+    --results-elim-text: #e8dff0;
+    --results-elim-border: #c85050;
+    --results-elim-shadow: rgba(200, 80, 80, 0.6);
+    --results-low: #f472b6;
+    --results-high: #34d399;
+    --results-perfect: #fbbf24;
+    --results-warning: #f472b6;
+    --results-warning-border: #c084fc;
+
+    /* --- Stats Page --- */
+    --stats-bg: #1a1525;
+    --stats-surface: #231d33;
+    --stats-elevated: #271f3a;
+    --stats-border: #352d4a;
+    --stats-border-strong: #c084fc;
+    --stats-header-text: #c084fc;
+    --stats-subtitle: #a89bc2;
+    --stats-subtitle-accent: #f472b6;
+    --stats-th-bg: #271f3a;
+    --stats-th-text: #c084fc;
+    --stats-td-bg: #231d33;
+    --stats-sticky-bg: #231d33;
+    --stats-sticky-header-bg: #271f3a;
+    --stats-cell-text: #e8dff0;
+    --stats-cell-empty: #150f20;
+    --stats-cell-empty-text: #352d4a;
+    --stats-cell-nodata-bg: #1e1730;
+    --stats-cell-nodata-text: #5a5070;
+    --stats-scrollbar-thumb: #c084fc;
+    --stats-scrollbar-track: #1a1525;
+    --stats-rank-gold: #fbbf24;
+    --stats-rank-gold-shadow: rgba(251, 191, 36, 0.3);
+    --stats-rank-silver: #c0c0c0;
+    --stats-rank-silver-shadow: rgba(192, 192, 192, 0.3);
+    --stats-rank-bronze: #cd7f32;
+    --stats-rank-bronze-shadow: rgba(205, 127, 50, 0.3);
+    --stats-rank-elim: #f472b6;
+    --stats-divider-color: #f472b6;
+    --stats-elim-row-bg: #1a1525;
+    --stats-elim-name: #a89bc2;
+    --stats-elim-badge-bg: #4a1942;
+    --stats-elim-badge-text: #f472b6;
+    --stats-nodata-icon: #c084fc;
+    --stats-deco-a: ':3';
+    --stats-deco-b: '~';
+}
+
+/* ==========================================================
+   THEME: VS CODE  { }
+   ========================================================== */
+.theme-vscode {
+    /* --- Font --- */
+    --font-main: 'Consolas', 'Monaco', 'Roboto Mono', 'Courier New', monospace;
+
+    /* --- Core Palette --- */
+    --bg-base: #1e1e1e;
+    --bg-surface: #252526;
+    --bg-elevated: #2d2d30;
+    --border: #3e3e42;
+    --border-muted: #2d2d30;
+
+    /* --- Text --- */
+    --text-primary: #d4d4d4;
+    --text-secondary: #a0a0a0;
+    --text-muted: #6e6e6e;
+    --text-dim: #858585;
+
+    /* --- Accents --- */
+    --accent: #4ec9b0;
+    --accent-light: #4ec9b0;
+    --accent-bg: #0e4429;
+    --accent-2: #569cd6;
+    --accent-warm: #6a9955;
+    --accent-warm-light: #6a9955;
+
+    /* --- Shapes --- */
+    --radius-card: 8px;
+    --radius-badge: 4px;
+    --radius-btn: 8px;
+    --radius-modal: 8px;
+    --radius-login: 4px;
+    --border-deco: solid;
+
+    /* --- Active Status --- */
+    --active: #4ec9b0;
+    --active-light: #4ec9b0;
+    --active-bg: #252526;
+    --active-stripe: linear-gradient(90deg, #4ec9b0, #4ec9b0, #569cd6);
+    --active-shadow: rgba(78, 201, 176, 0.4);
+    --active-shadow-strong: rgba(78, 201, 176, 0.6);
+    --active-hover-shadow: rgba(78, 201, 176, 0.5);
+    --active-action-bg: linear-gradient(135deg, #0e4429, #1e5a3e);
+
+    /* --- Completed Status --- */
+    --completed: #608b4e;
+    --completed-light: #6a9955;
+    --completed-bg: #252526;
+    --completed-stripe: linear-gradient(90deg, #608b4e, #6a9955, #608b4e);
+    --completed-badge-bg: #1e3a1e;
+    --completed-hover-shadow: rgba(96, 139, 78, 0.4);
+    --completed-action-bg: linear-gradient(135deg, #1e3a1e, #2e4a2e);
+
+    /* --- Submitted Status --- */
+    --submitted: #569cd6;
+    --submitted-light: #569cd6;
+    --submitted-bg: #1a2332;
+    --submitted-stripe: linear-gradient(90deg, #569cd6, #569cd6, #4ec9b0);
+    --submitted-badge-bg: #1a2332;
+    --submitted-hover-shadow: rgba(86, 156, 214, 0.4);
+    --submitted-action-bg: linear-gradient(135deg, #1a2332, #243447);
+
+    /* --- Pending Status --- */
+    --pending-bg: #1e1e1e;
+    --pending-border: #2d2d30;
+    --pending-stripe: linear-gradient(90deg, #3e3e42, #4e4e52);
+    --pending-badge-bg: #3e3e42;
+    --pending-badge-text: #858585;
+    --pending-badge-border: #4e4e52;
+    --pending-action-bg: #1e1e1e;
+
+    /* --- Merge Badge --- */
+    --merge-bg: #1a1a2e;
+    --merge-text: #569cd6;
+    --merge-border: #569cd6;
+
+    /* --- Primary Button (blue) --- */
+    --btn-primary: #0e639c;
+    --btn-primary-hover: #1177bb;
+    --btn-primary-border: #569cd6;
+    --btn-primary-text: #d4d4d4;
+    --btn-primary-shadow: rgba(14, 99, 156, 0.4);
+    --btn-primary-shadow-strong: rgba(14, 99, 156, 0.6);
+
+    /* --- Action Button (green) --- */
+    --btn-action: #0e4429;
+    --btn-action-hover: #1e5a3e;
+    --btn-action-border: #4ec9b0;
+    --btn-action-text: #d4d4d4;
+
+    /* --- Info Items --- */
+    --info-icon: #569cd6;
+    --info-label: #569cd6;
+    --info-value: #4ec9b0;
+
+    /* --- Header Bar --- */
+    --header-bg: linear-gradient(135deg, #0e639c 0%, #1177bb 50%, #1c88d1 100%);
+    --header-border: #569cd6;
+    --header-text: #d4d4d4;
+
+    /* --- Decorative Symbols --- */
+    --deco-a: '>';
+    --deco-b: '//';
+    --deco-c: '{ }';
+    --deco-d: '...';
+    --deco-e: '>';
+    --deco-f: '>';
+    --deco-g: '//';
+    --deco-h: '{ }';
+    --deco-no-rounds: '';
+
+    /* --- Results Page --- */
+    --results-bg: #1e1e1e;
+    --results-surface: rgba(45, 45, 48, 0.85);
+    --results-elevated: rgba(37, 37, 38, 0.75);
+    --results-sidebar: #2d2d30;
+    --results-sidebar-active: #0e639c;
+    --results-sidebar-active-accent: #4ec9b0;
+    --results-contestant-bg: rgba(30, 30, 30, 0.85);
+    --results-judge-name: #569cd6;
+    --results-score-bg: rgba(14, 68, 41, 0.85);
+    --results-score-text: #4ec9b0;
+    --results-score-border: #4ec9b0;
+    --results-gold-bg: rgba(212, 165, 116, 0.9);
+    --results-gold-text: #1e1e1e;
+    --results-gold-border: #d4a574;
+    --results-gold-shadow: rgba(212, 165, 116, 0.6);
+    --results-silver-bg: rgba(133, 133, 133, 0.9);
+    --results-silver-text: #1e1e1e;
+    --results-silver-border: #858585;
+    --results-silver-shadow: rgba(133, 133, 133, 0.6);
+    --results-bronze-bg: rgba(139, 90, 60, 0.9);
+    --results-bronze-text: #d4d4d4;
+    --results-bronze-border: #8b5a3c;
+    --results-bronze-shadow: rgba(139, 90, 60, 0.6);
+    --results-elim-bg: rgba(122, 40, 40, 0.9);
+    --results-elim-text: #d4d4d4;
+    --results-elim-border: #c85050;
+    --results-elim-shadow: rgba(200, 80, 80, 0.8);
+    --results-low: #f48771;
+    --results-high: #6a9955;
+    --results-perfect: #d7ba7d;
+    --results-warning: #f48771;
+    --results-warning-border: #3e3e42;
+
+    /* --- Stats Page --- */
+    --stats-bg: #1e1e1e;
+    --stats-surface: #252526;
+    --stats-elevated: #2d2d30;
+    --stats-border: #333333;
+    --stats-border-strong: #4ec9b0;
+    --stats-header-text: #4ec9b0;
+    --stats-subtitle: #888888;
+    --stats-subtitle-accent: #569cd6;
+    --stats-th-bg: #2d2d30;
+    --stats-th-text: #569cd6;
+    --stats-td-bg: #252526;
+    --stats-sticky-bg: #252526;
+    --stats-sticky-header-bg: #2d2d30;
+    --stats-cell-text: #d4d4d4;
+    --stats-cell-empty: #1a1a1a;
+    --stats-cell-empty-text: #444444;
+    --stats-cell-nodata-bg: #2a2a2a;
+    --stats-cell-nodata-text: #555555;
+    --stats-scrollbar-thumb: #4ec9b0;
+    --stats-scrollbar-track: #1e1e1e;
+    --stats-rank-gold: #ffd700;
+    --stats-rank-gold-shadow: rgba(255, 215, 0, 0.3);
+    --stats-rank-silver: #c0c0c0;
+    --stats-rank-silver-shadow: rgba(192, 192, 192, 0.3);
+    --stats-rank-bronze: #cd7f32;
+    --stats-rank-bronze-shadow: rgba(205, 127, 50, 0.3);
+    --stats-rank-elim: #f44336;
+    --stats-divider-color: #f44336;
+    --stats-elim-row-bg: #1e1e1e;
+    --stats-elim-name: #888888;
+    --stats-elim-badge-bg: #5c2020;
+    --stats-elim-badge-text: #f48771;
+    --stats-nodata-icon: #4ec9b0;
+    --stats-deco-a: '>';
+    --stats-deco-b: '//';
+}

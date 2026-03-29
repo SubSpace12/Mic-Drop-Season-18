@@ -203,7 +203,7 @@
                                                         <span class="locked-badge">[MARKED FOR RESUBMISSION]</span>
                                                     @endif
                                                     <a href="{{ $submission->url }}" target="_blank" class="song-link">
-                                                        > {{ $submission->artist }} - {{ $submission->title }}
+                                                        {{ $loop->iteration }}. {{ $submission->artist }} - {{ $submission->title }}
                                                     </a>
                                                 </td>
                                                 <td class="score-cell">

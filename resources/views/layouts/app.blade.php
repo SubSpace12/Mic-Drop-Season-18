@@ -6,17 +6,23 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'Laravel') }}</title>
     
-    <!-- Fonts -->
+    <!-- Fonts (both loaded; only the active one is used via --font-main) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     
     <!-- External CSS -->
     <link rel="stylesheet" href="{{ asset('css/app-layout.css') }}">
     
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @vite(['resources/css/theme.css', 'resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased">
+@php
+    $currentTheme = auth()->check()
+        ? (auth()->user()->theme ?? 'emoticon')
+        : 'emoticon';
+@endphp
+<body class="font-sans antialiased theme-{{ $currentTheme }}">
     <div class="min-h-screen">
         @include('layouts.navigation')
         

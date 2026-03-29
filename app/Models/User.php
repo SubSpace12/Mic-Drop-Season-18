@@ -35,6 +35,7 @@ protected $keyType = 'string';
         'premium_type',
         'public_flags',
         'roles',
+        'theme',
     ];
 
     /**
@@ -66,6 +67,7 @@ protected $keyType = 'string';
         'premium_type' => 'integer',
         'public_flags' => 'integer',
         'roles' => 'json',
+        'theme' => 'string',
     ];
 
     public function app()

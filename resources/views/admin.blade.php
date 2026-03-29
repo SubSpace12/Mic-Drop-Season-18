@@ -355,11 +355,11 @@
                         </div>
 
                         @if($activeJudges && $activeJudges->count() > 0)
-                            <div class="judges-display" style="background: #d1ecf1; border-color: #17a2b8;">
-                                <h4 style="color: #17a2b8;">Assigned Judges</h4>
+                            <div class="judges-display">
+                                <h4>Assigned Judges</h4>
                                 @if($activeRound->is_merge)
-                                    <div class="judge-group" style="border-color: #17a2b8;">
-                                        <div class="judge-group-title" style="color: #17a2b8;">Merge Round Judges</div>
+                                    <div class="judge-group">
+                                        <div class="judge-group-title">Merge Round Judges</div>
                                         <ul class="judge-list">
                                             @foreach($activeJudges as $judge)
                                                 <li>{{ $judge->global_name }} <span style="color: #666; font-size: 0.875rem;">(ID:
@@ -778,7 +778,7 @@
                                     <!-- Merge Round: Single tab with 3 judges -->
                                     <div class="tab-container">
                                         <div class="tab-content active">
-                                            <h4 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">
+                                            <h4 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: white;">
                                                 Select 3 Judges for Merge Round
                                             </h4>
 
@@ -835,7 +835,7 @@
 
                                         @for($group = 1; $group <= 3; $group++)
                                             <div class="tab-content {{ $group === 1 ? 'active' : '' }}" id="tab-group-{{ $group }}">
-                                                <h4 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem;">
+                                                <h4 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 1rem; color: white;">
                                                     Select 3 Judges for Group {{ $group }}
                                                 </h4>
 
