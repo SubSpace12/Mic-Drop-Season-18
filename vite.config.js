@@ -12,6 +12,7 @@ export default defineConfig({
             'resources/css/results.css',
             'resources/css/submit-judge-app.css',
             'resources/css/submit.css',
+            'resources/css/theme.css',
             'resources/css/view-apps.css'],
             refresh: true,
         }),
