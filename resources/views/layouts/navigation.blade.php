@@ -72,6 +72,10 @@
                                 {{ $hasJudgeApp ? __('Edit Judging Application') : __('Submit Judging Application') }}
                             </x-dropdown-link>
 
+                            <x-dropdown-link :href="url('/stats')" class="dropdown-link">
+                                Stats Sheet
+                            </x-dropdown-link>
+
                             @if($isStaff)
                                 <div class="dropdown-divider"></div>
                                 
