@@ -379,3 +379,188 @@
     --stats-deco-a: '>';
     --stats-deco-b: '//';
 }
+
+/* ==========================================================
+   THEME: COLOR LAND  ◆
+   ========================================================== */
+.theme-colorland {
+    /* --- Font --- */
+    --font-main: 'Lexend', sans-serif;
+
+    /* --- Core Palette --- */
+    --bg-base: #0b0b18;
+    --bg-surface: #12121f;
+    --bg-elevated: #1a1a2e;
+    --border: #252538;
+    --border-muted: #1a1a2e;
+
+    /* --- Text --- */
+    --text-primary: #f0eaff;
+    --text-secondary: #b0a8cc;
+    --text-muted: #5a5272;
+    --text-dim: #3d3558;
+
+    /* --- Accents --- */
+    --accent: #ff4db8;
+    --accent-light: #ff6ec7;
+    --accent-bg: #1f0a1a;
+    --accent-2: #00d4ff;
+    --accent-warm: #ffd93d;
+    --accent-warm-light: #ffe680;
+
+    /* --- Shapes --- */
+    --radius-card: 18px;
+    --radius-badge: 20px;
+    --radius-btn: 14px;
+    --radius-modal: 20px;
+    --radius-login: 20px;
+    --border-deco: solid;
+
+    /* --- Active Status --- */
+    --active: #ff4db8;
+    --active-light: #ff6ec7;
+    --active-bg: #1a0a14;
+    --active-stripe: linear-gradient(90deg, #ff4db8, #c84dff, #ff4db8);
+    --active-shadow: rgba(255, 77, 184, 0.25);
+    --active-shadow-strong: rgba(255, 77, 184, 0.45);
+    --active-hover-shadow: rgba(255, 77, 184, 0.4);
+    --active-action-bg: rgba(255, 77, 184, 0.08);
+
+    /* --- Completed Status --- */
+    --completed: #00e5a0;
+    --completed-light: #33ffb8;
+    --completed-bg: #071a12;
+    --completed-stripe: linear-gradient(90deg, #00e5a0, #00ffcc, #00e5a0);
+    --completed-badge-bg: #041a0e;
+    --completed-hover-shadow: rgba(0, 229, 160, 0.3);
+    --completed-action-bg: rgba(0, 229, 160, 0.08);
+
+    /* --- Submitted Status --- */
+    --submitted: #00c4ff;
+    --submitted-light: #4dd9ff;
+    --submitted-bg: #071520;
+    --submitted-stripe: linear-gradient(90deg, #00c4ff, #4db8ff, #00c4ff);
+    --submitted-badge-bg: #041020;
+    --submitted-hover-shadow: rgba(0, 196, 255, 0.35);
+    --submitted-action-bg: rgba(0, 196, 255, 0.08);
+
+    /* --- Pending Status --- */
+    --pending-bg: #0b0b18;
+    --pending-border: #1e1e30;
+    --pending-stripe: #1e1e30;
+    --pending-badge-bg: #1e1e30;
+    --pending-badge-text: #5a5272;
+    --pending-badge-border: #2e2e48;
+    --pending-action-bg: #0b0b18;
+
+    /* --- Merge Badge --- */
+    --merge-bg: #1f1a06;
+    --merge-text: #ffd93d;
+    --merge-border: #ffd93d;
+
+    /* --- Primary Button (magenta) --- */
+    --btn-primary: #b8177e;
+    --btn-primary-hover: #d41f93;
+    --btn-primary-border: #ff4db8;
+    --btn-primary-text: #ffe0f4;
+    --btn-primary-shadow: rgba(184, 23, 126, 0.3);
+    --btn-primary-shadow-strong: rgba(184, 23, 126, 0.5);
+
+    /* --- Action Button (mint) --- */
+    --btn-action: #065a3e;
+    --btn-action-hover: #0a8a5e;
+    --btn-action-border: #00e5a0;
+    --btn-action-text: #ccfff0;
+
+    /* --- Info Items --- */
+    --info-icon: #ff4db8;
+    --info-label: #00c4ff;
+    --info-value: #ffd93d;
+
+    /* --- Header Bar --- */
+    --header-bg: linear-gradient(90deg, #7c1fa8 0%, #c42898 35%, #e83058 65%, #ff6b3d 100%);
+    --header-border: rgba(255, 130, 220, 0.5);
+    --header-text: #ffffff;
+
+    /* --- Decorative Symbols --- */
+    --deco-a: '◆';
+    --deco-b: '●';
+    --deco-c: '★';
+    --deco-d: '◉';
+    --deco-e: '✦';
+    --deco-f: '▲';
+    --deco-g: '◆';
+    --deco-h: '★◆★';
+    --deco-no-rounds: '◉ no rounds yet';
+
+    /* --- Results Page --- */
+    --results-bg: #0b0b18;
+    --results-surface: rgba(18, 18, 31, 0.85);
+    --results-elevated: rgba(26, 26, 46, 0.75);
+    --results-sidebar: #12121f;
+    --results-sidebar-active: #b8177e;
+    --results-sidebar-active-accent: #ff4db8;
+    --results-contestant-bg: rgba(11, 11, 24, 0.85);
+    --results-judge-name: #ff4db8;
+    --results-score-bg: rgba(6, 90, 62, 0.85);
+    --results-score-text: #00e5a0;
+    --results-score-border: #00e5a0;
+    --results-gold-bg: rgba(212, 165, 116, 0.9);
+    --results-gold-text: #0b0b18;
+    --results-gold-border: #d4a574;
+    --results-gold-shadow: rgba(212, 165, 116, 0.5);
+    --results-silver-bg: rgba(133, 133, 133, 0.9);
+    --results-silver-text: #0b0b18;
+    --results-silver-border: #858585;
+    --results-silver-shadow: rgba(133, 133, 133, 0.5);
+    --results-bronze-bg: rgba(139, 90, 60, 0.9);
+    --results-bronze-text: #f0eaff;
+    --results-bronze-border: #8b5a3c;
+    --results-bronze-shadow: rgba(139, 90, 60, 0.5);
+    --results-elim-bg: rgba(122, 40, 40, 0.9);
+    --results-elim-text: #f0eaff;
+    --results-elim-border: #c85050;
+    --results-elim-shadow: rgba(200, 80, 80, 0.6);
+    --results-low: #ff4db8;
+    --results-high: #00e5a0;
+    --results-perfect: #ffd93d;
+    --results-warning: #ff4db8;
+    --results-warning-border: #c84dff;
+
+    /* --- Stats Page --- */
+    --stats-bg: #0b0b18;
+    --stats-surface: #12121f;
+    --stats-elevated: #1a1a2e;
+    --stats-border: #252538;
+    --stats-border-strong: #ff4db8;
+    --stats-header-text: #ff4db8;
+    --stats-subtitle: #b0a8cc;
+    --stats-subtitle-accent: #00c4ff;
+    --stats-th-bg: #1a1a2e;
+    --stats-th-text: #ff4db8;
+    --stats-td-bg: #12121f;
+    --stats-sticky-bg: #12121f;
+    --stats-sticky-header-bg: #1a1a2e;
+    --stats-cell-text: #f0eaff;
+    --stats-cell-empty: #08080f;
+    --stats-cell-empty-text: #252538;
+    --stats-cell-nodata-bg: #0f0f1e;
+    --stats-cell-nodata-text: #3d3558;
+    --stats-scrollbar-thumb: #ff4db8;
+    --stats-scrollbar-track: #0b0b18;
+    --stats-rank-gold: #ffd93d;
+    --stats-rank-gold-shadow: rgba(255, 217, 61, 0.3);
+    --stats-rank-silver: #c0c0c0;
+    --stats-rank-silver-shadow: rgba(192, 192, 192, 0.3);
+    --stats-rank-bronze: #cd7f32;
+    --stats-rank-bronze-shadow: rgba(205, 127, 50, 0.3);
+    --stats-rank-elim: #ff4db8;
+    --stats-divider-color: #c84dff;
+    --stats-elim-row-bg: #0b0b18;
+    --stats-elim-name: #b0a8cc;
+    --stats-elim-badge-bg: #2a0a1f;
+    --stats-elim-badge-text: #ff4db8;
+    --stats-nodata-icon: #c84dff;
+    --stats-deco-a: '◆';
+    --stats-deco-b: '●';
+}

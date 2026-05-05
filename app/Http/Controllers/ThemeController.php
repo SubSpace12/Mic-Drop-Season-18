@@ -12,8 +12,10 @@ class ThemeController extends Controller
      * The key is the CSS class / DB value, the label+icon are for the UI.
      */
     public const THEMES = [
+        'colorland'=> ['label' => 'Color Land','icon' => '◆'],
         'emoticon' => ['label' => ':3 World',   'icon' => ':3'],
         'vscode'   => ['label' => 'The Core',   'icon' => '>_'],
+        
     ];
 
     /**

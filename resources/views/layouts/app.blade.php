@@ -15,7 +15,8 @@
     <link rel="stylesheet" href="{{ asset('css/app-layout.css') }}">
     
     <!-- Scripts -->
-    @vite(['resources/css/theme.css', 'resources/css/app.css', 'resources/js/app.js'])
+    @viteReactRefresh
+    @vite(['resources/css/theme.css', 'resources/css/app.css', 'resources/js/app.jsx'])
 </head>
 @php
     $currentTheme = auth()->check()
@@ -23,6 +24,12 @@
         : 'emoticon';
 @endphp
 <body class="font-sans antialiased theme-{{ $currentTheme }}">
+    <div
+    id="iridescence-bg"
+    data-color='[0.749, 0.737, 0.447]'
+    data-mouse-react="false"
+    style="position: fixed; inset: 0; z-index: 0; pointer-events: none;"
+  ></div>
     <div class="min-h-screen">
         @include('layouts.navigation')
         

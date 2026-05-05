@@ -39,9 +39,7 @@ Route::get('/dashboard', function () {
 
 Route::post('/judge-vote', [AppVoteController::class, 'handleJudgeVote'])->middleware('auth');
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-});
+Route::get('/profile/{discordId}', [ProfileController::class, 'show'])->name('profile.show');
 
 Route::get('/results', function () {
     return view('results');

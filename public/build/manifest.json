@@ -1,72 +1,107 @@
 {
   "resources/css/admin.css": {
-    "file": "assets/admin-kC9EasnS.css",
+    "file": "assets/admin-Blit0XAm.css",
     "src": "resources/css/admin.css",
     "isEntry": true,
+    "name": "admin",
     "names": [
       "admin.css"
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-D0k60UFE.css",
+    "file": "assets/app-B3xaZ4CX.css",
     "src": "resources/css/app.css",
     "isEntry": true,
+    "name": "app",
     "names": [
       "app.css"
     ]
   },
   "resources/css/dashboard.css": {
-    "file": "assets/dashboard-BzYjwndb.css",
+    "file": "assets/dashboard-C_uyOudW.css",
     "src": "resources/css/dashboard.css",
     "isEntry": true,
+    "name": "dashboard",
     "names": [
       "dashboard.css"
     ]
   },
   "resources/css/judging.css": {
-    "file": "assets/judging-BfBVlTmB.css",
+    "file": "assets/judging-BYscdYFi.css",
     "src": "resources/css/judging.css",
     "isEntry": true,
+    "name": "judging",
     "names": [
       "judging.css"
     ]
   },
+  "resources/css/profile.css": {
+    "file": "assets/profile-OkP98eg4.css",
+    "src": "resources/css/profile.css",
+    "isEntry": true,
+    "name": "profile",
+    "names": [
+      "profile.css"
+    ]
+  },
   "resources/css/results.css": {
-    "file": "assets/results-BAkFteSS.css",
+    "file": "assets/results-Iq_SYksp.css",
     "src": "resources/css/results.css",
     "isEntry": true,
+    "name": "results",
     "names": [
       "results.css"
     ]
   },
+  "resources/css/stats.css": {
+    "file": "assets/stats-DfLDTgvi.css",
+    "src": "resources/css/stats.css",
+    "isEntry": true,
+    "name": "stats",
+    "names": [
+      "stats.css"
+    ]
+  },
   "resources/css/submit-judge-app.css": {
-    "file": "assets/submit-judge-app-oP-d_qAq.css",
+    "file": "assets/submit-judge-app-DANVAF_1.css",
     "src": "resources/css/submit-judge-app.css",
     "isEntry": true,
+    "name": "submit-judge-app",
     "names": [
       "submit-judge-app.css"
     ]
   },
   "resources/css/submit.css": {
-    "file": "assets/submit-CONc4_Bi.css",
+    "file": "assets/submit-BjGbxCgX.css",
     "src": "resources/css/submit.css",
     "isEntry": true,
+    "name": "submit",
     "names": [
       "submit.css"
     ]
   },
+  "resources/css/theme.css": {
+    "file": "assets/theme-CdOAS3WB.css",
+    "src": "resources/css/theme.css",
+    "isEntry": true,
+    "name": "theme",
+    "names": [
+      "theme.css"
+    ]
+  },
   "resources/css/view-apps.css": {
-    "file": "assets/view-apps-CyMlN_48.css",
+    "file": "assets/view-apps-Duf6XrxP.css",
     "src": "resources/css/view-apps.css",
     "isEntry": true,
+    "name": "view-apps",
     "names": [
       "view-apps.css"
     ]
   },
-  "resources/js/app.js": {
-    "file": "assets/app-DtCVKgHt.js",
+  "resources/js/app.jsx": {
+    "file": "assets/app-S4MvWPDF.js",
     "name": "app",
-    "src": "resources/js/app.js",
+    "src": "resources/js/app.jsx",
     "isEntry": true
   }
 }
