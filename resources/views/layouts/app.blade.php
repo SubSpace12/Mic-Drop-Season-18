@@ -21,7 +21,7 @@
 @php
     $currentTheme = auth()->check()
         ? (auth()->user()->theme ?? 'emoticon')
-        : 'emoticon';
+        : 'colorland';
 @endphp
 <body class="font-sans antialiased theme-{{ $currentTheme }}">
     <div
