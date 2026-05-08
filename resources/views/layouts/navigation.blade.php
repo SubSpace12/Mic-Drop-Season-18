@@ -135,6 +135,10 @@
                     {{ $hasJudgeApp ? __('Edit Judging Application') : __('Submit Judging Application') }}
                 </x-responsive-nav-link>
 
+                <x-responsive-nav-link :href="url('/stats')" class="responsive-nav-link">
+                    Stats Sheet
+                </x-responsive-nav-link>
+
                 @if($isStaff)
                     <x-responsive-nav-link :href="url('/view-apps')" class="responsive-nav-link">
                         {{ __('View Judging Applications') }}
