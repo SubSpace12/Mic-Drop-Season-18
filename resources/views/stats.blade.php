@@ -66,7 +66,7 @@
 
                 $groupColumn = ($activeRound && $round->is_merge != $activeRound->is_merge)
                     ? 'group_legacy' : 'md_group';
-                $group = $round->is_merge ? 0 : $entry[$groupColumn];
+                $group = $round->is_merge ? 0 : $contestant->{$groupColumn};
 
                 $subs = DB::table('submissions')
                     ->join('judges', function ($join) use ($rn, $group, $seasonId) {
@@ -172,7 +172,7 @@
                 if (!isset($entry['round_averages'][$rn])) continue;
                 $groupColumn = ($activeRound && $round->is_merge != $activeRound->is_merge)
                     ? 'group_legacy' : 'md_group';
-                $group = $round->is_merge ? 0 : $contestant->{$groupColumn};
+                $group = $round->is_merge ? 0 : $entry[$groupColumn];
                 $groupScores[$group][] = [
                     'id' => $entry['id'],
                     'avg' => $entry['round_averages'][$rn],
