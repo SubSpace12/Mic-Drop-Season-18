@@ -21,6 +21,20 @@
 
         $roundNumbers = $finishedRounds->pluck('round_number')->toArray();
 
+        $activeRound = $seasonId ? DB::table('round')
+            ->where('status', 1)
+            ->where('season_id', $seasonId)
+            ->orderBy('round_number')
+            ->first() : null;
+
+        if (!$activeRound) {
+            $activeRound = $seasonId ? DB::table('round')
+                ->where('status', 2)
+                ->where('season_id', $seasonId)
+                ->orderBy('round_number', 'desc')
+                ->first() : null;
+        }
+
         // Get all contestants for this season
         $allContestants = $seasonId ? DB::table('contestants')
             ->join('users', 'users.id', '=', 'contestants.id')
@@ -50,7 +64,9 @@
                 $round = $finishedRounds->firstWhere('round_number', $rn);
                 if (!$round) continue;
 
-                $group = $round->is_merge ? 0 : $contestant->md_group;
+                $groupColumn = ($activeRound && $round->is_merge != $activeRound->is_merge)
+                    ? 'group_legacy' : 'md_group';
+                $group = $round->is_merge ? 0 : $entry[$groupColumn];
 
                 $subs = DB::table('submissions')
                     ->join('judges', function ($join) use ($rn, $group, $seasonId) {
@@ -111,6 +127,7 @@
                 'season_avg' => round($seasonAvg, 2),
                 'season_median' => round($seasonMedian, 3),
                 'season_stddev' => round($seasonStdDev, 3),
+                'group_legacy' => $contestant->group_legacy ?? $contestant->md_group,
             ];
 
             if ($contestant->eliminated) {
@@ -153,7 +170,9 @@
             $groupScores = [];
             foreach ($allStats as $entry) {
                 if (!isset($entry['round_averages'][$rn])) continue;
-                $group = $round->is_merge ? 0 : $entry['md_group'];
+                $groupColumn = ($activeRound && $round->is_merge != $activeRound->is_merge)
+                    ? 'group_legacy' : 'md_group';
+                $group = $round->is_merge ? 0 : $contestant->{$groupColumn};
                 $groupScores[$group][] = [
                     'id' => $entry['id'],
                     'avg' => $entry['round_averages'][$rn],
