@@ -15,7 +15,7 @@ class ThemeController extends Controller
         'colorland'=> ['label' => 'Color Land','icon' => '◆'],
         'emoticon' => ['label' => ':3 World',   'icon' => ':3'],
         'vscode'   => ['label' => 'The Core',   'icon' => '>_'],
-        
+        'sponsor'  => ['label' => 'FizzTech', 'icon'  => '♦',],
     ];
 
     /**

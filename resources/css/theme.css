@@ -564,3 +564,232 @@
     --stats-deco-a: '◆';
     --stats-deco-b: '●';
 }
+
+/* ==========================================================
+   THEME: RASPBERRY  ♦
+   ----------------------------------------------------------
+   Light corporate theme. Append this block to theme.css,
+   then register 'sponsor' in ThemeController::THEMES.
+   ========================================================== */
+
+.theme-sponsor {
+    /* --- Font --- */
+    --font-main: 'Lexend', sans-serif;
+
+    /* --- Core Palette --- */
+    --bg-base:      #f8f6fa;
+    --bg-surface:   #ffffff;
+    --bg-elevated:  #fdf5f8;
+    --border:       #e8e2ee;
+    --border-muted: #f0ecf4;
+
+    /* --- Text --- */
+    --text-primary:   #180f1e;
+    --text-secondary: #5c5569;
+    --text-muted:     #9d96ab;
+    --text-dim:       #c4bdcf;
+
+    /* --- Accents --- */
+    --accent:            #d11872;
+    --accent-light:      #e63d8a;
+    --accent-bg:         #fce7f3;
+    --accent-2:          #7c3aed;
+    --accent-warm:       #d97706;
+    --accent-warm-light: #f59e0b;
+
+    /* --- Shapes --- */
+    --radius-card:  10px;
+    --radius-badge: 6px;
+    --radius-btn:   8px;
+    --radius-modal: 12px;
+    --radius-login: 8px;
+    --border-deco:  solid;
+
+    /* --- Active Status --- */
+    --active:               #d11872;
+    --active-light:         #9d1252;
+    --active-bg:            #fff5f9;
+    --active-stripe:        #d11872;
+    --active-shadow:        rgba(209, 24, 114, 0.12);
+    --active-shadow-strong: rgba(209, 24, 114, 0.22);
+    --active-hover-shadow:  rgba(209, 24, 114, 0.18);
+    --active-action-bg:     rgba(209, 24, 114, 0.05);
+
+    /* --- Completed Status --- */
+    --completed:              #16a34a;
+    --completed-light:        #166534;
+    --completed-bg:           #f0fdf4;
+    --completed-stripe:       #16a34a;
+    --completed-badge-bg:     #dcfce7;
+    --completed-hover-shadow: rgba(22, 163, 74, 0.15);
+    --completed-action-bg:    rgba(22, 163, 74, 0.05);
+
+    /* --- Submitted Status --- */
+    --submitted:              #2563eb;
+    --submitted-light:        #1e3a8a;
+    --submitted-bg:           #eff6ff;
+    --submitted-stripe:       #2563eb;
+    --submitted-badge-bg:     #dbeafe;
+    --submitted-hover-shadow: rgba(37, 99, 235, 0.15);
+    --submitted-action-bg:    rgba(37, 99, 235, 0.05);
+
+    /* --- Pending Status --- */
+    --pending-bg:          #f8f6fa;
+    --pending-border:      #e8e2ee;
+    --pending-stripe:      #e0d9e9;
+    --pending-badge-bg:    #f5f0f7;
+    --pending-badge-text:  #9d96ab;
+    --pending-badge-border: #dbd5e3;
+    --pending-action-bg:   #f8f6fa;
+
+    /* --- Merge Badge --- */
+    --merge-bg:     #fffbeb;
+    --merge-text:   #92400e;
+    --merge-border: #f59e0b;
+
+    /* --- Primary Button (raspberry) --- */
+    --btn-primary:              #d11872;
+    --btn-primary-hover:        #b81464;
+    --btn-primary-border:       #e83d8a;
+    --btn-primary-text:         #ffffff;
+    --btn-primary-shadow:       rgba(209, 24, 114, 0.2);
+    --btn-primary-shadow-strong: rgba(209, 24, 114, 0.35);
+
+    /* --- Action Button (green) --- */
+    --btn-action:        #16a34a;
+    --btn-action-hover:  #15803d;
+    --btn-action-border: #4ade80;
+    --btn-action-text:   #ffffff;
+
+    /* --- Info Items --- */
+    --info-icon:  #d11872;
+    --info-label: #7c3aed;
+    --info-value: #d97706;
+
+    /* --- Header Bar --- */
+    --header-bg:     #d11872;
+    --header-border: rgba(255, 255, 255, 0.25);
+    --header-text:   #ffffff;
+
+    /* --- Decorative Symbols (none for this theme) --- */
+    --deco-a: '';
+    --deco-b: '';
+    --deco-c: '';
+    --deco-d: '';
+    --deco-e: '';
+    --deco-f: '';
+    --deco-g: '';
+    --deco-h: '';
+    --deco-no-rounds: '';
+
+    /* --- Results Page --- */
+    --results-bg:                   #f8f6fa;
+    --results-surface:              rgba(255, 255, 255, 0.92);
+    --results-elevated:             rgba(253, 245, 248, 0.88);
+    --results-sidebar:              #ffffff;
+    --results-sidebar-active:       #d11872;
+    --results-sidebar-active-accent: #e83d8a;
+    --results-contestant-bg:        rgba(248, 246, 250, 0.9);
+    --results-judge-name:           #d11872;
+    --results-score-bg:             rgba(240, 253, 244, 0.92);
+    --results-score-text:           #166534;
+    --results-score-border:         #16a34a;
+    --results-gold-bg:              rgba(212, 165, 116, 0.9);
+    --results-gold-text:            #1a0f0a;
+    --results-gold-border:          #d4a574;
+    --results-gold-shadow:          rgba(212, 165, 116, 0.5);
+    --results-silver-bg:            rgba(133, 133, 133, 0.9);
+    --results-silver-text:          #0f0f0f;
+    --results-silver-border:        #858585;
+    --results-silver-shadow:        rgba(133, 133, 133, 0.5);
+    --results-bronze-bg:            rgba(139, 90, 60, 0.9);
+    --results-bronze-text:          #fff8f5;
+    --results-bronze-border:        #8b5a3c;
+    --results-bronze-shadow:        rgba(139, 90, 60, 0.5);
+    --results-elim-bg:              rgba(254, 226, 226, 0.92);
+    --results-elim-text:            #991b1b;
+    --results-elim-border:          #ef4444;
+    --results-elim-shadow:          rgba(239, 68, 68, 0.3);
+    --results-low:                  #dc2626;
+    --results-high:                 #16a34a;
+    --results-perfect:              #d97706;
+    --results-warning:              #dc2626;
+    --results-warning-border:       #e8e2ee;
+
+    /* --- Stats Page --- */
+    --stats-bg:                #f8f6fa;
+    --stats-surface:           #ffffff;
+    --stats-elevated:          #fdf5f8;
+    --stats-border:            #e8e2ee;
+    --stats-border-strong:     #d11872;
+    --stats-header-text:       #d11872;
+    --stats-subtitle:          #5c5569;
+    --stats-subtitle-accent:   #7c3aed;
+    --stats-th-bg:             #fce7f3;
+    --stats-th-text:           #9d1252;
+    --stats-td-bg:             #ffffff;
+    --stats-sticky-bg:         #ffffff;
+    --stats-sticky-header-bg:  #fce7f3;
+    --stats-cell-text:         #180f1e;
+    --stats-cell-empty:        #f5f0f7;
+    --stats-cell-empty-text:   #dbd5e3;
+    --stats-cell-nodata-bg:    #faf8fb;
+    --stats-cell-nodata-text:  #c4bdcf;
+    --stats-scrollbar-thumb:   #d11872;
+    --stats-scrollbar-track:   #f8f6fa;
+    --stats-rank-gold:         #b45309;
+    --stats-rank-gold-shadow:  rgba(180, 83, 9, 0.25);
+    --stats-rank-silver:       #4b5563;
+    --stats-rank-silver-shadow: rgba(75, 85, 99, 0.25);
+    --stats-rank-bronze:       #78350f;
+    --stats-rank-bronze-shadow: rgba(120, 53, 15, 0.25);
+    --stats-rank-elim:         #dc2626;
+    --stats-divider-color:     #d11872;
+    --stats-elim-row-bg:       #fff5f9;
+    --stats-elim-name:         #9d96ab;
+    --stats-elim-badge-bg:     #fce7f3;
+    --stats-elim-badge-text:   #9d1252;
+    --stats-nodata-icon:       #d11872;
+    --stats-deco-a: '';
+    --stats-deco-b: '';
+}
+
+/* ---- Sponsor theme: particles background fills the fixed mount point ---- */
+.theme-sponsor #iridescence-bg {
+    z-index: 0;
+}
+
+/* ---- Sponsor theme: light-mode shadow overrides ----
+   dashboard.css hard-codes dark-mode shadow values; these
+   replace them with lighter equivalents when on this theme. */
+
+.theme-sponsor .round-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06),
+                0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.theme-sponsor .round-card.status-active:hover,
+.theme-sponsor .round-card.status-completed:hover {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.theme-sponsor .round-card.status-active.status-submitted:hover {
+    box-shadow: 0 4px 16px var(--submitted-hover-shadow);
+}
+
+.theme-sponsor .join-season-container {
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.theme-sponsor .modal-content {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.14);
+}
+
+.theme-sponsor .welcome-message {
+    box-shadow: 0 2px 12px var(--btn-primary-shadow);
+}
+
+.theme-sponsor .guest-message,
+.theme-sponsor .no-rounds {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
