@@ -684,14 +684,14 @@
 
     /* --- Results Page --- */
     --results-bg:                   #f8f6fa;
-    --results-surface:              rgba(255, 255, 255, 0.92);
-    --results-elevated:             rgba(253, 245, 248, 0.88);
+    --results-surface:              rgba(255, 255, 255, 0.62);
+    --results-elevated:             rgba(253, 245, 248, 0.55);
     --results-sidebar:              #ffffff;
     --results-sidebar-active:       #d11872;
     --results-sidebar-active-accent: #e83d8a;
-    --results-contestant-bg:        rgba(248, 246, 250, 0.9);
+    --results-contestant-bg:        rgba(248, 246, 250, 0.62);
     --results-judge-name:           #d11872;
-    --results-score-bg:             rgba(240, 253, 244, 0.92);
+    --results-score-bg:             rgba(240, 253, 244, 0.65);
     --results-score-text:           #166534;
     --results-score-border:         #16a34a;
     --results-gold-bg:              rgba(212, 165, 116, 0.9);
