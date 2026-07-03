@@ -754,7 +754,7 @@
     --stats-deco-b: '';
 }
 
-/* ---- Sponsor theme: particles background fills the fixed mount point ---- */
+/* ---- Sponsor theme: decay background fills the fixed mount point ---- */
 .theme-sponsor #iridescence-bg {
     z-index: 0;
 }

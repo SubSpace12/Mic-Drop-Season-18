@@ -81,7 +81,7 @@
     ]
   },
   "resources/css/theme.css": {
-    "file": "assets/theme-CdOAS3WB.css",
+    "file": "assets/theme-CTaO2PwK.css",
     "src": "resources/css/theme.css",
     "isEntry": true,
     "name": "theme",
@@ -99,7 +99,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-S4MvWPDF.js",
+    "file": "assets/app-CitX52Gl.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true

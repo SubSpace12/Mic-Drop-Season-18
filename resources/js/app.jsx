@@ -1,7 +1,7 @@
 import './bootstrap';
 import { createRoot } from 'react-dom/client'
 import Grainient from './components/Grainient';
-import Particles from './components/Particles';
+import SponsorDecayBackground from './components/SponsorDecayBackground';
 import Alpine from 'alpinejs';
 
 const el = document.getElementById('iridescence-bg');
@@ -36,19 +36,7 @@ if (el) {
         );
     } else if (document.body.classList.contains('theme-sponsor')) {
         createRoot(el).render(
-            <Particles
-                particleCount={1000}
-                particleSpread={7}
-                speed={0.09}
-                particleColors={["#EC4899", "#ff0000", "#F43F5E"]}
-                moveParticlesOnHover={false}
-                particleHoverFactor={1}
-                alphaParticles={false}
-                particleBaseSize={130}
-                sizeRandomness={2.1}
-                cameraDistance={28}
-                disableRotation={false}
-            />
+            <SponsorDecayBackground />
         );
     }
 }

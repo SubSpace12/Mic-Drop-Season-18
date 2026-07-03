@@ -24,14 +24,6 @@
         : 'colorland';
 @endphp
 <body class="font-sans antialiased theme-{{ $currentTheme }}">
-    <div id="page-loader" aria-hidden="true">
-    <div class="loader-inner">
-        <div class="loader-spinner"></div>
-        <span class="loader-text">Loading</span>
-    </div>
-</div>
- 
-
     <div
     id="iridescence-bg"
     data-color='[0.749, 0.737, 0.447]'
@@ -57,35 +49,5 @@
             {{ $slot }}
         </main>
     </div>
-    <script>
-(function () {
-    var loader = document.getElementById('page-loader');
-    if (!loader) return;
- 
-    function hide() {
-        loader.classList.add('fading');
- 
-        // Remove from DOM once the CSS transition is done
-        var fallback = setTimeout(function () {
-            loader.style.display = 'none';
-        }, 500);
- 
-        loader.addEventListener('transitionend', function () {
-            clearTimeout(fallback);
-            loader.style.display = 'none';
-        }, { once: true });
-    }
- 
-    // 1 second hold, then fade
-    setTimeout(hide, 1000);
- 
-    // Hard failsafe — never block the page longer than 4 seconds
-    setTimeout(function () {
-        loader.style.display = 'none';
-    }, 4000);
-}());
-</script>
- 
-
 </body>
 </html>
