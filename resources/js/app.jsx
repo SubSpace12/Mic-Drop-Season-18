@@ -34,11 +34,7 @@ if (el) {
                 zoom={1}
             />
         );
-    } else if (document.body.classList.contains('theme-sponsor')) {
-        createRoot(el).render(
-            <SponsorDecayBackground />
-        );
-    }
+    } 
 }
 
 window.Alpine = Alpine;
