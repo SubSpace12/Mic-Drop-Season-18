@@ -158,6 +158,15 @@
                                 ->where('judges.season_id', $seasonId)->orderBy('judge_number')
                                 ->get();
                 }
+            $showPastThemes = $activeSeason && $activeSeason->season_id == 18 && $round == 16;
+    $pastThemes = collect();
+    if ($showPastThemes) {
+        $pastThemes = DB::table('round')
+            ->where('season_id', 18)
+            ->whereBetween('round_number', [1, 15])
+            ->orderBy('round_number')
+            ->get(['round_number', 'title', 'theme_details']);
+    }
         @endphp
         @vite(['resources/css/submit.css'])
         <div class="submission-container">
@@ -344,7 +353,30 @@
                                         </div>
                                 @endif
                         </div>
+                        @if($showPastThemes && $pastThemes->isNotEmpty())
+                                <div class="past-themes-carousel" id="pastThemesCarousel"
+                                        data-themes='@json($pastThemes->map(fn($r) => [
+                                                "round" => $r->round_number,
+                                                "title" => $r->title,
+                                                "details" => $r->theme_details,
+                                        ]))'>
+                                        <div class="past-themes-header">
+                                                <span class="past-themes-label">Past Themes — Rounds 1–15</span>
+                                                <select id="pastThemesSelect" class="past-themes-select"></select>
+                                        </div>
+                                        <div class="past-themes-body">
+                                                <button type="button" class="past-themes-arrow past-themes-prev" id="pastThemesPrev" aria-label="Previous theme">&#8249;</button>
+                                                <div class="past-themes-content">
+                                                        <div class="past-themes-round" id="pastThemesRound"></div>
+                                                        <div class="past-themes-title" id="pastThemesTitle"></div>
+                                                        <div class="past-themes-details" id="pastThemesDetails"></div>
+                                                </div>
+                                                <button type="button" class="past-themes-arrow past-themes-next" id="pastThemesNext" aria-label="Next theme">&#8250;</button>
+                                        </div>
+                                </div>
+                        @endif
 
+                    
                         @if($isStaffViewing)
                                 <div class="staff-viewing-banner">
                                         [STAFF] View Mode - You are viewing this form as staff. Submission is disabled.
@@ -500,7 +532,62 @@
                                 element.textContent = `${localTimeString} (Your Local Time - ${timezone})`;
                         });
                 });
+                (function () {
+    const el = document.getElementById('pastThemesCarousel');
+    if (!el) return;
 
+    let themes = [];
+    try {
+        themes = JSON.parse(el.dataset.themes);
+    } catch (e) {
+        console.error('Could not parse past themes data', e);
+        return;
+    }
+    if (themes.length === 0) return;
+
+    const select = document.getElementById('pastThemesSelect');
+    const roundEl = document.getElementById('pastThemesRound');
+    const titleEl = document.getElementById('pastThemesTitle');
+    const detailsEl = document.getElementById('pastThemesDetails');
+    const prevBtn = document.getElementById('pastThemesPrev');
+    const nextBtn = document.getElementById('pastThemesNext');
+
+    themes.forEach((t, i) => {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = `Round ${t.round}: ${t.title}`;
+        select.appendChild(opt);
+    });
+
+    let index = 0;
+
+    function render() {
+        const t = themes[index];
+        roundEl.textContent = `Round ${t.round}`;
+        titleEl.textContent = t.title;
+        detailsEl.textContent = t.details || 'No theme details recorded.';
+        select.value = index;
+        prevBtn.disabled = themes.length <= 1;
+        nextBtn.disabled = themes.length <= 1;
+    }
+
+    prevBtn.addEventListener('click', () => {
+        index = (index - 1 + themes.length) % themes.length;
+        render();
+    });
+
+    nextBtn.addEventListener('click', () => {
+        index = (index + 1) % themes.length;
+        render();
+    });
+
+    select.addEventListener('change', () => {
+        index = parseInt(select.value, 10);
+        render();
+    });
+
+    render();
+})();
                 // Prevent form submission for staff
                 @if($isStaffViewing)
                         document.getElementById('submissionForm').addEventListener('submit', function (e) {
@@ -630,5 +717,6 @@
                                 element.innerHTML = linkedText;
                         });
                         });
+
         </script>
 </x-app-layout>
