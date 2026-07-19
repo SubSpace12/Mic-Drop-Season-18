@@ -170,6 +170,7 @@
                 return [
                     'round' => $r->round_number,
                     'title' => $r->title,
+                    'description' => $r->description,
                     'details' => $r->theme_details,
                 ];
             })
@@ -373,6 +374,7 @@
                                                 <div class="past-themes-content">
                                                         <div class="past-themes-round" id="pastThemesRound"></div>
                                                         <div class="past-themes-title" id="pastThemesTitle"></div>
+                                                        <div class="past-themes-description" id="pastThemesDescription"></div>
                                                         <div class="past-themes-details" id="pastThemesDetails"></div>
                                                 </div>
                                                 <button type="button" class="past-themes-arrow past-themes-next" id="pastThemesNext" aria-label="Next theme">&#8250;</button>
@@ -552,6 +554,7 @@
     const select = document.getElementById('pastThemesSelect');
     const roundEl = document.getElementById('pastThemesRound');
     const titleEl = document.getElementById('pastThemesTitle');
+    const descriptionEl = document.getElementById('pastThemesDescription');
     const detailsEl = document.getElementById('pastThemesDetails');
     const prevBtn = document.getElementById('pastThemesPrev');
     const nextBtn = document.getElementById('pastThemesNext');
@@ -569,6 +572,8 @@
         const t = themes[index];
         roundEl.textContent = `Round ${t.round}`;
         titleEl.textContent = t.title;
+        descriptionEl.textContent = t.description || '';
+        descriptionEl.style.display = t.description ? '' : 'none';
         detailsEl.textContent = t.details || 'No theme details recorded.';
         select.value = index;
         prevBtn.disabled = themes.length <= 1;

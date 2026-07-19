@@ -796,3 +796,10 @@
     white-space: pre-wrap;
     line-height: 1.4;
 }
+
+.past-themes-description {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
