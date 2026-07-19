@@ -165,7 +165,7 @@
             ->where('season_id', 18)
             ->whereBetween('round_number', [1, 15])
             ->orderBy('round_number')
-            ->get(['round_number', 'title', 'theme_details'])
+            ->get(['round_number', 'title', 'description', 'theme_details'])
             ->map(function ($r) {
                 return [
                     'round' => $r->round_number,
