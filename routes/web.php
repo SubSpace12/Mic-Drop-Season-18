@@ -9,6 +9,7 @@ use App\Http\Controllers\SlideBGController;
 use App\Http\Controllers\JudgeAppController;
 use App\Http\Controllers\SubmissionController;
 use App\Http\Controllers\ThemeController;
+use App\Http\Controllers\SearchController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -155,3 +156,6 @@ Route::post('/theme', [ThemeController::class, 'update'])
     ->middleware('auth')
     ->name('theme.update');
  
+
+Route::get('/search', [SearchController::class, 'index'])->middleware('auth')->name('search');
+Route::post('/search/query', [SearchController::class, 'query'])->middleware('auth')->name('search.query');

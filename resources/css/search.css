@@ -1,0 +1,132 @@
+.search-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1.5rem 1rem 3rem;
+}
+
+.search-bar-wrap {
+    margin-bottom: 1.5rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.85rem 1.1rem;
+    font-family: var(--font-main);
+    font-size: 1.05rem;
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-btn);
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.search-input:focus {
+    border-color: var(--accent);
+}
+
+.search-status {
+    margin-top: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    min-height: 1.2em;
+}
+
+.search-results {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+}
+
+.no-results {
+    color: var(--text-muted);
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.search-result-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-card);
+    padding: 1rem 1.2rem;
+}
+
+.search-result-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+}
+
+.search-result-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+}
+
+.search-result-artist {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.search-result-artist::before {
+    content: '— ';
+}
+
+.search-result-count {
+    margin-left: auto;
+    font-size: 0.78rem;
+    color: var(--accent);
+    background: var(--accent-bg);
+    padding: 0.15rem 0.55rem;
+    border-radius: var(--radius-badge);
+}
+
+.search-entries {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.search-entry {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.6rem;
+    background: var(--bg-elevated);
+    border-radius: calc(var(--radius-btn) - 4px);
+    border: 1px solid var(--border-muted);
+}
+
+.search-entry-round {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.search-entry-group {
+    color: var(--text-secondary);
+}
+
+.search-entry-contestant {
+    color: var(--text-primary);
+}
+
+.search-entry-link {
+    margin-left: auto;
+    color: var(--submitted);
+    text-decoration: none;
+    font-size: 0.85rem;
+}
+
+.search-entry-link:hover {
+    text-decoration: underline;
+}
+
+.access-message {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-secondary);
+}

@@ -19,6 +19,7 @@ export default defineConfig({
                 'resources/css/stats.css',
                 'resources/css/profile.css',
                 'resources/css/view-apps.css',
+                'resources/css/search.css',
             ],
             refresh: true,
         }),
