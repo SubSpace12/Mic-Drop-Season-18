@@ -158,14 +158,23 @@
                                 ->where('judges.season_id', $seasonId)->orderBy('judge_number')
                                 ->get();
                 }
-            $showPastThemes = $activeSeason && $activeSeason->season_id == 18 && $round == 16;
-    $pastThemes = collect();
+           $showPastThemes = $activeSeason && $activeSeason->season_id == 18 && $round == 16;
+    $pastThemesData = [];
     if ($showPastThemes) {
-        $pastThemes = DB::table('round')
+        $pastThemesData = DB::table('round')
             ->where('season_id', 18)
             ->whereBetween('round_number', [1, 15])
             ->orderBy('round_number')
-            ->get(['round_number', 'title', 'theme_details']);
+            ->get(['round_number', 'title', 'theme_details'])
+            ->map(function ($r) {
+                return [
+                    'round' => $r->round_number,
+                    'title' => $r->title,
+                    'details' => $r->theme_details,
+                ];
+            })
+            ->values()
+            ->all();
     }
         @endphp
         @vite(['resources/css/submit.css'])
@@ -353,13 +362,8 @@
                                         </div>
                                 @endif
                         </div>
-                        @if($showPastThemes && $pastThemes->isNotEmpty())
-                                <div class="past-themes-carousel" id="pastThemesCarousel"
-                                        data-themes='@json($pastThemes->map(fn($r) => [
-                                                "round" => $r->round_number,
-                                                "title" => $r->title,
-                                                "details" => $r->theme_details,
-                                        ]))'>
+         @if($showPastThemes && count($pastThemesData) > 0)
+                                <div class="past-themes-carousel" id="pastThemesCarousel" data-themes='@json($pastThemesData)'>
                                         <div class="past-themes-header">
                                                 <span class="past-themes-label">Past Themes — Rounds 1–15</span>
                                                 <select id="pastThemesSelect" class="past-themes-select"></select>
