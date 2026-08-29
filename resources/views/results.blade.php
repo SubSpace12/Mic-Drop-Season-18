@@ -28,6 +28,14 @@
         ->orderBy('round_number')
         ->first() : null;
 
+    if (!$activeRound) {
+        $activeRound = $seasonId ? DB::table('round')
+            ->where('status', 2)
+            ->where('season_id', $seasonId)
+            ->orderBy('round_number', 'desc')
+            ->first() : null;
+    }
+
     // Determine which group column to use
     $groupColumn = 'md_group';
     if ($activeRound && $roundInfo) {
@@ -35,13 +43,6 @@
         if ($activeRound->is_merge != $roundInfo->is_merge) {
             $groupColumn = 'group_legacy';
         }
-    }
-    if (!$activeRound) {
-        $activeRound = $seasonId ? DB::table('round')
-            ->where('status', 2)
-            ->where('season_id', $seasonId)
-            ->orderBy('round_number', 'desc')
-            ->first() : null;
     }
 
     $effectiveGroup = $group;
